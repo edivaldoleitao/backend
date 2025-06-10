@@ -1,70 +1,53 @@
-# track_save_backend
+# 🚀 Ambiente de Desenvolvimento com Dev Containers (VS Code)
 
-backend do tracksave
+Este guia descreve como configurar e utilizar o ambiente de desenvolvimento padronizado para este projeto usando [Dev Containers](https://code.visualstudio.com/docs/devcontainers/containers) no Visual Studio Code.
 
-[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+O uso de Dev Containers garante que todos os desenvolvedores trabalhem em um ambiente idêntico e isolado, contendo todas as dependências necessárias (Python, bibliotecas, banco de dados, etc.), sem a necessidade de instalar tudo manualmente na sua máquina.
 
-License: MIT
+---
 
-## Settings
+### ✅ Pré-requisitos
 
-Moved to [settings](https://cookiecutter-django.readthedocs.io/en/latest/1-getting-started/settings.html).
+Antes de começar, garanta que você tenha instalado:
 
-## Basic Commands
+1. **Docker Desktop**: Essencial para criar e gerenciar os contêineres. [Faça o download aqui](https://www.docker.com/products/docker-desktop/).
+2. **Visual Studio Code**: O editor onde o ambiente será executado. [Faça o download aqui](https://code.visualstudio.com/).
+3. **Extensão Dev Containers**: A extensão oficial da Microsoft para o VS Code.
+    - [Instalar a partir do Marketplace](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
-### Setting Up Your Users
+---
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+### ⚙️ Configuração Inicial (Apenas na primeira vez)
 
-- To create a **superuser account**, use this command:
+O projeto precisa de um arquivo de configuração de ambiente chamado `.env`.
 
-      $ python manage.py createsuperuser
+1. **Crie o arquivo `.env`**: Copie o arquivo de exemplo `.env.example` que está na raiz do projeto. Você pode fazer isso pelo terminal:
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+    ```bash
+    cp .env.example .env
+    ```
 
-### Type checks
+2. **Ajuste as variáveis**: Abra o novo arquivo `.env` e, se necessário, ajuste as variáveis para a sua configuração local.
 
-Running type checks with mypy:
+---
 
-    $ mypy track_save
+### ▶️ Como Iniciar o Ambiente
 
-### Test coverage
+1. Abra a pasta raiz do projeto no **Visual Studio Code**.
+2. O VS Code pode detectar automaticamente a configuração do Dev Container e mostrar uma notificação. Se isso acontecer, clique em **"Reopen in Container"**.
+3. Caso a notificação não apareça, inicie manualmente:
+    - Pressione `F1` para abrir a paleta de comandos.
+    - Digite e selecione a opção: **`Dev Containers: Reopen in Container`**.
 
-To run the tests, check your test coverage, and generate an HTML coverage report:
+> 💡 **Aguarde a construção:** Na primeira vez, o Docker irá baixar as imagens e construir o ambiente, o que pode levar alguns minutos. Nas próximas vezes, o processo será quase instantâneo.
 
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
+---
 
-#### Running tests with pytest
+### ⚡ Executando a Aplicação
 
-    $ pytest
+Com o ambiente rodando dentro do contêiner, você pode usar o terminal integrado do VS Code (`Ctrl + '` ou `Cmd + '`) para executar os comandos do Django.
 
-### Live reloading and Sass CSS compilation
+#### Rodando o servidor de desenvolvimento
 
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/2-local-development/developing-locally.html#using-webpack-or-gulp).
-
-### Email Server
-
-In development, it is often nice to be able to see emails that are being sent from your application. For that reason local SMTP server [Mailpit](https://github.com/axllent/mailpit) with a web interface is available as docker container.
-
-Container mailpit will start automatically when you will run all docker containers.
-Please check [cookiecutter-django Docker documentation](https://cookiecutter-django.readthedocs.io/en/latest/2-local-development/developing-locally-docker.html) for more details how to start all containers.
-
-With Mailpit running, to view messages that are sent by your application, open your browser and go to `http://127.0.0.1:8025`
-
-### Sentry
-
-Sentry is an error logging aggregator service. You can sign up for a free account at <https://sentry.io/signup/?code=cookiecutter> or download and host it yourself.
-The system is set up with reasonable defaults, including 404 logging and integration with the WSGI application.
-
-You must set the DSN url in production.
-
-## Deployment
-
-The following details how to deploy this application.
-
-### Docker
-
-See detailed [cookiecutter-django Docker documentation](https://cookiecutter-django.readthedocs.io/en/latest/3-deployment/deployment-with-docker.html).
+```bash
+python manage.py runserver 0.0.0.0:8001
