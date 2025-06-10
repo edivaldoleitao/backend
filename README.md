@@ -19,15 +19,7 @@ Antes de começar, garanta que você tenha instalado:
 
 ### ⚙️ Configuração Inicial (Apenas na primeira vez)
 
-O projeto precisa de um arquivo de configuração de ambiente chamado `.env`.
-
-1. **Crie o arquivo `.env`**: Copie o arquivo de exemplo `.env.example` que está na raiz do projeto. Você pode fazer isso pelo terminal:
-
-    ```bash
-    cp .env.example .env
-    ```
-
-2. **Ajuste as variáveis**: Abra o novo arquivo `.env` e, se necessário, ajuste as variáveis para a sua configuração local.
+O projeto precisa de uma pasta de configuração de ambiente chamado `.envs`, disponível no discord
 
 ---
 
