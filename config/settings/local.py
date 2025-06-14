@@ -4,6 +4,11 @@ from .base import INSTALLED_APPS
 from .base import MIDDLEWARE
 from .base import env
 
+from pathlib import Path
+
+env.read_env(str(Path(BASE_DIR / ".envs" / ".local" / ".django")))
+env.read_env(str(Path(BASE_DIR / ".envs" / ".local" / ".postgres")))
+
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
