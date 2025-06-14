@@ -10,6 +10,7 @@ class UserCategory(models.TextChoices):
     ESTUDO = 'estudo', 'Estudo'
 
 class User(AbstractUser):
+    username = None # pra não usar esse campo
     name = models.CharField(max_length=255, blank=True, null=True)
     
     email = models.EmailField(unique=True)

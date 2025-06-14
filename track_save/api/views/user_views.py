@@ -48,6 +48,12 @@ def create_user(request):
         # valida se é uma lista (evitar erro de tipo na gravação do dado no banco)
         if not isinstance(categories, list):
             return HttpResponseBadRequest('categories tem que ser uma lista.')
+        
+        # validação pra categorias inválidas
+        invalid_categories = [c for c in categories if c not in UserCategory.values]
+        if invalid_categories:
+            return HttpResponseBadRequest(f'Categorias inválidas: {invalid_categories}')
+
 
         # cria o usuário
         user = User.objects.create(
@@ -111,8 +117,9 @@ def get_all_users(request):
         })
 
     return JsonResponse(users_data, safe=False)
-    
-def update_user(request):
+
+@csrf_exempt
+def update_user(request, user_id):
     if request.method not in ['PUT', 'PATCH']:
         return HttpResponseNotAllowed(['PUT', 'PATCH'], 'Método não permitido!')
 
@@ -121,14 +128,7 @@ def update_user(request):
     except json.JSONDecodeError:
         return HttpResponseBadRequest('JSON inválido.')
 
-    user_id = data.get('id')
-
-    if not user_id:
-        return JsonResponse({
-            'status': 'error',
-            'message': 'O id precisa vir no body da requisição.'
-        }, status=400)
-
+    # busca o user pelo id
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
@@ -169,8 +169,8 @@ def update_user(request):
 # ainda falta confirmar como será o fluxo para envio do email de confirmação de redefinição
 # da senha
 @csrf_exempt
-def update_password(request):
-    if request.method != 'POST':
+def update_password(request, user_id):
+    if request.method not in ['PUT', 'PATCH']:
         return JsonResponse({'status': 'error', 'message': 'Método não permitido'}, status=405)
 
     try:
@@ -178,18 +178,17 @@ def update_password(request):
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'JSON inválido'}, status=400)
 
-    email = data.get('email')
     nova_senha = data.get('nova_senha')
     confirmar_senha = data.get('confirmar_senha')
 
-    if not email or not nova_senha or not confirmar_senha:
+    if not nova_senha or not confirmar_senha:
         return JsonResponse({'status': 'error', 'message': 'Preencha todos os campos'}, status=400)
 
     if nova_senha != confirmar_senha:
         return JsonResponse({'status': 'error', 'message': 'As senhas precisam ser iguais'}, status=400)
 
     try:
-        user = User.objects.get(email=email)
+        user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Usuário não encontrado'}, status=404)
 
@@ -199,38 +198,21 @@ def update_password(request):
     return JsonResponse({'status': 'success', 'message': 'Senha redefinida com sucesso'})
 
 @csrf_exempt
-def delete_user(request):
-    if request.method != 'POST':
+def delete_user(request, user_id):
+    if request.method != 'DELETE':
         return JsonResponse({'status': 'error', 'message': 'Método não permitido'}, status=405)
 
     try:
-        data = json.loads(request.body)
-        email = data.get('email')
+        user = User.objects.get(id=user_id)
+        user.delete()
 
-        if not email:
-            return JsonResponse({
-                'status': 'error',
-                'message': 'O email precisa ser enviado no body da requisição.'
-            }, status=400)
+        return JsonResponse({
+            'status': 'success',
+            'message': f'Usuário deletado com sucesso!'
+        })
 
-        try:
-            user = User.objects.get(email=email)
-            user.delete()
-
-            return JsonResponse({
-                'status': 'success',
-                'message': f'Usuário deletado com sucesso!'
-            })
-
-        except User.DoesNotExist:
-            return JsonResponse({
-                'status': 'error',
-                'message': f'Usuário não encontrado.'
-            }, status=404)
-
-    except json.JSONDecodeError:
+    except User.DoesNotExist:
         return JsonResponse({
             'status': 'error',
-            'message': 'JSON inválido. Envie um JSON no formato {"email": "seu@email.com"}'
-        }, status=400)
-   
+            'message': f'Usuário não encontrado.'
+        }, status=404)
