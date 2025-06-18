@@ -6,8 +6,12 @@ from django.http import HttpResponseNotFound
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from api.controllers import user_controller
+from api.serielizers.login_serielizers import EmailLoginSerializer
 
 
 @require_GET
@@ -181,3 +185,11 @@ def delete_user(request, user_id):
 
     except user_controller.User.DoesNotExist:
         return HttpResponseNotFound("Usuário não encontrado")
+
+
+class EmailLoginView(APIView):
+    def post(self, request):
+        serializer = EmailLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            return Response(serializer.validated_data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

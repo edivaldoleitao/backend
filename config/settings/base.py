@@ -69,8 +69,17 @@ DJANGO_APPS = [
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
     "django.forms",
+    "rest_framework",
+    "rest_framework_simplejwt",
 ]
+
 THIRD_PARTY_APPS = ["crispy_forms", "crispy_bootstrap5", "corsheaders"]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
 
 LOCAL_APPS = [
     "track_save.api",

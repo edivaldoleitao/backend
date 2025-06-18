@@ -1,7 +1,10 @@
-from api.entities.user import User, UserCategory
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
+
+from api.entities.user import User
+from api.entities.user import UserCategory
+
 
 def get_categories():
     return [{"value": choice.value, "label": choice.label} for choice in UserCategory]
@@ -31,13 +34,17 @@ def create_user(name, email, password, categories):
         email=email,
         password=make_password(password),
         is_verified=False,
-        categories=categories
+        categories=categories,
     )
     return user
 
 
 def get_user_by_id(user_id):
     return User.objects.get(id=user_id)
+
+
+def get_user_by_email(user_email):
+    return User.objects.get(email=user_email)
 
 
 def get_all_users():
@@ -82,10 +89,13 @@ def delete_user(user_id):
     user.delete()
     return
 
+
 """
 Esboço de método. Pra funcionar precisam ser configuradas constantes em .envs/.local/.django,
 tanto pra teste local quando com gmail, fora implementar fluxo com token.
 """
+
+
 def recover_password(email):
     from django.core.mail import send_mail
 
@@ -100,12 +110,12 @@ def recover_password(email):
     link_redefinicao = f"http://localhost:8001/api/update_password/{user.id}"
 
     send_mail(
-        subject='Redefinição de senha da conta Track&Save',
-        message=f'Ao clicar no botão abaixo você será redirecionado(a) para o site e poderá redefinir sua senha. \
-                  Caso não tenha feito esta solicitação, basta ignorar este email. LINK TESTE: {link_redefinicao}',
-        from_email='tracksave@email.com',
+        subject="Redefinição de senha da conta Track&Save",
+        message=f"Ao clicar no botão abaixo você será redirecionado(a) para o site e poderá redefinir sua senha. \
+                  Caso não tenha feito esta solicitação, basta ignorar este email. LINK TESTE: {link_redefinicao}",
+        from_email="tracksave@email.com",
         recipient_list=[email],
         fail_silently=False,
     )
 
-    return {'message': 'Email enviado com sucesso'}
+    return {"message": "Email enviado com sucesso"}
