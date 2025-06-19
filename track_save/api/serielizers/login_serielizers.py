@@ -5,7 +5,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.controllers import user_controller
 
-
 class EmailLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)

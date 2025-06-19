@@ -57,7 +57,6 @@ def get_user_by_id(user_id):
 def get_user_by_email(user_email):
     return User.objects.get(email=user_email)
 
-
 def get_all_users():
     return User.objects.all()
 
@@ -138,6 +137,5 @@ def confirm_email(user_id):
 
         user.is_verified = True
         user.save()
-        print("Email confirmado com sucesso")
     except User.DoesNotExist():
         raise User.DoesNotExist("Esse id não pertence a nenhuma conta")
