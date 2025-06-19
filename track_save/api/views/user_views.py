@@ -193,5 +193,3 @@ def confirm_email(request, user_id):
         return JsonResponse(
             {"status": "success", "message": "Email do usuário verificado com sucesso"}
         )
-    except:
-        ...
