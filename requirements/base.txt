@@ -14,4 +14,4 @@ django-model-utils==5.0.0  # https://github.com/jazzband/django-model-utils
 django-crispy-forms==2.4  # https://github.com/django-crispy-forms/django-crispy-forms
 crispy-bootstrap5==2025.4  # https://github.com/django-crispy-forms/crispy-bootstrap5
 django-redis==5.4.0  # https://github.com/jazzband/django-redis
-corsheaders==4.7.0  #
+django-cors-headers==4.7.0
