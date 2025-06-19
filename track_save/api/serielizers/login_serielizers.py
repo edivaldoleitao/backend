@@ -23,6 +23,9 @@ class EmailLoginSerializer(serializers.Serializer):
         if not user:
             raise serializers.ValidationError("Email ou senha inválidos.")
 
+        if not user.is_verified:
+            raise serializers.ValidationError("E-mail ainda não confirmado.")
+
         refresh = RefreshToken.for_user(user)
         return {
             "access": str(refresh.access_token),
