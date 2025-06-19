@@ -181,3 +181,15 @@ def delete_user(request, user_id):
 
     except user_controller.User.DoesNotExist:
         return HttpResponseNotFound("Usuário não encontrado")
+
+
+@csrf_exempt
+def confirm_email(request, user_id):
+    if request.method != "GET":
+        return HttpResponseNotAllowed(["GET"])
+
+    try:
+        user_controller.confirm_email(user_id)
+        return JsonResponse(
+            {"status": "success", "message": "Email do usuário verificado com sucesso"}
+        )
