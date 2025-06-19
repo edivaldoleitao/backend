@@ -1,5 +1,8 @@
+import os
+
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
 from django.core.validators import validate_email
 
 from api.entities.user import User
@@ -36,6 +39,14 @@ def create_user(name, email, password, categories):
         is_verified=False,
         categories=categories,
     )
+
+    send_mail(
+        subject="Confirmação de email - Track&Save",
+        message=f"Obrigado por se cadastrar no Track&Save! Para confirmar o email clique no link abaixo. Link: http://locahost:8001/api/confirm_email/{user.id}/",
+        recipient_list=[email],
+        from_email=os.getenv("DEFAULT_FROM_EMAIL"),
+    )
+
     return user
 
 
@@ -97,8 +108,6 @@ tanto pra teste local quando com gmail, fora implementar fluxo com token.
 
 
 def recover_password(email):
-    from django.core.mail import send_mail
-
     if not email:
         raise ValueError("Informe o email!")
 
@@ -119,3 +128,16 @@ def recover_password(email):
     )
 
     return {"message": "Email enviado com sucesso"}
+
+
+def confirm_email(user_id):
+    if not user_id:
+        raise ValueError("Informe um id valido")
+    try:
+        user = User.objects.get(id=user_id)
+
+        user.is_verified = True
+        user.save()
+        print("Email confirmado com sucesso")
+    except User.DoesNotExist():
+        raise User.DoesNotExist("Esse id não pertence a nenhuma conta")

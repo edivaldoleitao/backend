@@ -19,4 +19,9 @@ urlpatterns = [
     path("delete_user/<int:user_id>/", user_views.delete_user, name="delete_user"),
     path("recover_password/", user_views.recover_password, name="recover_password"),
     path("login/", user_views.EmailLoginView.as_view(), name="email_login"),
+    path(
+        "confirm_email/<int:user_id>/",
+        user_views.confirm_email,
+        name="confirm_email",
+    ),
 ]
