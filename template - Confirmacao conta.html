@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirmação de Conta - Track & Save</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f2f4f8;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    
+    <div style="background-color: #004DFF; padding: 30px; text-align: center;">
+      <h1 style="color: #ffffff; margin-top: 20px;">Confirme sua conta</h1>
+    </div>
+
+    <div style="padding: 30px;">
+      <p style="font-size: 16px; color: #333;">Olá <strong>{{ user.name }}</strong>,</p>
+
+      <p style="font-size: 15px; color: #444;">
+        Estamos quase lá! Para começar a usar todos os recursos do <strong>Track & Save</strong>, confirme seu endereço de e-mail clicando no botão abaixo:
+      </p>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="{{ confirmation_link }}" style="background-color: #004DFF; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-size: 16px;">
+          Confirmar Conta
+        </a>
+      </div>
+
+      <p style="font-size: 14px; color: #666;">
+        Caso você não tenha criado esta conta, pode ignorar este e-mail.
+      </p>
+    </div>
+
+    <div style="background-color: #f0f2f5; padding: 20px; text-align: center; font-size: 13px; color: #999;">
+      &copy; 2025 Track & Save - Todos os direitos reservados.
+    </div>
+  </div>
+</body>
+</html>
