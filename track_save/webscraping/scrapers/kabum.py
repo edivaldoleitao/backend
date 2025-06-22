@@ -1,9 +1,11 @@
 from .scraper import Scraper
+from playwright.sync_api import Page, Locator
+import re
 
 class KabumScraper(Scraper):
 
-  def __init__(self, query: str):
-    self.query = query
+  def __init__(self, category: str):
+    self.category = category
 
   def run(self) -> list[dict]:
     results = []
@@ -12,7 +14,7 @@ class KabumScraper(Scraper):
 
     locInputBusca = page.locator("#inputBusca")
     self.wait_element(locInputBusca)
-    locInputBusca.fill(self.query)
+    locInputBusca.fill(self.category)
     locInputBusca.press("Enter")
 
     locBarraFiltro = page.locator("#Filter")
@@ -24,31 +26,55 @@ class KabumScraper(Scraper):
     locItens = page.locator("article.productCard")
     self.wait_element(locItens)
 
-    #for i in range(locItens.count()):
-    for i in range(3):
-      locItem = locItens.nth(i)
-      locNome   = locItem.locator("span.nameCard")
-      locPreco  = locItem.locator("span.priceCard")
-      locLink   = locItem.locator("a")
-      locImgURL = locItem.locator("img")
+    # for i in range(locItens.count()):
+    for i in range(2):
+      card = locItens.nth(i)
 
-      if self.element_visible(locNome) and self.element_visible(locPreco) and self.element_visible(locLink):
-        nome = locNome.inner_text().strip()
-        preco = locPreco.inner_text().strip()
-        link_href = locLink.get_attribute("href") if locLink.count() > 0 else ""
-        link = link_href.strip() if link_href else ""
-        img_src = locImgURL.get_attribute("src") if locImgURL.count() > 0 else ""
-        img_url = img_src.strip() if img_src else ""
+      card.click()
 
-        results.append({
-        "nome": nome,
-        "preco": preco,
-        "link": link,
-        "img_url": img_url
-        })
+      descriptionSection = page.locator("#description")
+      techInfoSection    = page.locator("#technicalInfoSection")
+      self.wait_elements(page, [descriptionSection, techInfoSection])
+
+      common_data = self.get_common_data(page, descriptionSection, techInfoSection)
+
+      product_data = {
+        **common_data,
+        "specific_info": {}
+      }
+
+      results.append(product_data)
+
+      page.go_back()
 
     browser.close()
     return results
+
+  def get_common_data(self, page: Page, descriptionSection: Locator, techInfoSection: Locator) -> dict:
+    price_raw   = page.locator("#blocoValores b.regularPrice").first.inner_text()
+    price_clean = re.sub(r"[^\d\.,]", "", price_raw)
+
+    brand_name = techInfoSection.locator("span:has-text('Marca')").first.inner_text()
+    brand      = re.search(r"Marca:\s*(.+)$", brand_name)
+
+    desc_title     = descriptionSection.locator("h3").first.inner_text()
+    desc_paragraph = descriptionSection.locator("h3 + p").first.inner_text().strip()
+
+    name  = descriptionSection.locator("h2").first.inner_text()
+    price = price_clean.replace(".", "").replace(",", ".")
+    url  = page.url
+    img_url = page.locator("#carouselDetails img").first.get_attribute("src")
+    brand = brand.group(1) if brand else ""
+    description = f"{desc_title}\n\n{desc_paragraph}"
+
+    return {
+      "name": name,
+      "price": price,
+      "url": url,
+      "img_url": img_url,
+      "brand": brand,
+      "description": description
+    }
 
 if __name__ == "__main__":
   # exemplo de uso
