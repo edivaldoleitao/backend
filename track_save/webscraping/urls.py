@@ -4,6 +4,5 @@ from .views import WebscrapingAPIView
 app_name = "webscraping"
 
 urlpatterns = [
-  # GET /webscraping/?site=kabum&query=...
-  path("", WebscrapingAPIView.as_view(), name="webscraping_api"),
+  path('scrape/', WebscrapingAPIView.run_scraper, name='api-run-scraper'),
 ]

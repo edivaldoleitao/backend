@@ -1,27 +1,56 @@
-from django.http import HttpResponseBadRequest
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
 from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from track_save.webscraping.webscraping_factory import get_scraper
+from track_save.webscraping.enums import Categories
 
 class WebscrapingAPIView(APIView):
-  """
-  GET /api/scrape/?site=kabum&query=placa+de+video
-  """
-  @require_GET
-  def get_all_by_scraper(request, user_id):
-    site  = request.query_params.get("site")
-    query = request.query_params.get("query")
-    if not site or not query:
-      return HttpResponseBadRequest("Parâmetros 'site' e 'query' são obrigatórios")
+  @api_view(['POST'])
+  def run_scraper(request):
+    """
+    Espera um JSON:
+      {
+        "name": "kabum",
+        "category": "GPU"
+      }
+    Retorna a lista de produtos já em JSON.
+    """
+    name     = request.data.get('name')
+    category = request.data.get('category')
 
+    if not name or not category:
+      return Response(
+      {'detail': 'Campos "name" e "category" são obrigatórios.'},
+      status=status.HTTP_400_BAD_REQUEST
+      )
+
+    # valida categoria
     try:
-      scraper = get_scraper(site, query=query)
-    except ValueError as e:
-      return JsonResponse({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+      cat_enum = Categories[category.upper()]
+    except KeyError:
+      return Response(
+      {'detail': f'Categoria "{category}" inválida.'},
+      status=status.HTTP_400_BAD_REQUEST
+      )
 
-    # roda o scraping
-    data = scraper.run()
-    return JsonResponse(data, safe=False, status=status.HTTP_200_OK)
+    # instancia o scraper
+    try:
+      scraper = get_scraper(name, category=cat_enum)
+    except ValueError as e:
+      return Response(
+      {'detail': str(e)},
+      status=status.HTTP_404_NOT_FOUND
+      )
+
+    # executa e captura erros
+    try:
+      data = scraper.run()
+    except Exception as e:
+      return Response(
+      {'detail': f'Erro no scraper: {e}'},
+      status=status.HTTP_500_INTERNAL_SERVER_ERROR
+      )
+
+    return Response(data, status=status.HTTP_200_OK)
