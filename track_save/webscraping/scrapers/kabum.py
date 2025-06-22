@@ -1,10 +1,11 @@
 from .scraper import Scraper
+from ..enums import Categories
 from playwright.sync_api import Page, Locator
 import re
 
 class KabumScraper(Scraper):
 
-  def __init__(self, category: str):
+  def __init__(self, category: Categories):
     self.category = category
 
   def run(self) -> list[dict]:
@@ -14,7 +15,9 @@ class KabumScraper(Scraper):
 
     locInputBusca = page.locator("#inputBusca")
     self.wait_element(locInputBusca)
-    locInputBusca.fill(self.category)
+
+    query = self.parse_category(self.category, is_query=True)
+    locInputBusca.fill(query)
     locInputBusca.press("Enter")
 
     locBarraFiltro = page.locator("#Filter")
@@ -26,8 +29,7 @@ class KabumScraper(Scraper):
     locItens = page.locator("article.productCard")
     self.wait_element(locItens)
 
-    # for i in range(locItens.count()):
-    for i in range(2):
+    for i in range(locItens.count()):
       card = locItens.nth(i)
 
       card.click()
@@ -36,11 +38,12 @@ class KabumScraper(Scraper):
       techInfoSection    = page.locator("#technicalInfoSection")
       self.wait_elements(page, [descriptionSection, techInfoSection])
 
-      common_data = self.get_common_data(page, descriptionSection, techInfoSection)
+      common_data   = self.get_common_data(page, descriptionSection, techInfoSection)
+      specific_info = self.get_specific_data(techInfoSection)
 
       product_data = {
         **common_data,
-        "specific_info": {}
+        "specific_info": specific_info
       }
 
       results.append(product_data)
@@ -76,9 +79,32 @@ class KabumScraper(Scraper):
       "description": description
     }
 
+  def get_specific_data(self, section: Locator) -> dict:
+    if self.category == Categories.GPU:
+      model_name = section.locator("span:has-text('Modelo')").first.inner_text()
+      model      = re.search(r"Modelo:\s*(.+)$", model_name)
+
+    #   vram_info = section.locator("span:has-text('Tamanho máximo da memória')").first.inner_text()
+    #   vram      = re.search(r"Tamanho máximo da memória:\s*(.+)$", vram_info)
+
+      # COMPLEMENTAR COM OUTRAS INFORMAÇÕES ESPECÍFICAS
+
+      specific_info = {
+        "model": model.group(1) if model else "",
+        "vram": "8GB GDDR6",
+        "chipset": "AMD",
+        "max_resolution": "1920x1080",
+        "output": "HDMI, DisplayPort",
+        "tech_support": "DirectX 12, OpenGL 4.6",
+      }
+
+      return specific_info
+
+    else:
+      return {}
+
 if __name__ == "__main__":
   # exemplo de uso
-  q = "placa de vídeo"
-  scraper = KabumScraper(q)
+  scraper = KabumScraper(category=Categories.GPU)
   resultados = scraper.run()
   print(resultados)
