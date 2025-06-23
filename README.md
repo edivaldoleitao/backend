@@ -43,3 +43,14 @@ Com o ambiente rodando dentro do contêiner, você pode usar o terminal integrad
 
 ```bash
 python manage.py runserver 0.0.0.0:8001
+```
+
+#### Aplicando migrations
+
+Rodar os comandos abaixo quando a aplicação não estiver rodando
+
+```bash
+python manage.py makemigrations (demonstra modificações a serem aplicadas no banco)
+
+python manage.py migrate (aplica as modificações)
+```
