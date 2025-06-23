@@ -42,7 +42,7 @@ def create_user(name, email, password, categories):
 
     send_mail(
         subject="Confirmação de email - Track&Save",
-        message=f"Obrigado por se cadastrar no Track&Save! Para confirmar o email clique no link abaixo. Link: http://locahost:8001/api/confirm_email/{user.id}/",
+        message=f"Obrigado por se cadastrar no Track&Save! Para confirmar o email clique no link abaixo. Link: http://localhost:8001/api/confirm_email/{user.id}/",
         recipient_list=[email],
         from_email=os.getenv("DEFAULT_FROM_EMAIL"),
     )

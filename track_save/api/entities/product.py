@@ -54,6 +54,25 @@ class ProductStore(models.Model):
 
 # TABELAS ESPECÍFICAS
 
+class Motherboard(models.Model):
+    prod = models.OneToOneField(Product, on_delete=models.CASCADE)
+    socket = models.CharField(max_length=50) 
+    chipset = models.CharField(max_length=100) 
+    form_type = models.CharField(max_length=50) # (atx, itx)
+    max_ram_capacity = models.IntegerField()
+    ram_type = models.CharField(max_length=10)
+    ram_slots = models.IntegerField()
+    pcie_slots = models.PositiveIntegerField()
+    sata_ports = models.IntegerField()
+    m2_slot = models.IntegerField()
+
+    class Meta:
+        app_label = "api"
+    
+    def __str__(self):
+        return f"Motherboard for {self.prod.name}"
+
+
 class Gpu(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
