@@ -17,3 +17,9 @@ django-redis==5.4.0  # https://github.com/jazzband/django-redis
 django-cors-headers==4.7.0  # https://github.com/adamchainz/django-cors-headers
 djangorestframework==3.16.0  # https://github.com/encode/django-rest-framework
 djangorestframework-simplejwt==5.5.0  # https://github.com/jazzband/djangorestframework-simplejwt
+
+
+# Playwright
+# ------------------------------------------------------------------------------
+playwright>=1.52.0
+pytest-playwright>=0.7.0

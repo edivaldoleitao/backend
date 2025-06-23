@@ -34,45 +34,48 @@ ENV BUILD_ENV=${BUILD_ENVIRONMENT}
 WORKDIR ${APP_HOME}
 
 
-# devcontainer dependencies and utils
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  sudo git bash-completion nano ssh
+# devcontainer dependencies and playwright requirements
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    build-essential libpq-dev sudo git bash-completion nano ssh \
+    wait-for-it gettext \
+    libglib2.0-0 libnss3 libnspr4 libdbus-1-3 \
+    libatk1.0-0 libatk-bridge2.0-0 libcups2 \
+    libxcb1 libxkbcommon0 libatspi2.0-0 libx11-6 \
+    libxcomposite1 libxdamage1 libxext6 libxfixes3 \
+    libxrandr2 libgbm1 libpango-1.0-0 libcairo2 \
+    libasound2 \
+  && rm -rf /var/lib/apt/lists/*
 
 # Create devcontainer user and add it to sudoers
 RUN groupadd --gid 1000 dev-user \
   && useradd --uid 1000 --gid dev-user --shell /bin/bash --create-home dev-user \
-  && echo dev-user ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/dev-user \
+  && echo "dev-user ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/dev-user \
   && chmod 0440 /etc/sudoers.d/dev-user
 
+# Install Python dependencies
+COPY --from=python-build-stage /usr/src/app/wheels /wheels
 
-# Install required system dependencies
-RUN apt-get update && apt-get install --no-install-recommends -y \
-  # psycopg dependencies
-  libpq-dev \
-  wait-for-it \
-  # Translations dependencies
-  gettext \
-  # cleaning up unused files
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+# Permissions for the wheels directory to dev-user
+RUN chown -R dev-user:dev-user /wheels
 
-# All absolute dir copies ignore workdir instruction. All relative dir copies are wrt to the workdir instruction
-# copy python dependency wheels from python-build-stage
-COPY --from=python-build-stage /usr/src/app/wheels /wheels/
+# Install Python dependencies from wheels
+RUN pip install --no-cache-dir --upgrade pip \
+ && pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
+ && rm -rf /wheels
 
-# use wheels to install python dependencies
-RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
-  && rm -rf /wheels/
-
+# Copy entrypoint and start scripts
 COPY ./compose/production/django/entrypoint /entrypoint
-RUN sed -i 's/\r$//g' /entrypoint
-RUN chmod +x /entrypoint
+COPY ./compose/local/django/start      /start
+RUN sed -i 's/\r$//g' /entrypoint /start \
+  && chmod +x /entrypoint /start
 
-COPY ./compose/local/django/start /start
-RUN sed -i 's/\r$//g' /start
-RUN chmod +x /start
+# Set the user to dev-user
+USER dev-user
 
-
+# Install playwright and playwright browsers
+RUN pip install --no-cache-dir pytest-playwright playwright \
+  && python -m playwright install --with-deps
 
 # copy application code to WORKDIR
 COPY . ${APP_HOME}
