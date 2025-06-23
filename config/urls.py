@@ -6,7 +6,7 @@ from django.urls import path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
-    path("chatbot/", include("chatbot.urls")),
+    path("webscraping/", include("webscraping.urls")),
 ]
 
 if settings.DEBUG:
