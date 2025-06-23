@@ -18,8 +18,13 @@ django-cors-headers==4.7.0  # https://github.com/adamchainz/django-cors-headers
 djangorestframework==3.16.0  # https://github.com/encode/django-rest-framework
 djangorestframework-simplejwt==5.5.0  # https://github.com/jazzband/djangorestframework-simplejwt
 
-
 # Playwright
 # ------------------------------------------------------------------------------
 playwright>=1.52.0
 pytest-playwright>=0.7.0
+
+#Scrapy
+# -------------------------------------------------------------------------------
+scrapy==2.13.0
+scrapy-fake-useragent==1.4.4
+
