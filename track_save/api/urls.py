@@ -4,6 +4,7 @@ from .views import product_views
 
 # from .views.user_views import create_user, get_categories, get_user
 from .views import user_views
+from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path("create_user/", user_views.create_user, name="create_user"),
@@ -19,6 +20,8 @@ urlpatterns = [
     path("delete_user/<int:user_id>/", user_views.delete_user, name="delete_user"),
     path("recover_password/", user_views.recover_password, name="recover_password"),
     path("login/", user_views.EmailLoginView.as_view(), name="email_login"),
+    path('users/me/', user_views.CurrentUserView.as_view(), name='current_user'),
+    path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path(
         "confirm_email/<int:user_id>/",
         user_views.confirm_email,

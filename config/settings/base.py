@@ -3,6 +3,8 @@
 
 from pathlib import Path
 
+from datetime import timedelta
+
 import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -79,6 +81,12 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     )
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "BLACKLIST_AFTER_ROTATION": True, # Opcional: invalida o refresh token antigo
 }
 
 LOCAL_APPS = [
