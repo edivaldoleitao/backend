@@ -33,18 +33,6 @@ class User(AbstractUser):
         return self.email
     
 
-class UserHistory(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    created_at = models.DateField()
-
-    class Meta:
-        app_label = 'api' 
-
-    def __str__(self):
-        return f"{self.user.email} viewed {self.product.name}"
-
-
 class UserSpecification(models.Model):
     user_id = models.OneToOneField(User, on_delete=models.CASCADE)    
     cpu = models.CharField(max_length=100)

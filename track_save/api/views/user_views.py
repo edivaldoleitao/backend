@@ -53,10 +53,8 @@ def create_user(request):
     except Exception as e:
         return HttpResponseBadRequest(str(e))
 
-
+@require_GET
 def get_user_id(request, user_id):
-    if request.method != "GET":
-        return HttpResponseNotAllowed(["GET"])
 
     try:
         user = user_controller.get_user_by_id(user_id)
@@ -75,10 +73,8 @@ def get_user_id(request, user_id):
     except user_controller.User.DoesNotExist:
         return HttpResponseNotFound("Usuário não encontrado")
 
-
+@require_GET
 def get_all_users(request):
-    if request.method != "GET":
-        return HttpResponseNotAllowed(["GET"])
 
     users = user_controller.get_all_users()
 

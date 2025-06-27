@@ -91,6 +91,7 @@ SIMPLE_JWT = {
 
 LOCAL_APPS = [
     "track_save.api",
+    "track_save.chatbot",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
