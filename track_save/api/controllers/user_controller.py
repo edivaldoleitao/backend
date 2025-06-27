@@ -57,6 +57,7 @@ def get_user_by_id(user_id):
 def get_user_by_email(user_email):
     return User.objects.get(email=user_email)
 
+
 def get_all_users():
     return User.objects.all()
 
@@ -97,7 +98,7 @@ def update_password(user_id, nova_senha, confirmar_senha):
 def delete_user(user_id):
     user = User.objects.get(id=user_id)
     user.delete()
-    return
+    
 
 
 """
@@ -121,9 +122,8 @@ def recover_password(email):
         subject="Redefinição de senha da conta Track&Save",
         message=f"Ao clicar no botão abaixo você será redirecionado(a) para o site e poderá redefinir sua senha. \
                   Caso não tenha feito esta solicitação, basta ignorar este email. LINK TESTE: {link_redefinicao}",
-        from_email="tracksave@email.com",
+        from_email=os.getenv("DEFAULT_FROM_EMAIL"),
         recipient_list=[email],
-        fail_silently=False,
     )
 
     return {"message": "Email enviado com sucesso"}

@@ -2,7 +2,6 @@ volumes:
   track_save_local_postgres_data: {}
   track_save_local_postgres_data_backups: {}
 
-
 services:
   django:
     build:
@@ -21,6 +20,7 @@ services:
       - ./.envs/.local/.api_key_gpt
     ports:
       - '8000:8000'
+      - '8001:8001'
     command: /start
 
   postgres:

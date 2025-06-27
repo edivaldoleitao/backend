@@ -1,10 +1,10 @@
 # ruff: noqa: E501
+from pathlib import Path
+
 from .base import *  # noqa: F403
 from .base import INSTALLED_APPS
 from .base import MIDDLEWARE
 from .base import env
-
-from pathlib import Path
 
 env.read_env(str(Path(BASE_DIR / ".envs" / ".local" / ".django")))
 env.read_env(str(Path(BASE_DIR / ".envs" / ".local" / ".postgres")))
@@ -36,7 +36,12 @@ CACHES = {
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-host
 EMAIL_HOST = env("EMAIL_HOST", default="mailpit")
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-port
-EMAIL_PORT = 1025
+EMAIL_PORT = env("EMAIL_PORT", default=1025)
+
+
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
@@ -65,7 +70,7 @@ if env("USE_DOCKER") == "yes":
     # ------------------------------------------------------------------------------
     # This is a custom setting for RunServerPlus to fix reloader issue in Windows docker environment
     # Werkzeug reloader type [auto, watchdog, or stat]
-    RUNSERVERPLUS_POLLER_RELOADER_TYPE = 'stat'
+    RUNSERVERPLUS_POLLER_RELOADER_TYPE = "stat"
     # If you have CPU and IO load issues, you can increase this poller interval e.g) 5
     RUNSERVERPLUS_POLLER_RELOADER_INTERVAL = 1
 
