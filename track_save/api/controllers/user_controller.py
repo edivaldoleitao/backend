@@ -98,7 +98,7 @@ def update_password(user_id, nova_senha, confirmar_senha):
 def delete_user(user_id):
     user = User.objects.get(id=user_id)
     user.delete()
-    return
+    
 
 
 """
