@@ -17,11 +17,11 @@ def create_product(request):
 
     try:
         data = json.loads(request.body)
-        
+
         # separa os atributos específicos
-        spec_fields = {key: value for key, value in data.items() if key 
+        spec_fields = {key: value for key, value in data.items() if key
                        not in ['name', 'category', 'description', 'image_url', 'brand']}
-        
+
         product = product_controller.create_product(
             name = data.get('name').lower(),
             category = data.get('category').lower(),
@@ -30,7 +30,7 @@ def create_product(request):
             brand = data.get("brand"),
             **spec_fields
         )
-        
+
         return JsonResponse(
             {
                 "id": product.id,
@@ -42,16 +42,39 @@ def create_product(request):
             },
             status=201
         )
-        
+
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")
     except Exception as e:
         return HttpResponseBadRequest(str(e))
-    
+
+@require_GET
+def search_products(request):
+    filters = {
+        key: request.GET.get(key)
+        for key in ['id', 'name', 'category', 'store', 'brand', 'price_min', 'price_max', 'rating_min']
+        if request.GET.get(key) is not None
+    }
+
+    if 'price_min' in filters:
+        filters['price_min'] = float(filters['price_min'])
+    if 'price_max' in filters:
+        filters['price_max'] = float(filters['price_max'])
+    if 'rating_min' in filters:
+        filters['rating_min'] = float(filters['rating_min'])
+
+    try:
+        result = product_controller.search_products(filters)
+        return JsonResponse(result, safe=not isinstance(result, list), status=200)
+    except ValueError as e:
+        return HttpResponseNotFound(str(e))
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+
 # buscar produto pelo id
 @require_GET
 def get_product_id(request, product_id):
-    
+
     try:
         product = product_controller.get_product_by_id(product_id)
 
@@ -66,7 +89,7 @@ def get_product_id(request, product_id):
 # buscar produto pelo nome
 @require_GET
 def get_product_name(request, product_name):
-    
+
     try:
         product = product_controller.get_product_by_name(product_name)
 
@@ -81,10 +104,10 @@ def get_product_name(request, product_name):
 # retorna todos os produtos daquela categoria
 @require_GET
 def get_product_category(request, product_category):
-    
+
     try:
         products = product_controller.get_product_by_category(product_category)
-        
+
         if not products:
             return HttpResponseNotFound("Nenhum produto encontrado nesta categoria")
 
@@ -98,10 +121,10 @@ def get_product_category(request, product_category):
 # retorna todos os produtos do banco
 @require_GET
 def get_products(request):
-    
+
     try:
         products = product_controller.get_all_products()
-        
+
         if not products:
             return HttpResponseNotFound("Nenhum pproduto cadastrado")
 
@@ -111,18 +134,18 @@ def get_products(request):
         return HttpResponseBadRequest(str(e))
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {str(e)}")
-    
+
 # update pelo id
 @csrf_exempt
 def update_product(request, product_id):
     if request.method not in ["POST", "PUT"]:
         return HttpResponseNotAllowed(["POST", "PUT"])
-    
+
     try:
         data = json.loads(request.body)
-        
+
         product = product_controller.update_product(product_id, **data)
-        
+
         return JsonResponse({
             "id": product.id,
             "name": product.name,
@@ -131,7 +154,7 @@ def update_product(request, product_id):
             "image_url": product.image_url,
             "brand": product.brand
         }, status=200)
-    
+
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
     except Product.DoesNotExist:
@@ -142,12 +165,12 @@ def update_product(request, product_id):
 # exclusão pelo id
 @csrf_exempt
 def delete_product(request, product_id):
-    
+
     try:
         message = product_controller.delete_product(product_id)
-        
+
         return JsonResponse({"message": message}, status=200)
-    
+
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
     except Product.DoesNotExist:

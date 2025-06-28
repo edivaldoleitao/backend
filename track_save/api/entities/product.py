@@ -9,11 +9,12 @@ class ProductCategory(models.TextChoices):
     MOTHERBOARD = 'motherboard', 'Motherboard'
     RAM = 'ram', 'Ram'
     GPU = 'gpu', 'Gpu'
-    
+
 
 class Store(models.Model):
     name = models.CharField(max_length=255)
     url_base = models.TextField()
+    is_sponsor = models.BooleanField()
 
     class Meta:
         app_label = "api"
@@ -31,7 +32,7 @@ class Product(models.Model):
     description = models.TextField()
     image_url = models.TextField()
     brand = models.CharField(max_length=100, default="Generic Brand")
-    
+
 
     class Meta:
         app_label = "api"
@@ -43,6 +44,7 @@ class Product(models.Model):
 class ProductStore(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    rating = models.FloatField() # avaliação média do produto
     url_product = models.TextField()
     available = models.BooleanField()
 
@@ -56,8 +58,8 @@ class ProductStore(models.Model):
 
 class Motherboard(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
-    socket = models.CharField(max_length=50) 
-    chipset = models.CharField(max_length=100) 
+    socket = models.CharField(max_length=50)
+    chipset = models.CharField(max_length=100)
     form_type = models.CharField(max_length=50) # (atx, itx)
     max_ram_capacity = models.IntegerField()
     ram_type = models.CharField(max_length=10)
@@ -68,7 +70,7 @@ class Motherboard(models.Model):
 
     class Meta:
         app_label = "api"
-    
+
     def __str__(self):
         return f"Motherboard for {self.prod.name}"
 
@@ -167,7 +169,7 @@ class Ram(models.Model):
 
     def __str__(self):
         return f"RAM for {self.prod.name}"
-    
+
 class Computer(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     is_notebook = models.BooleanField()

@@ -23,6 +23,7 @@ urlpatterns = [
         name="confirm_email",
     ),
     path("create_product/", product_views.create_product, name="create_product"),
+    path('products/search/', product_views.search_products, name='search_products'),
     path('get_product/<int:product_id>/', product_views.get_product_id, name='get_product'),
     path('get_products/', product_views.get_products, name='get_products'),
     path('get_product_name/<str:product_name>/', product_views.get_product_name, name='get_product'),
