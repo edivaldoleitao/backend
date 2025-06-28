@@ -3,6 +3,9 @@ from api.entities.user import Product
 from api.entities.product import ProductCategory
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from api.entities.product import ProductStore
+from api.entities.product import Product
+from api.entities.product import Store
 
 # no fim do código tem um exemplo do uso dessa função
 def create_product(name, category, description, image_url, brand, **spec_fields):
@@ -127,7 +130,6 @@ def get_product_by_id(product_id):
         product = Product.objects.get(id=product_id)
         
         product_data = {
-            "id": product.id,
             "name": product.name,
             "category": product.category,
             "description": product.description,
@@ -229,7 +231,6 @@ def get_product_by_name(product_name):
         product = Product.objects.get(name=product_name)
 
         product_data = {
-            "id": product.id,
             "name": product.name,
             "category": product.category,
             "description": product.description,
@@ -338,7 +339,6 @@ def get_product_by_category(product_category):
         for product in products:
             
             product_data = {
-                "id": product.id,
                 "name": product.name,
                 "category": product.category,
                 "description": product.description,
@@ -447,7 +447,6 @@ def get_all_products():
         for product in products:
             
             product_data = {
-                "id": product.id,
                 "name": product.name,
                 "category": product.category,
                 "description": product.description,
@@ -664,3 +663,92 @@ def delete_product(product_id):
         **data  # Passa os campos específicos de categoria
     )
     """
+
+def create_product_store(product_id, store_id, url_product, available):
+    """
+    Cria um novo ProductStore.
+    Raises:
+      ValueError: se faltar algum campo obrigatório.
+      Product.DoesNotExist / Store.DoesNotExist: se product_id ou store_id não existirem.
+    """
+    # validação básica
+    if not all([product_id, store_id, url_product]) or available is None:
+        raise ValueError("Todos os campos (product_id, store_id, url_product, available) são obrigatórios.")
+
+    # busca as entidades relacionadas
+    product = Product.objects.get(id=product_id)
+    store = Store.objects.get(id=store_id)
+
+    # cria e retorna
+    ps = ProductStore.objects.create(
+        product=product,
+        store=store,
+        url_product=url_product,
+        available=available
+    )
+    return ps
+
+
+def get_all_product_stores():
+    """
+    Retorna lista de dicts com todos os ProductStore.
+    """
+    lst = []
+    for ps in ProductStore.objects.select_related("product", "store").all():
+        lst.append({
+            "product":    ps.product.id,
+            "store":      ps.store.id,
+            "url_product": ps.url_product,
+            "available":  ps.available,
+        })
+    return lst
+
+
+def get_product_store_by_id(product_store_id):
+    """
+    Retorna dict com os dados do ProductStore solicitado.
+    Raises:
+      ProductStore.DoesNotExist se não existir.
+    """
+    ps = ProductStore.objects.get(id=product_store_id)
+    return {
+        "product":     ps.product.id,
+        "store":       ps.store.id,
+        "url_product": ps.url_product,
+        "available":   ps.available,
+    }
+
+
+def update_product_store(product_store_id, **data):
+    """
+    Atualiza campos de um ProductStore existente.
+    Campos aceitos em data: product_id, store_id, url_product, available.
+    Raises:
+      ProductStore.DoesNotExist se não existir.
+      Product.DoesNotExist / Store.DoesNotExist se IDs inválidos.
+    """
+    ps = ProductStore.objects.get(id=product_store_id)
+
+    if "product_id" in data:
+        ps.product = Product.objects.get(id=data["product_id"])
+    if "store_id" in data:
+        ps.store = Store.objects.get(id=data["store_id"])
+    if "url_product" in data:
+        ps.url_product = data["url_product"]
+    if "available" in data:
+        ps.available = data["available"]
+
+    ps.save()
+    return ps
+
+
+def delete_product_store(product_store_id):
+    """
+    Exclui o ProductStore indicado.
+    Raises:
+      ProductStore.DoesNotExist se não existir.
+    Returns mensagem de confirmação.
+    """
+    ps = ProductStore.objects.get(id=product_store_id)
+    ps.delete()
+    return "ProductStore excluído com sucesso."
