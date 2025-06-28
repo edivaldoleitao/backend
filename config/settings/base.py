@@ -1,9 +1,8 @@
 # ruff: noqa: ERA001, E501
 """Base settings to build other settings files upon."""
 
-from pathlib import Path
-
 from datetime import timedelta
+from pathlib import Path
 
 import environ
 
@@ -84,9 +83,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "BLACKLIST_AFTER_ROTATION": True, # Opcional: invalida o refresh token antigo
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
 }
 
 LOCAL_APPS = [
