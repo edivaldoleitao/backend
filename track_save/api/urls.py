@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .views import price_views
 from .views import product_views
 from .views import user_views
 
@@ -49,5 +50,41 @@ urlpatterns = [
         "delete_product/<int:product_id>/",
         product_views.delete_product,
         name="delete_product",
+    ),
+    path(
+        "product_stores/", product_views.list_product_stores, name="list_product_stores"
+    ),
+    path(
+        "product_stores/create/",
+        product_views.create_product_store,
+        name="create_product_store",
+    ),
+    path(
+        "product_stores/<int:product_store_id>/",
+        product_views.get_product_store_by_id,
+        name="get_product_store",
+    ),
+    path(
+        "product_stores/update/<int:product_store_id>/",
+        product_views.update_product_store,
+        name="update_product_store",
+    ),
+    path(
+        "product_stores/delete/<int:product_store_id>/",
+        product_views.delete_product_store,
+        name="delete_product_store",
+    ),
+    path("prices/", price_views.list_prices, name="list_prices"),
+    path("prices/create/", price_views.create_price_view, name="create_price"),
+    path("prices/<int:price_id>/", price_views.get_price, name="get_price"),
+    path(
+        "prices/update/<int:price_id>/",
+        price_views.update_price_view,
+        name="update_price",
+    ),
+    path(
+        "prices/delete/<int:price_id>/",
+        price_views.delete_price_view,
+        name="delete_price",
     ),
 ]
