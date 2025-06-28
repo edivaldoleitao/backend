@@ -9,6 +9,7 @@ class ProductCategory(models.TextChoices):
     MOTHERBOARD = 'motherboard', 'Motherboard'
     RAM = 'ram', 'Ram'
     GPU = 'gpu', 'Gpu'
+    CPU = 'cpu', 'Cpu'
     
 
 class Store(models.Model):
