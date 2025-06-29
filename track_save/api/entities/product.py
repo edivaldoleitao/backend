@@ -10,7 +10,7 @@ class ProductCategory(models.TextChoices):
     RAM = 'ram', 'Ram'
     GPU = 'gpu', 'Gpu'
     CPU = 'cpu', 'Cpu'
-    
+
 
 class Store(models.Model):
     name = models.CharField(max_length=255)
@@ -32,7 +32,7 @@ class Product(models.Model):
     description = models.TextField()
     image_url = models.TextField()
     brand = models.CharField(max_length=100, default="Generic Brand")
-    
+
 
     class Meta:
         app_label = "api"
@@ -57,8 +57,8 @@ class ProductStore(models.Model):
 
 class Motherboard(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
-    socket = models.CharField(max_length=50) 
-    chipset = models.CharField(max_length=100) 
+    socket = models.CharField(max_length=50)
+    chipset = models.CharField(max_length=100)
     form_type = models.CharField(max_length=50) # (atx, itx)
     max_ram_capacity = models.IntegerField()
     ram_type = models.CharField(max_length=10)
@@ -69,7 +69,7 @@ class Motherboard(models.Model):
 
     class Meta:
         app_label = "api"
-    
+
     def __str__(self):
         return f"Motherboard for {self.prod.name}"
 
@@ -168,7 +168,7 @@ class Ram(models.Model):
 
     def __str__(self):
         return f"RAM for {self.prod.name}"
-    
+
 class Computer(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     is_notebook = models.BooleanField()
@@ -189,4 +189,4 @@ class Computer(models.Model):
         app_label = "api"
 
     def __str__(self):
-        return f"{self.product.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
+        return f"{self.prod.name} ({'Notebook' if self.is_notebook else 'Desktop'})"

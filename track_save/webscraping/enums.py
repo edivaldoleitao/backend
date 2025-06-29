@@ -1,9 +1,25 @@
 from enum import Enum
 
 class Categories(Enum):
-  GPU = "placa de vídeo"
-  CPU = "processador"
-  RAM = "memória RAM"
-  MOUSE = "mouse"
-  KEYBOARD = "teclado"
-  MONITOR = "monitor"
+  GPU = ("placa de vídeo", "https://www.kabum.com.br/hardware/placa-de-video-vga")
+  CPU = ("processador", "https://www.kabum.com.br/hardware/processadores")
+  RAM = ("memória RAM", "https://www.kabum.com.br/hardware/memoria-ram")
+  MOTHERBOARD = ("placa mãe", "https://www.kabum.com.br/hardware/placa-mae")
+  MOUSE = ("mouse", "https://www.kabum.com.br/perifericos/-mouse-gamer")
+  KEYBOARD = ("teclado", "https://www.kabum.com.br/perifericos/teclado-gamer")
+  MONITOR = ("monitor", "https://www.kabum.com.br/computadores/monitores")
+  COMPUTER = ("computador", "https://www.kabum.com.br/computadores/pc", "https://www.kabum.com.br/computadores/notebooks")
+
+  @property
+  def query(self):
+    return self.value[0]
+
+  @property
+  def url(self):
+    return self.value[1]
+
+  @property
+  def url_2(self):
+    if len(self.value) > 2:
+      return self.value[2]
+    return None
