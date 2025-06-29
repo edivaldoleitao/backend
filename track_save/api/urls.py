@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import product_views, user_views, price_views
+from .views import product_views, user_views, price_views, list_views
 
 
 urlpatterns = [
@@ -39,4 +39,9 @@ urlpatterns = [
     path('prices/<int:price_id>/', price_views.get_price,          name='get_price'),
     path('prices/update/<int:price_id>/', price_views.update_price_view, name='update_price'),
     path('prices/delete/<int:price_id>/', price_views.delete_price_view, name='delete_price'),
+    path('favorites/', list_views.list_favorites_view,  name='list_favorites'),
+    path('favorites/create/', list_views.create_favorite_view, name='create_favorite'),
+    path('favorites/<int:fav_id>/', list_views.get_favorite_view,    name='get_favorite'),
+    path('favorites/update/<int:fav_id>/',list_views.update_favorite_view, name='update_favorite'),
+    path('favorites/delete/<int:fav_id>/',list_views.delete_favorite_view, name='delete_favorite'),
 ]
