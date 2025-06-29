@@ -43,11 +43,10 @@ class KabumScraper(Scraper):
       }
 
       results.append(product_data)
-      print(f"Produto {i + 1} capturado: {product_data['name']}")
-      print("URL:", product_data["url"])
-    #   print("Product Data:", product_data)
-      print("Vram:", product_data.get("specific_info", {}).get("vram", "Unknown"))
-      print("=" * 50 + "\n")
+      # print(f"Produto {i + 1} capturado: {product_data['name']}")
+      # print("URL:", product_data["url"])
+      print("Product Data:", product_data)
+      # print("=" * 50 + "\n")
 
       page.go_back()
 
@@ -76,14 +75,106 @@ class KabumScraper(Scraper):
     }
 
   def get_specific_data(self, section: Locator) -> dict:
-    if self.category == Categories.GPU:
+    if self.category == Categories.MOTHERBOARD:
+      specific_info = {
+        "socket": "AM4/AM5/LGA1200",
+        "model": self.get_model(section),
+        "chipset": "AMD/NVIDIA",
+        "form_type": "ATX/ITX",
+        "max_ram_capacity": "64GB",
+        "ram_type": "DDR4/DDR5",
+        "ram_slots": "4",
+        "pcie_slots": "2",
+        "sata_ports": "6",
+        "m2_slot": "1",
+      }
+
+      return specific_info
+
+    elif self.category == Categories.GPU:
       specific_info = {
         "model": self.get_model(section),
         "vram": self.get_vram(section),
-        "chipset": "AMD",
+        "chipset": "AMD/NVIDIA",
         "max_resolution": "1920x1080",
         "output": "HDMI, DisplayPort",
         "tech_support": "DirectX 12, OpenGL 4.6",
+      }
+
+      return specific_info
+
+    elif self.category == Categories.CPU:
+      specific_info = {
+        "model": self.get_model(section),
+        "integrated_video": "Vega 8/12",
+        "socket": "AM4/AM5/LGA1200",
+        "core_number": "6/8/12",
+        "thread_number": "12/16/24",
+        "frequency": "3.0GHz",
+        "mem_speed": "3200MHz",
+      }
+
+      return specific_info
+
+    elif self.category == Categories.KEYBOARD:
+      specific_info = {
+        "model": self.get_model(section),
+        "key_type": "Mechanical/Membrane",
+        "layout": "ABNT2/ANSI",
+        "connectivity": "Wired/Wireless",
+        "dimension": "Standard/Compact",
+      }
+
+      return specific_info
+
+    elif self.category == Categories.MOUSE:
+      specific_info = {
+        "model": self.get_model(section),
+        "dpi": "8000/16000",
+        "connectivity": "Wired/Wireless",
+        "color": "Preto/Branco",
+      }
+
+      return specific_info
+
+    elif self.category == Categories.MONITOR:
+      specific_info = {
+        "model": self.get_model(section),
+        "inches": "24\"/27\"",
+        "panel_type": "IPS/TN",
+        "proportion": "16:9/21:9",
+        "resolution": "1920x1080/2560x1440",
+        "refresh_rate": "60Hz/144Hz",
+        "color_support": "16.7M/1.07B",
+        "output": "HDMI/DisplayPort/VGA",
+      }
+
+      return specific_info
+
+    elif self.category == Categories.RAM:
+      specific_info = {
+        "model": self.get_model(section),
+        "capacity": "8GB/16GB/32GB",
+        "ddr": "DDR4/DDR5",
+        "speed": "2400MHz/3200MHz",
+      }
+
+      return specific_info
+
+    elif self.category == Categories.COMPUTER:
+      specific_info = {
+        "is_notebook": False,
+        "motherboard": "B550/B550M",
+        "cpu": "AMD Ryzen 5/Intel Core i5",
+        "ram": "16GB DDR4",
+        "storage": "512GB SSD/1TB HDD",
+        "gpu": "AMD Radeon RX 6600/NVIDIA GeForce GTX 1660",
+        "inches": "24\"/27\"",
+        "panel_type": "IPS/TN",
+        "resolution": "1920x1080/2560x1440",
+        "refresh_rate": "60Hz/144Hz",
+        "color_support": "16.7M/1.07B",
+        "output": "HDMI/DisplayPort/VGA",
       }
 
       return specific_info

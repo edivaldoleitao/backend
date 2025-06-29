@@ -4,7 +4,7 @@ class Categories(Enum):
   GPU = ("placa de vídeo", "https://www.kabum.com.br/hardware/placa-de-video-vga")
   CPU = ("processador", "https://www.kabum.com.br/hardware/processadores")
   RAM = ("memória RAM", "https://www.kabum.com.br/hardware/memoria-ram")
-  MOTHERBOARD = ("placa mãe", "https://www.kabum.com.br/hardware/placa-mae")
+  MOTHERBOARD = ("placa mãe", "https://www.kabum.com.br/hardware/placas-mae")
   MOUSE = ("mouse", "https://www.kabum.com.br/perifericos/-mouse-gamer")
   KEYBOARD = ("teclado", "https://www.kabum.com.br/perifericos/teclado-gamer")
   MONITOR = ("monitor", "https://www.kabum.com.br/computadores/monitores")
