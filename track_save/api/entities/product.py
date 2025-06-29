@@ -9,6 +9,7 @@ class ProductCategory(models.TextChoices):
     MOTHERBOARD = 'motherboard', 'Motherboard'
     RAM = 'ram', 'Ram'
     GPU = 'gpu', 'Gpu'
+    STORAGE = 'storage', 'Storage'
 
 
 class Store(models.Model):
@@ -32,6 +33,8 @@ class Product(models.Model):
     description = models.TextField()
     image_url = models.TextField()
     brand = models.CharField(max_length=100, default="Generic Brand")
+    # identificador para evitar repetição de produtos, composto por nome + url do produto
+    hash = models.TextField()
 
 
     class Meta:
@@ -58,9 +61,10 @@ class ProductStore(models.Model):
 
 class Motherboard(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
+    model = models.CharField(max_length=255)
     socket = models.CharField(max_length=50)
     chipset = models.CharField(max_length=100)
-    form_type = models.CharField(max_length=50) # (atx, itx)
+    form_type = models.CharField(max_length=50) # atx, itx
     max_ram_capacity = models.IntegerField()
     ram_type = models.CharField(max_length=10)
     ram_slots = models.IntegerField()
@@ -126,7 +130,6 @@ class Cpu(models.Model):
 class Mouse(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    brand = models.CharField(max_length=255)
     dpi = models.IntegerField()
     connectivity = models.CharField(max_length=255)
     color = models.CharField(max_length=255)
@@ -158,7 +161,6 @@ class Monitor(models.Model):
 
 class Ram(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
-    brand = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
     capacity = models.FloatField()
     ddr = models.CharField(max_length=255)
