@@ -9,8 +9,9 @@ class ProductCategory(models.TextChoices):
     MOTHERBOARD = 'motherboard', 'Motherboard'
     RAM = 'ram', 'Ram'
     GPU = 'gpu', 'Gpu'
+    CPU = 'cpu', 'Cpu'
     STORAGE = 'storage', 'Storage'
-
+    
 
 class Store(models.Model):
     name = models.CharField(max_length=255)
