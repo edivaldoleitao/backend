@@ -46,7 +46,7 @@ class KabumScraper(Scraper):
       # print(f"Produto {i + 1} capturado: {product_data['name']}")
       # print("URL:", product_data["url"])
       print("Product Data:", product_data)
-      # print("=" * 50 + "\n")
+      print("=" * 50 + "\n")
 
       page.go_back()
 
@@ -59,6 +59,7 @@ class KabumScraper(Scraper):
       name_loc = page.locator("#container-purchase h1")
 
     name  = name_loc.inner_text().strip()
+    category = self.category.name.lower()
     price = self.get_price(priceSection)
     url  = page.url
     img_url = page.locator("#carouselDetails img").first.get_attribute("src")
@@ -67,6 +68,7 @@ class KabumScraper(Scraper):
 
     return {
       "name": name,
+      "category": category,
       "price": price,
       "url": url,
       "img_url": img_url,
