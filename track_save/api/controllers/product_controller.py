@@ -223,23 +223,27 @@ def search_products(filters: dict):
             base_query &= Q(category__iexact=filters['category'])
         if 'brand' in filters:
             base_query &= Q(brand__icontains=filters['brand'])
-        if 'rating_min' in filters:
-            base_query &= Q(rating__gte=filters['rating_min'])
 
-        # pegar preço mais recente do produto
+        # último preço coletado
         latest_price_subquery = Price.objects.filter(
             product_store__product=OuterRef('pk')
         ).order_by('-collection_date').values('value')[:1]
 
-        # filtro pra produto pertencente à loja patrocinadora
+        # rating máximo entre as lojas
+        rating_subquery = ProductStore.objects.filter(
+            product=OuterRef('pk')
+        ).order_by('-rating').values('rating')[:1]
+
+        # se o produto pertence a alguma loja patrocinada
         sponsor_subquery = Store.objects.filter(
             productstore__product=OuterRef('pk'),
             is_sponsor=True
         )
 
-        # filtrar produtos patrocinados
+        # produtos patrocinados
         sponsored_products = Product.objects.annotate(
             latest_price=Subquery(latest_price_subquery),
+            rating=Subquery(rating_subquery),
             is_sponsored=Exists(sponsor_subquery)
         ).filter(base_query, is_sponsored=True)
 
@@ -247,12 +251,15 @@ def search_products(filters: dict):
             sponsored_products = sponsored_products.filter(latest_price__gte=filters['price_min'])
         if 'price_max' in filters:
             sponsored_products = sponsored_products.filter(latest_price__lte=filters['price_max'])
+        if 'rating_min' in filters:
+            sponsored_products = sponsored_products.filter(rating__gte=filters['rating_min'])
 
         sponsored_products = sponsored_products.order_by('-rating')[:3]
 
-        # filtra restante dos produtos (não patrocinados)
+        # produtos não patrocinados
         non_sponsored_products = Product.objects.annotate(
             latest_price=Subquery(latest_price_subquery),
+            rating=Subquery(rating_subquery),
             is_sponsored=Exists(sponsor_subquery)
         ).filter(base_query, is_sponsored=False)
 
@@ -260,10 +267,12 @@ def search_products(filters: dict):
             non_sponsored_products = non_sponsored_products.filter(latest_price__gte=filters['price_min'])
         if 'price_max' in filters:
             non_sponsored_products = non_sponsored_products.filter(latest_price__lte=filters['price_max'])
+        if 'rating_min' in filters:
+            non_sponsored_products = non_sponsored_products.filter(rating__gte=filters['rating_min'])
 
         non_sponsored_products = non_sponsored_products.order_by('-rating')
 
-        # concatena os produtos
+        # concatenar resultados
         final_products = list(sponsored_products) + list(non_sponsored_products)
 
         if not final_products:
@@ -278,7 +287,7 @@ def search_products(filters: dict):
                 "description": product.description,
                 "image_url": product.image_url,
                 "brand": product.brand,
-                "rating": getattr(product, "rating", None),
+                "rating": product.rating,
                 "latest_price": product.latest_price,
                 "is_sponsored": product.is_sponsored,
                 "specific_details": get_specific_details(product)
@@ -289,6 +298,7 @@ def search_products(filters: dict):
 
     except Exception as e:
         raise ValueError(f"Erro ao buscar produto(s): {str(e)}")
+
 
 # pra pegar produto pelo id
 def get_product_by_id(product_id):

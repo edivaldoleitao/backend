@@ -15,7 +15,7 @@ class ProductCategory(models.TextChoices):
 class Store(models.Model):
     name = models.CharField(max_length=255)
     url_base = models.TextField()
-    is_sponsor = models.BooleanField()
+    is_sponsor = models.BooleanField(default=False)
 
     class Meta:
         app_label = "api"
@@ -34,7 +34,7 @@ class Product(models.Model):
     image_url = models.TextField()
     brand = models.CharField(max_length=100, default="Generic Brand")
     # identificador para evitar repetição de produtos, composto por nome + url do produto
-    hash = models.TextField()
+    hash = models.TextField(default="name+product_url")
 
 
     class Meta:
@@ -47,7 +47,7 @@ class Product(models.Model):
 class ProductStore(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
-    rating = models.FloatField() # avaliação média do produto
+    rating = models.FloatField(default=0.0) # avaliação média do produto
     url_product = models.TextField()
     available = models.BooleanField()
 
@@ -61,7 +61,7 @@ class ProductStore(models.Model):
 
 class Motherboard(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
-    model = models.CharField(max_length=255)
+    model = models.CharField(max_length=255, default="Generic Model")
     socket = models.CharField(max_length=50)
     chipset = models.CharField(max_length=100)
     form_type = models.CharField(max_length=50) # atx, itx
