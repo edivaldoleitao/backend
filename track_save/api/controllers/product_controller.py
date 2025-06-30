@@ -300,6 +300,7 @@ def get_specific_details(product):
 """
 exemplo de uso
 http://localhost:8001/api/products/search/?name=nvidia rtx 3080&brand=NVIDIA
+http://localhost:8001/api/products/search/?brand=NVIDIA&category=gpu&price_min=2000&price_max=3000&store=Kabum
 """
 def search_products(filters: dict):
     try:
@@ -313,6 +314,8 @@ def search_products(filters: dict):
             base_query &= Q(category__iexact=filters['category'])
         if 'brand' in filters:
             base_query &= Q(brand__icontains=filters['brand'])
+        if 'store' in filters:
+            base_query &= Q(productstore__store__name__icontains=filters['store'])
 
         # último preço coletado
         latest_price_subquery = Price.objects.filter(
@@ -370,6 +373,20 @@ def search_products(filters: dict):
 
         product_data_list = []
         for product in final_products:
+            # tenta buscar a entrada de preço mais recente com loja associada
+            latest_price_entry = Price.objects.filter(
+                product_store__product=product
+            ).order_by('-collection_date').select_related('product_store__store').first()
+
+            if latest_price_entry:
+                ps = latest_price_entry.product_store
+                store_name = ps.store.name
+                available = ps.available
+                collection_date = latest_price_entry.collection_date
+            else:
+                store_name = None
+                available = None
+
             product_data = {
                 "id": product.id,
                 "name": product.name,
@@ -380,9 +397,13 @@ def search_products(filters: dict):
                 "rating": product.rating,
                 "latest_price": product.latest_price,
                 "is_sponsored": product.is_sponsored,
+                "store": store_name,
+                "available": available,
+                "collection_date": collection_date,
                 "specific_details": get_specific_details(product)
             }
             product_data_list.append(product_data)
+
 
         return product_data_list if len(product_data_list) > 1 else product_data_list[0]
 
