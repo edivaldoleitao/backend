@@ -6,6 +6,71 @@ from django.db import transaction
 from django.db.models import Q, OuterRef, Subquery, Max, BooleanField, Exists
 from django.db.models.functions import Coalesce
 
+
+def create_store(name):
+    if Store.objects.filter(name=name).exists():
+        raise ValueError("Esta loja já foi cadastrada.")
+    
+    match name:
+        case "Kabum":
+            store = Store.objects.create(
+                    name = name,
+                    url_base = "https://www.kabum.com.br",
+                    is_sponsor = False
+                    )
+        case "Terabyte":
+            store = Store.objects.create(
+                    name = name,
+                    url_base = "https://www.terabyteshop.com.br",
+                    is_sponsor = False
+                    )
+        case "Amazon":
+            store = Store.objects.create(
+                    name = name,
+                    url_base = "https://www.amazon.com/?language=pt_BR",
+                    is_sponsor = False
+                    )
+            
+    return store
+
+def get_stores():
+    stores = Store.objects.all()
+    
+    if not stores:
+        raise ValueError(f"Não há lojas cadastradas")
+        
+    lst = []
+    for store in stores:
+        
+        store_data = {
+        "name": store.name,
+        "url_base": store.url_base,
+        "is_sponsor": store.is_sponsor
+        }
+        
+        lst.append(store_data)
+        
+    return lst
+        
+            
+def update_store(name, url=None, is_sponsor=None):
+    
+    store = Store.objects.get(name=name)
+    
+    if url:
+        store.url_base = url
+    if is_sponsor:
+        store.is_sponsor = is_sponsor
+    
+    return store
+
+def delete_store(name):
+    
+    stores = Store.objects.filter(name=name)
+    count, _ = stores.delete()
+    return f"{count} loja(s) com nome '{name}' foram deletadas com sucesso."
+    
+
 # no fim do código tem um exemplo do uso dessa função
 def create_product(name, category, description, image_url, brand, **spec_fields):
     if not all([name, category, description, image_url, brand]):
@@ -56,7 +121,7 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                     )
                 case "gpu":
                     Gpu.objects.create(
-                        prod_id=product.id,
+                        prod=product,
                         model=spec_fields.get("model"),
                         vram=spec_fields.get("vram"),
                         chipset=spec_fields.get("chipset"),
@@ -66,7 +131,7 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                     )
                 case "keyboard":
                     Keyboard.objects.create(
-                        prod_id=product.id,
+                        prod=product,
                         model=spec_fields.get("model"),
                         key_type=spec_fields.get("key_type"),
                         layout=spec_fields.get("layout"),
@@ -75,7 +140,7 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                     )
                 case "cpu":
                     Cpu.objects.create(
-                        prod_id=product.id,
+                        prod=product,
                         model=spec_fields.get("model"),
                         integrated_video=spec_fields.get("integrated_video"),
                         socket=spec_fields.get("socket"),
@@ -86,7 +151,7 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                     )
                 case "mouse":
                     Mouse.objects.create(
-                        prod_id=product.id,
+                        prod=product,
                         model=spec_fields.get("model"),
                         brand=spec_fields.get("brand"),
                         dpi=spec_fields.get("dpi"),
@@ -95,7 +160,7 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                     )
                 case "monitor":
                     Monitor.objects.create(
-                        prod_id=product.id,
+                        prod=product,
                         model=spec_fields.get("model"),
                         inches=spec_fields.get("inches"),
                         panel_type=spec_fields.get("panel_type"),
@@ -107,7 +172,7 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                     )
                 case "ram":
                     Ram.objects.create(
-                        prod_id=product.id,
+                        prod=product,
                         brand=spec_fields.get("brand"),
                         model=spec_fields.get("model"),
                         capacity=spec_fields.get("capacity"),
@@ -119,6 +184,31 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
 
         except Exception as e:
             raise ValueError(f"Erro ao criar produto na categoria específica: {str(e)}")
+        
+        # cria em ProductStore
+        store = Store.objects.get(name=spec_fields.get("store"))
+        
+        try:
+            product_store = ProductStore.objects.create(
+                product = product,
+                store = store,
+                url_product = spec_fields.get("url"),
+                available = spec_fields.get("available")
+            )
+            
+        except Exception as e:
+            raise ValueError(f"Erro ao inserir em ProductStore: {str(e)}")
+        
+        # cria em Price
+        try:
+            Price.objects.create(
+                product_store = product_store,
+                value = spec_fields.get("value"),
+                collection_date = spec_fields.get("collection_date"),
+            )
+            
+        except Exception as e:
+            raise ValueError(f"Erro ao inserir em Price: {str(e)}")
 
     return product
 
@@ -811,35 +901,3 @@ def delete_product(product_id):
     except Exception as e:
         raise ValueError(f"Erro ao excluir produto: {str(e)}")
 
-
-    """
-    data = {
-        "name": "Gaming Laptop",
-        "category": "computer",  # Categoria como "computer"
-        "description": "A high-end gaming laptop with powerful specs.",
-        "image_url": "https://example.com/laptop.jpg",
-        "brand": "BrandX",
-        # atributos específicos
-        "is_notebook": True,
-        "motherboard": "Model ABC",
-        "cpu": "Intel i7",
-        "ram": 16,
-        "storage": 512,
-        "gpu": "NVIDIA GTX 3060",
-        "inches": 15.6,
-        "panel_type": "IPS",
-        "resolution": "1920x1080",
-        "refresh_rate": "144Hz",
-        "color_support": "16.7M",
-        "output": "HDMI"
-    }
-
-    product = create_product(
-        name=data["name"],
-        category=data["category"],
-        description=data["description"],
-        image_url=data["image_url"],
-        brand=data["brand"],
-        **data  # Passa os campos específicos de categoria
-    )
-    """

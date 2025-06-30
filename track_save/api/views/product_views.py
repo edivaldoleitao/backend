@@ -6,9 +6,72 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 
-from api.entities.product import Product
+from api.entities.product import Product, Store
 from api.controllers import product_controller
 import json
+
+@csrf_exempt
+@require_POST
+def create_store(request):
+    try:
+        data = json.loads(request.body)
+        store = product_controller.create_store(name = data.get("name"))
+        return JsonResponse(
+            {
+                "name": store.name,
+                "url_base": store.url_base,
+                "is_sponsor": store.is_sponsor
+            },
+            status=201
+        )
+    
+    except ValueError as e:
+        return HttpResponseNotFound(str(e))
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+
+@csrf_exempt
+@require_GET
+def get_stores(request):
+    try:
+        data = product_controller.get_stores()
+        return JsonResponse(data, status=200, safe=False)
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+    
+@csrf_exempt
+def update_store(request, name):
+    if request.method not in ["POST", "PUT"]:
+        return HttpResponseNotAllowed(["POST", "PUT"])
+
+    try:
+        data = json.loads(request.body)
+
+        store = product_controller.update_store(name, **data)
+
+        return JsonResponse({
+            "name": store.name,
+            "url_base": store.url_base,
+            "is_sponsor": store.is_sponsor
+        }, status=200)
+    except Store.DoesNotExist:
+        return HttpResponseNotFound("Loja não encontrada")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+    
+@csrf_exempt
+def delete_store(request, name):
+    if request.method != "DELETE":
+        return HttpResponseNotAllowed(["DELETE"])
+    try:
+        msg = product_controller.delete_store(name=name)
+        return msg
+    
+    except Store.DoesNotExist:
+        return HttpResponseNotFound("Store não encontrada")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+    
 
 # criar produto
 @csrf_exempt
@@ -23,8 +86,8 @@ def create_product(request):
                        not in ['name', 'category', 'description', 'image_url', 'brand']}
 
         product = product_controller.create_product(
-            name = data.get('name').lower(),
-            category = data.get('category').lower(),
+            name = data.get("name").lower(),
+            category = data.get("category").lower(),
             description = data.get("description"),
             image_url = data.get("image_url"),
             brand = data.get("brand"),
