@@ -88,9 +88,27 @@ urlpatterns = [
         price_views.delete_price_view,
         name="delete_price",
     ),
-    path('favorites/', list_views.list_favorites_view,  name='list_favorites'),
-    path('favorites/create/', list_views.create_favorite_view, name='create_favorite'),
-    path('favorites/<int:fav_id>/', list_views.get_favorite_view,    name='get_favorite'),
-    path('favorites/update/<int:fav_id>/',list_views.update_favorite_view, name='update_favorite'),
-    path('favorites/delete/<int:fav_id>/',list_views.delete_favorite_view, name='delete_favorite'),
+    path("favorites/", list_views.list_favorites_view, name="list_favorites"),
+    path("favorites/create/", list_views.create_favorite_view, name="create_favorite"),
+    path("favorites/<int:fav_id>/", list_views.get_favorite_view, name="get_favorite"),
+    path(
+        "favorites/update/<int:fav_id>/",
+        list_views.update_favorite_view,
+        name="update_favorite",
+    ),
+    path(
+        "favorites/delete/<int:fav_id>/",
+        list_views.delete_favorite_view,
+        name="delete_favorite",
+    ),
+    path(
+        "prices-with-product-data/",
+        price_views.get_all_prices_with_product_data,
+        name="prices_with_product_data",
+    ),
+    path(
+        "products/search/",
+        product_views.search_products_with_price_view,
+        name="search_products_with_price",
+    ),
 ]

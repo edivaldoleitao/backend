@@ -83,3 +83,45 @@ def delete_price(price_id):
     p = Price.objects.get(id=price_id)
     p.delete()
     return "Price excluído com sucesso."
+
+
+def get_all_prices_with_product():
+    """
+    Retorna uma lista de produtos com preços, loja e info do produto.
+    """
+    data = []
+
+    prices = Price.objects.select_related(
+        "product_store__product", "product_store__store"
+    ).all()
+
+    for price in prices:
+        product = price.product_store.product
+        store = price.product_store.store
+
+        data.append(
+            {
+                "product_id": product.id,
+                "name": product.name,
+                "category": product.category,
+                "brand": product.brand,
+                "image_url": product.image_url,
+                "store": {
+                    "id": store.id,
+                    "name": store.name,
+                    "logo_url": store.logo_url if hasattr(store, "logo_url") else "",
+                },
+                "price": str(price.value),
+                "collection_date": price.collection_date.isoformat(),
+            }
+        )
+
+    return data
+
+
+def search_products_with_price_by_name(query: str):
+    """
+    Retorna uma lista de produtos com preço cujo nome contém a `query` (case-insensitive).
+    """
+    all_products = get_all_prices_with_product()
+    return [p for p in all_products if query.lower() in p["name"].lower()]
