@@ -7,7 +7,7 @@ class Scraper:
   def init_browser(self):
     """Inicializa o navegador com Playwright."""
     playwright = sync_playwright().start()
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch(headless=True)
     page = browser.new_page()
     return playwright, browser, page
 
@@ -114,8 +114,10 @@ class Scraper:
       except:
         current_timeout = current_timeout + 500
 
-  def parse_category(self, category: Categories, is_query=False) -> str:
+  def parse_category(self, category: Categories, is_query=False, get_url=False) -> str:
     if is_query:
-      return category.value # Se for GPU, retorna "placa de vídeo", se for CPU, retorna "processador", etc.
+      return category.query # Se for GPU, retorna "placa de vídeo", se for CPU, retorna "processador", etc.
+    elif get_url:
+      return category.url
     else:
       return category.name.lower() # Se for GPU, retorna "gpu", se for CPU, retorna "cpu", etc.

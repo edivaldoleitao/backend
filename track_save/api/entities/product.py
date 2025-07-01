@@ -11,7 +11,7 @@ class ProductCategory(models.TextChoices):
     GPU = 'gpu', 'Gpu'
     CPU = 'cpu', 'Cpu'
     STORAGE = 'storage', 'Storage'
-    
+
 
 class Store(models.Model):
     name = models.CharField(max_length=255)
@@ -201,4 +201,4 @@ class Computer(models.Model):
         app_label = "api"
 
     def __str__(self):
-        return f"{self.product.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
+        return f"{self.prod.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
