@@ -35,7 +35,7 @@ class Product(models.Model):
     image_url = models.TextField()
     brand = models.CharField(max_length=100, default="Generic Brand")
     # identificador para evitar repetição de produtos, composto por nome + url do produto
-    hash = models.TextField(default="name+product_url")
+    hash = models.TextField(editable=False, unique=True, blank=True, null=True)
 
 
     class Meta:
@@ -57,6 +57,14 @@ class ProductStore(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.store.name}"
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if not self.product.hash:
+            self.product.hash = self.product.name + self.url_product
+            self.product.save()
+
 
 # TABELAS ESPECÍFICAS
 

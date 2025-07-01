@@ -85,7 +85,7 @@ def create_product(request):
 
         # separa os atributos específicos
         spec_fields = {key: value for key, value in data.items() if key
-                       not in ['name', 'category', 'description', 'image_url', 'brand', "hash"]}
+                       not in ['name', 'category', 'description', 'image_url', 'brand']}
 
         product = product_controller.create_product(
             name = data.get("name"),
@@ -93,7 +93,6 @@ def create_product(request):
             description = data.get("description"),
             image_url = data.get("image_url"),
             brand = data.get("brand"),
-            hash = data.get("hash"),
             **spec_fields
         )
 
@@ -158,12 +157,9 @@ def get_product_id(request, product_id):
 def get_product_name(request, product_name):
 
     try:
-        product = product_controller.get_product_by_name(product_name)
+        products = product_controller.get_product_by_name(product_name)
 
-        return JsonResponse(
-            product,
-            status=200
-        )
+        return JsonResponse({"products": products}, safe=False, status=200)
 
     except product_controller.Product.DoesNotExist:
         return HttpResponseNotFound("Produto não encontrado")

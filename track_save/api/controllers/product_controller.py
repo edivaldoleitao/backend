@@ -74,7 +74,7 @@ def delete_store(name):
     
 
 # no fim do código tem um exemplo do uso dessa função
-def create_product(name, category, description, image_url, brand, hash, **spec_fields):
+def create_product(name, category, description, image_url, brand, **spec_fields):
     if not all([name, category, description, image_url, brand]):
         raise ValueError("Todos os campos são obrigatórios.")
 
@@ -93,7 +93,6 @@ def create_product(name, category, description, image_url, brand, hash, **spec_f
                 description=description,
                 image_url=image_url,
                 brand=brand,
-                hash=hash
             )
 
             if not product:
@@ -420,11 +419,13 @@ def get_product_by_id(product_id):
         product = Product.objects.get(id=product_id)
 
         product_data = {
+            "id": product.id,
             "name": product.name,
             "category": product.category,
             "description": product.description,
             "image_url": product.image_url,
-            "brand": product.brand
+            "brand": product.brand,
+            "hash": product.hash
         }
 
         match product.category:
@@ -516,104 +517,112 @@ def get_product_by_id(product_id):
         raise ValueError(f"Erro ao obter produto: {str(e)}")
 
 # pra pegar produto pelo nome
+
 def get_product_by_name(product_name):
     try:
-        product = Product.objects.get(name=product_name)
+        products = Product.objects.filter(name=product_name)
 
-        product_data = {
-            "name": product.name,
-            "category": product.category,
-            "description": product.description,
-            "image_url": product.image_url,
-            "brand": product.brand
-        }
+        if not products.exists():
+            raise ValueError(f"Não há produtos nomeados como: {product_name}")
 
-        match product.category:
-            case "computer":
-                computer = Computer.objects.get(prod=product)
-                product_data["specific_details"] = {
-                    "is_notebook": computer.is_notebook,
-                    "motherboard": computer.motherboard,
-                    "cpu": computer.cpu,
-                    "ram": computer.ram,
-                    "storage": computer.storage,
-                    "gpu": computer.gpu,
-                    "inches": computer.inches,
-                    "panel_type": computer.panel_type,
-                    "resolution": computer.resolution,
-                    "refresh_rate": computer.refresh_rate,
-                    "color_support": computer.color_support,
-                    "output": computer.output
-                }
-            case "gpu":
-                gpu = Gpu.objects.get(prod=product)
-                product_data["specific_details"] = {
-                    "model": gpu.model,
-                    "vram": gpu.vram,
-                    "chipset": gpu.chipset,
-                    "max_resolution": gpu.max_resolution,
-                    "output": gpu.output,
-                    "tech_support": gpu.tech_support
-                }
-            case "keyboard":
-                keyboard = Keyboard.objects.get(prod=product)
-                product_data["specific_details"] = {
-                    "model": keyboard.model,
-                    "key_type": keyboard.key_type,
-                    "layout": keyboard.layout,
-                    "connectivity": keyboard.connectivity,
-                    "dimension": keyboard.dimension
-                }
-            case "cpu":
-                cpu = Cpu.objects.get(prod=product)
-                product_data["specific_details"] = {
-                    "model": cpu.model,
-                    "integrated_video": cpu.integrated_video,
-                    "socket": cpu.socket,
-                    "core_number": cpu.core_number,
-                    "thread_number": cpu.thread_number,
-                    "frequency": cpu.frequency,
-                    "mem_speed": cpu.mem_speed
-                }
-            case "mouse":
-                mouse = Mouse.objects.get(prod=product)
-                product_data["specific_details"] = {
-                    "model": mouse.model,
-                    "brand": mouse.brand,
-                    "dpi": mouse.dpi,
-                    "connectivity": mouse.connectivity,
-                    "color": mouse.color
-                }
-            case "monitor":
-                monitor = Monitor.objects.get(prod=product)
-                product_data["specific_details"] = {
-                    "model": monitor.model,
-                    "inches": monitor.inches,
-                    "panel_type": monitor.panel_type,
-                    "proportion": monitor.proportion,
-                    "resolution": monitor.resolution,
-                    "refresh_rate": monitor.refresh_rate,
-                    "color_support": monitor.color_support,
-                    "output": monitor.output
-                }
-            case "ram":
-                ram = Ram.objects.get(prod=product)
-                product_data["specific_details"] = {
-                    "brand": ram.brand,
-                    "model": ram.model,
-                    "capacity": ram.capacity,
-                    "ddr": ram.ddr,
-                    "speed": ram.speed
-                }
-            case _:
-                product_data["name_error"] = "Produto com este nome não existe"
+        product_data_list = []
 
-        return product_data
+        for product in products:
 
-    except Product.DoesNotExist:
-        raise ValueError("Produto não encontrado.")
+            product_data = {
+                "id": product.id,
+                "name": product.name,
+                "category": product.category,
+                "description": product.description,
+                "image_url": product.image_url,
+                "brand": product.brand,
+                "hash": product.hash
+            }
+
+            match product.category:
+                case "computer":
+                    computer = Computer.objects.get(prod=product)
+                    product_data["specific_details"] = {
+                        "is_notebook": computer.is_notebook,
+                        "motherboard": computer.motherboard,
+                        "cpu": computer.cpu,
+                        "ram": computer.ram,
+                        "storage": computer.storage,
+                        "gpu": computer.gpu,
+                        "inches": computer.inches,
+                        "panel_type": computer.panel_type,
+                        "resolution": computer.resolution,
+                        "refresh_rate": computer.refresh_rate,
+                        "color_support": computer.color_support,
+                        "output": computer.output
+                    }
+                case "gpu":
+                    gpu = Gpu.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": gpu.model,
+                        "vram": gpu.vram,
+                        "chipset": gpu.chipset,
+                        "max_resolution": gpu.max_resolution,
+                        "output": gpu.output,
+                        "tech_support": gpu.tech_support
+                    }
+                case "keyboard":
+                    keyboard = Keyboard.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": keyboard.model,
+                        "key_type": keyboard.key_type,
+                        "layout": keyboard.layout,
+                        "connectivity": keyboard.connectivity,
+                        "dimension": keyboard.dimension
+                    }
+                case "cpu":
+                    cpu = Cpu.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": cpu.model,
+                        "integrated_video": cpu.integrated_video,
+                        "socket": cpu.socket,
+                        "core_number": cpu.core_number,
+                        "thread_number": cpu.thread_number,
+                        "frequency": cpu.frequency,
+                        "mem_speed": cpu.mem_speed
+                    }
+                case "mouse":
+                    mouse = Mouse.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": mouse.model,
+                        "brand": mouse.brand,
+                        "dpi": mouse.dpi,
+                        "connectivity": mouse.connectivity,
+                        "color": mouse.color
+                    }
+                case "monitor":
+                    monitor = Monitor.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": monitor.model,
+                        "inches": monitor.inches,
+                        "panel_type": monitor.panel_type,
+                        "proportion": monitor.proportion,
+                        "resolution": monitor.resolution,
+                        "refresh_rate": monitor.refresh_rate,
+                        "color_support": monitor.color_support,
+                        "output": monitor.output
+                    }
+                case "ram":
+                    ram = Ram.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "brand": ram.brand,
+                        "model": ram.model,
+                        "capacity": ram.capacity,
+                        "ddr": ram.ddr,
+                        "speed": ram.speed
+                    }
+
+            product_data_list.append(product_data)
+
+        return product_data_list
+
     except Exception as e:
-        raise ValueError(f"Erro ao obter produto: {str(e)}")
+        raise ValueError(f"Erro ao obter produtos: {str(e)}")
 
 # pra pegar produto pela categoria
 def get_product_by_category(product_category):
@@ -629,11 +638,13 @@ def get_product_by_category(product_category):
         for product in products:
 
             product_data = {
+                "id": product.id,
                 "name": product.name,
                 "category": product.category,
                 "description": product.description,
                 "image_url": product.image_url,
-                "brand": product.brand
+                "brand": product.brand,
+                "hash": product.hash
             }
 
             match product.category:
@@ -737,11 +748,13 @@ def get_all_products():
         for product in products:
 
             product_data = {
+                "id": product.id,
                 "name": product.name,
                 "category": product.category,
                 "description": product.description,
                 "image_url": product.image_url,
-                "brand": product.brand
+                "brand": product.brand,
+                "hash": product.hash
             }
 
             try:
