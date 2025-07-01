@@ -8,6 +8,8 @@ from django.views.decorators.http import require_POST
 
 from api.entities.product import Product, Store
 from api.controllers import product_controller
+from api.entities.product import ProductStore
+from api.controllers import product_controller
 import json
 
 @csrf_exempt
@@ -242,3 +244,109 @@ def delete_product(request, product_id):
         return HttpResponseNotFound("Produto não encontrado.")
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+    
+@csrf_exempt
+@require_POST
+def create_product_store(request):
+    try:
+        data = json.loads(request.body)
+        product_id = data.get("product_id")
+        store_id = data.get("store_id")
+        url_product = data.get("url_product")
+        available = data.get("available")
+
+        # chama o controller
+        ps = product_controller.create_product_store(
+            product_id=product_id,
+            store_id=store_id,
+            url_product=url_product,
+            available=available,
+        )
+
+        return JsonResponse({
+            "id": ps.id,
+            "product": ps.product.id,
+            "store": ps.store.id,
+            "url_product": ps.url_product,
+            "available": ps.available,
+        }, status=201)
+
+    except json.JSONDecodeError:
+        return HttpResponseBadRequest("JSON inválido")
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
+    except ProductStore.DoesNotExist:
+        return HttpResponseNotFound("ProductStore não encontrado")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+# listar todos os ProductStores
+@require_GET
+def list_product_stores(request):
+    try:
+        lst = product_controller.get_all_product_stores()
+        if not lst:
+            return HttpResponseNotFound("Nenhum ProductStore cadastrado")
+        return JsonResponse({"product_stores": lst}, safe=False, status=200)
+
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+# buscar ProductStore por ID
+@require_GET
+def get_product_store_by_id(request, product_store_id):
+    try:
+        data = product_controller.get_product_store_by_id(product_store_id)
+        return JsonResponse(data, status=200)
+
+    except product_controller.ProductStore.DoesNotExist:
+        return HttpResponseNotFound("ProductStore não encontrado")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+# update pelo ID
+@csrf_exempt
+def update_product_store(request, product_store_id):
+    if request.method not in ["POST", "PUT"]:
+        return HttpResponseNotAllowed(["POST", "PUT"])
+
+    try:
+        data = json.loads(request.body)
+        ps = product_controller.update_product_store(product_store_id, **data)
+        return JsonResponse({
+            "id": ps.id,
+            "product": ps.product.id,
+            "store": ps.store.id,
+            "url_product": ps.url_product,
+            "available": ps.available,
+        }, status=200)
+
+    except json.JSONDecodeError:
+        return HttpResponseBadRequest("JSON inválido")
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
+    except ProductStore.DoesNotExist:
+        return HttpResponseNotFound("ProductStore não encontrado")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+# exclusão pelo ID
+@csrf_exempt
+def delete_product_store(request, product_store_id):
+    if request.method != "DELETE":
+        return HttpResponseNotAllowed(["DELETE"])
+
+    try:
+        msg = product_controller.delete_product_store(product_store_id)
+        return JsonResponse({"message": msg}, status=200)
+
+    except ProductStore.DoesNotExist:
+        return HttpResponseNotFound("ProductStore não encontrado")
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")

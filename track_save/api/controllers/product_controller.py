@@ -420,7 +420,6 @@ def get_product_by_id(product_id):
         product = Product.objects.get(id=product_id)
 
         product_data = {
-            "id": product.id,
             "name": product.name,
             "category": product.category,
             "description": product.description,
@@ -522,7 +521,6 @@ def get_product_by_name(product_name):
         product = Product.objects.get(name=product_name)
 
         product_data = {
-            "id": product.id,
             "name": product.name,
             "category": product.category,
             "description": product.description,
@@ -631,7 +629,6 @@ def get_product_by_category(product_category):
         for product in products:
 
             product_data = {
-                "id": product.id,
                 "name": product.name,
                 "category": product.category,
                 "description": product.description,
@@ -740,7 +737,6 @@ def get_all_products():
         for product in products:
 
             product_data = {
-                "id": product.id,
                 "name": product.name,
                 "category": product.category,
                 "description": product.description,
