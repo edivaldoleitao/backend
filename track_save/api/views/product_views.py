@@ -83,14 +83,15 @@ def create_product(request):
 
         # separa os atributos específicos
         spec_fields = {key: value for key, value in data.items() if key
-                       not in ['name', 'category', 'description', 'image_url', 'brand']}
+                       not in ['name', 'category', 'description', 'image_url', 'brand', "hash"]}
 
         product = product_controller.create_product(
-            name = data.get("name").lower(),
+            name = data.get("name"),
             category = data.get("category").lower(),
             description = data.get("description"),
             image_url = data.get("image_url"),
             brand = data.get("brand"),
+            hash = data.get("hash"),
             **spec_fields
         )
 
@@ -101,7 +102,8 @@ def create_product(request):
                 "category": product.category,
                 "description": product.description,
                 "image_url": product.image_url,
-                "brand": product.brand
+                "brand": product.brand,
+                "hash": product.hash
             },
             status=201
         )

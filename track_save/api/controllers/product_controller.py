@@ -61,6 +61,8 @@ def update_store(name, url=None, is_sponsor=None):
         store.url_base = url
     if is_sponsor:
         store.is_sponsor = is_sponsor
+        
+    store.save()
     
     return store
 
@@ -72,11 +74,11 @@ def delete_store(name):
     
 
 # no fim do código tem um exemplo do uso dessa função
-def create_product(name, category, description, image_url, brand, **spec_fields):
+def create_product(name, category, description, image_url, brand, hash, **spec_fields):
     if not all([name, category, description, image_url, brand]):
         raise ValueError("Todos os campos são obrigatórios.")
 
-    if Product.objects.filter(name=name).exists():
+    if Product.objects.filter(hash=hash).exists():
         raise ValueError("Este produto já foi cadastrado.")
 
 
@@ -90,7 +92,8 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                 category=category,
                 description=description,
                 image_url=image_url,
-                brand=brand
+                brand=brand,
+                hash=hash
             )
 
             if not product:
@@ -828,6 +831,26 @@ def get_all_products():
 
             except Exception as e:
                 f"Erro ao carregar detalhes: {str(e)}"
+
+            latest_price_entry = Price.objects.filter(
+                product_store__product=product
+                ).order_by('-collection_date').select_related('product_store__store').first()
+
+            if latest_price_entry:
+                ps = latest_price_entry.product_store
+                product_data["store"] = ps.store.name
+                product_data["store_url_base"] = ps.store.url_base
+                product_data["rating"] = ps.rating
+                product_data["available"] = ps.available
+                product_data["value"] = float(latest_price_entry.value)
+                product_data["collection_date"] = latest_price_entry.collection_date
+            else:
+                product_data["store"] = None
+                product_data["store_url_base"] = None
+                product_data["rating"] = None
+                product_data["available"] = None
+                product_data["value"] = None
+                product_data["collection_date"] = None
 
             product_data_list.append(product_data)
 
