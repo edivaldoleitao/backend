@@ -6,12 +6,14 @@ from django.http import HttpResponseNotFound
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from rest_framework.permissions import IsAuthenticated
 from api.controllers import user_controller
 from api.serielizers.login_serielizers import EmailLoginSerializer
+from api.serielizers.user_data_serializers import CurrentUserSerializer
 
 
 @require_GET
@@ -36,7 +38,6 @@ def create_user(request):
 
         return JsonResponse(
             {
-                "id": user.id,
                 "name": user.name,
                 "email": user.email,
                 "created_at": user.created_at,
@@ -107,7 +108,6 @@ def update_user(request, user_id):
 
         return JsonResponse(
             {
-                "id": user.id,
                 "name": user.name,
                 "email": user.email,
                 "created_at": user.created_at,
@@ -132,7 +132,7 @@ def update_password(request, user_id):
     try:
         data = json.loads(request.body)
 
-        user = user_controller.update_password(
+        user_controller.update_password(
             user_id,
             nova_senha=data.get("nova_senha"),
             confirmar_senha=data.get("confirmar_senha"),
@@ -189,7 +189,16 @@ class EmailLoginView(APIView):
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+      
     
+class CurrentUserView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CurrentUserSerializer
+
+    def get_object(self):
+        return self.request.user
+      
+
 @csrf_exempt
 def confirm_email(request, user_id):
     if request.method != "GET":

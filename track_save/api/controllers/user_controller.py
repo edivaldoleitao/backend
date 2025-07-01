@@ -54,10 +54,6 @@ def get_user_by_id(user_id):
     return User.objects.get(id=user_id)
 
 
-def get_user_by_email(user_email):
-    return User.objects.get(email=user_email)
-
-
 def get_all_users():
     return User.objects.all()
 
@@ -98,13 +94,6 @@ def update_password(user_id, nova_senha, confirmar_senha):
 def delete_user(user_id):
     user = User.objects.get(id=user_id)
     user.delete()
-    
-
-
-"""
-Esboço de método. Pra funcionar precisam ser configuradas constantes em .envs/.local/.django,
-tanto pra teste local quando com gmail, fora implementar fluxo com token.
-"""
 
 
 def recover_password(email):
