@@ -1,21 +1,12 @@
 import json
 from datetime import datetime
-
-from django.http import HttpResponseBadRequest
-from django.http import HttpResponseNotAllowed
-from django.http import HttpResponseNotFound
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET
-from django.views.decorators.http import require_POST
-
+from django.views.decorators.http import require_GET, require_POST
 from api.entities.favorite import Favorite
-from track_save.api.controllers.favorite_controller import create_favorite
-from track_save.api.controllers.favorite_controller import delete_favorite
-from track_save.api.controllers.favorite_controller import get_all_favorites
-from track_save.api.controllers.favorite_controller import get_favorite_by_id
-from track_save.api.controllers.favorite_controller import update_favorite
-
+from track_save.api.controllers.favorite_controller import (create_favorite, delete_favorite,
+                                                            get_all_favorites, get_favorite_by_id,
+                                                            update_favorite)
 
 # POST /api/favorites/create/
 @csrf_exempt
