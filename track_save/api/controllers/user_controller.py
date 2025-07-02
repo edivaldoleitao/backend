@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
+from django.template.loader import render_to_string
 
 from api.entities.user import User
 from api.entities.user import UserCategory
@@ -40,11 +41,19 @@ def create_user(name, email, password, categories):
         categories=categories,
     )
 
+    context = {
+        "name": name,
+        "redirect_url": f"http://localhost:8001/api/confirm_email/{user.id}/",
+    }
+
+    html_message = render_to_string("emails/confirm_email.html", context)
+
     send_mail(
         subject="Confirmação de email - Track&Save",
         message=f"Obrigado por se cadastrar no Track&Save! Para confirmar o email clique no link abaixo. Link: http://localhost:8001/api/confirm_email/{user.id}/",
         recipient_list=[email],
         from_email=os.getenv("DEFAULT_FROM_EMAIL"),
+        html_message=html_message,
     )
 
     return user
@@ -107,12 +116,19 @@ def recover_password(email):
 
     link_redefinicao = f"http://localhost:8001/api/update_password/{user.id}"
 
+    context = {
+        "redirect_url": link_redefinicao,
+    }
+
+    html_message = render_to_string("emails/reset_password.html", context)
+
     send_mail(
         subject="Redefinição de senha da conta Track&Save",
         message=f"Ao clicar no botão abaixo você será redirecionado(a) para o site e poderá redefinir sua senha. \
                   Caso não tenha feito esta solicitação, basta ignorar este email. LINK TESTE: {link_redefinicao}",
         from_email=os.getenv("DEFAULT_FROM_EMAIL"),
         recipient_list=[email],
+        html_message=html_message,
     )
 
     return {"message": "Email enviado com sucesso"}

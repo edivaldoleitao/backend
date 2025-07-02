@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirmação de Conta</title>
+  <style>
+    body {
+      background-color: #f0f2f5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .card {
+      background-color: #2563eb;
+      color: white;
+      padding: 30px 25px;
+      border-radius: 10px;
+      width: 350px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .card img.logo {
+      width: 100px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      font-size: 14px;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .btn-confirmar {
+      background-color: #00c851;
+      color: white;
+      padding: 12px 0;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: inline-block;  
+    }
+
+    .btn-confirmar:hover {
+      background-color: #009b3e;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img class="logo" src="https://i.ibb.co/MDd0xDdx/xxxx-removebg-preview.png" alt="Logo Track&Save">
+
+    <h2>
+      {{ name }}, é hora de <br> confirmar sua conta!
+    </h2>
+    <p>
+      No Track&amp;Save você pode encontrar <br>
+      aquela peça tão desejada com o melhor <br>
+      preço disponível. <br>
+      Com apenas um clique será possível <br>
+      desfrutar de todas as nossas <br>
+      possibilidades!
+    </p>
+    <a  href="{{redirect_url}}" class="btn-confirmar">CONFIRMAR</a>
+  </div>
+</body>
+</html>
