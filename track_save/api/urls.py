@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import list_views
+from .views import favorite_views
 from .views import price_views
 from .views import product_views
 from .views import user_views
@@ -30,8 +30,7 @@ urlpatterns = [
     path("stores/update/<str:name>", product_views.update_store, name="update_store"),
     path("stores/delete/<str:name>", product_views.delete_store, name="delete_store"),
     path("create_product/", product_views.create_product, name="create_product"),
-
-    path('products/search/', product_views.search_products, name='search_products'),
+    path("products/search/", product_views.search_products, name="search_products"),
     path(
         "get_product/<int:product_id>/",
         product_views.get_product_id,
@@ -94,9 +93,21 @@ urlpatterns = [
         price_views.delete_price_view,
         name="delete_price",
     ),
-    path('favorites/', list_views.list_favorites_view,  name='list_favorites'),
-    path('favorites/create/', list_views.create_favorite_view, name='create_favorite'),
-    path('favorites/<int:fav_id>/', list_views.get_favorite_view,    name='get_favorite'),
-    path('favorites/update/<int:fav_id>/',list_views.update_favorite_view, name='update_favorite'),
-    path('favorites/delete/<int:fav_id>/',list_views.delete_favorite_view, name='delete_favorite'),
+    path("favorites/", favorite_views.list_favorites_view, name="list_favorites"),
+    path(
+        "favorites/create/", favorite_views.create_favorite_view, name="create_favorite"
+    ),
+    path(
+        "favorites/<int:fav_id>/", favorite_views.get_favorite_view, name="get_favorite"
+    ),
+    path(
+        "favorites/update/<int:fav_id>/",
+        favorite_views.update_favorite_view,
+        name="update_favorite",
+    ),
+    path(
+        "favorites/delete/<int:fav_id>/",
+        favorite_views.delete_favorite_view,
+        name="delete_favorite",
+    ),
 ]
