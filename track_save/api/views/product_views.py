@@ -1,14 +1,7 @@
-from django.http import HttpResponseBadRequest
-from django.http import HttpResponseNotAllowed
-from django.http import HttpResponseNotFound
-from django.http import JsonResponse
+from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET
-from django.views.decorators.http import require_POST
-
+from django.views.decorators.http import require_GET, require_POST
 from api.entities.product import Product, Store
-from api.controllers import product_controller
-from api.entities.product import ProductStore
 from api.controllers import product_controller
 import json
 

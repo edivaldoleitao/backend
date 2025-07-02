@@ -189,25 +189,135 @@ class EmailLoginView(APIView):
         if serializer.is_valid():
             return Response(serializer.validated_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-      
-    
+
+
 class CurrentUserView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CurrentUserSerializer
 
     def get_object(self):
         return self.request.user
-      
+
 
 @csrf_exempt
 def confirm_email(request, user_id):
     if request.method != "GET":
         return HttpResponseNotAllowed(["GET"])
 
+    user_controller.confirm_email(user_id)
+    return JsonResponse(
+        {"status": "success", "message": "Email do usuário verificado com sucesso"}
+    )
+
+
+### USER SPECIFICATION ###
+
+@csrf_exempt
+def create_user_specification(request):
+    if request.method != "POST":
+        return HttpResponseNotAllowed(["POST"])
+
     try:
-        user_controller.confirm_email(user_id)
-        return JsonResponse(
-            {"status": "success", "message": "Email do usuário verificado com sucesso"}
+        data = json.loads(request.body)
+        spec = user_controller.create_user_specification(
+            user_id=data.get("user_id"),
+            cpu=data.get("cpu"),
+            ram=data.get("ram"),
+            motherboard=data.get("motherboard"),
+            cooler=data.get("cooler"),
+            gpu=data.get("gpu"),
+            storage=data.get("storage"),
+            psu=data.get("psu"),
         )
-    except:
-        ...
+
+        return JsonResponse({
+            "user_id": spec.user_id.id,
+            "cpu": spec.cpu,
+            "ram": spec.ram,
+            "motherboard": spec.motherboard,
+            "cooler": spec.cooler,
+            "gpu": spec.gpu,
+            "storage": spec.storage,
+            "psu": spec.psu,
+        }, status=201)
+
+    except json.JSONDecodeError:
+        return HttpResponseBadRequest("JSON inválido")
+    except Exception as e:
+        return HttpResponseBadRequest(str(e))
+
+
+@require_GET
+def get_user_specification_id(request, user_id):
+    try:
+        spec = user_controller.get_user_specification_by_user_id(user_id)
+        return JsonResponse({
+            "user_id": spec.user_id.id,
+            "cpu": spec.cpu,
+            "ram": spec.ram,
+            "motherboard": spec.motherboard,
+            "cooler": spec.cooler,
+            "gpu": spec.gpu,
+            "storage": spec.storage,
+            "psu": spec.psu,
+        })
+    except Exception as e:
+        return HttpResponseNotFound(str(e))
+    
+@require_GET
+def get_all_specifications(request):
+    specs = user_controller.get_all_specifications()
+        
+    specs_data = [{
+        "user_id": s.user_id.id,
+        "cpu": s.cpu,
+        "ram": s.ram,
+        "motherboard": s.motherboard,
+        "cooler": s.cooler,
+        "gpu": s.gpu,
+        "storage": s.storage,
+        "psu": s.psu,
+        }
+        for s in specs
+    ]
+        
+    return JsonResponse(specs_data, safe=False)
+
+
+@csrf_exempt
+def update_user_specification(request, user_id):
+    if request.method != "PUT":
+        return HttpResponseNotAllowed(["PUT"])
+
+    try:
+        data = json.loads(request.body)
+        spec = user_controller.update_user_specification(user_id, data)
+
+        return JsonResponse({
+            "user_id": spec.user_id.id,
+            "cpu": spec.cpu,
+            "ram": spec.ram,
+            "motherboard": spec.motherboard,
+            "cooler": spec.cooler,
+            "gpu": spec.gpu,
+            "storage": spec.storage,
+            "psu": spec.psu,
+        })
+
+    except json.JSONDecodeError:
+        return HttpResponseBadRequest("JSON inválido")
+    except Exception as e:
+        return HttpResponseBadRequest(str(e))
+
+
+@csrf_exempt
+def delete_user_specification(request, user_id):
+    if request.method != "DELETE":
+        return HttpResponseNotAllowed(["DELETE"])
+
+    try:
+        user_controller.delete_user_specification(user_id)
+        return JsonResponse({"message": "Especificação deletada com sucesso."})
+
+    except Exception as e:
+        return HttpResponseBadRequest(str(e))
