@@ -151,6 +151,7 @@ def create_user_specification(user_id, cpu, ram, motherboard, cooler=None, gpu=N
         raise ValueError("Este usuário já possui especificações cadastradas.")
 
     spec = UserSpecification.objects.create(
+        user_id=user,
         cpu=cpu,
         ram=ram,
         motherboard=motherboard,

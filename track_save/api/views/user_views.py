@@ -248,7 +248,7 @@ def create_user_specification(request):
 
 
 @require_GET
-def get_user_specification(request, user_id):
+def get_user_specification_id(request, user_id):
     try:
         spec = user_controller.get_user_specification_by_user_id(user_id)
         return JsonResponse({
@@ -263,6 +263,25 @@ def get_user_specification(request, user_id):
         })
     except Exception as e:
         return HttpResponseNotFound(str(e))
+    
+@require_GET
+def get_all_specifications(request):
+    specs = user_controller.get_all_specifications()
+        
+    specs_data = [{
+        "user_id": s.user_id.id,
+        "cpu": s.cpu,
+        "ram": s.ram,
+        "motherboard": s.motherboard,
+        "cooler": s.cooler,
+        "gpu": s.gpu,
+        "storage": s.storage,
+        "psu": s.psu,
+        }
+        for s in specs
+    ]
+        
+    return JsonResponse(specs_data, safe=False)
 
 
 @csrf_exempt
