@@ -10,11 +10,13 @@ class ProductCategory(models.TextChoices):
     RAM = 'ram', 'Ram'
     GPU = 'gpu', 'Gpu'
     CPU = 'cpu', 'Cpu'
-    
+    STORAGE = 'storage', 'Storage'
+
 
 class Store(models.Model):
     name = models.CharField(max_length=255)
     url_base = models.TextField()
+    is_sponsor = models.BooleanField(default=False)
 
     class Meta:
         app_label = "api"
@@ -32,7 +34,9 @@ class Product(models.Model):
     description = models.TextField()
     image_url = models.TextField()
     brand = models.CharField(max_length=100, default="Generic Brand")
-    
+    # identificador para evitar repetição de produtos, composto por nome + url do produto
+    hash = models.TextField(editable=False, unique=True, blank=True, null=True)
+
 
     class Meta:
         app_label = "api"
@@ -44,6 +48,7 @@ class Product(models.Model):
 class ProductStore(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    rating = models.FloatField(default=0.0) # avaliação média do produto
     url_product = models.TextField()
     available = models.BooleanField()
 
@@ -52,14 +57,23 @@ class ProductStore(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.store.name}"
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if not self.product.hash:
+            self.product.hash = self.product.name + self.url_product
+            self.product.save()
+
 
 # TABELAS ESPECÍFICAS
 
 class Motherboard(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
-    socket = models.CharField(max_length=50) 
-    chipset = models.CharField(max_length=100) 
-    form_type = models.CharField(max_length=50) # (atx, itx)
+    model = models.CharField(max_length=255, default="Generic Model")
+    socket = models.CharField(max_length=50)
+    chipset = models.CharField(max_length=100)
+    form_type = models.CharField(max_length=50) # atx, itx
     max_ram_capacity = models.IntegerField()
     ram_type = models.CharField(max_length=10)
     ram_slots = models.IntegerField()
@@ -69,7 +83,7 @@ class Motherboard(models.Model):
 
     class Meta:
         app_label = "api"
-    
+
     def __str__(self):
         return f"Motherboard for {self.prod.name}"
 
@@ -125,7 +139,6 @@ class Cpu(models.Model):
 class Mouse(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    brand = models.CharField(max_length=255)
     dpi = models.IntegerField()
     connectivity = models.CharField(max_length=255)
     color = models.CharField(max_length=255)
@@ -157,7 +170,6 @@ class Monitor(models.Model):
 
 class Ram(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
-    brand = models.CharField(max_length=255)
     model = models.CharField(max_length=255)
     capacity = models.FloatField()
     ddr = models.CharField(max_length=255)
@@ -168,7 +180,7 @@ class Ram(models.Model):
 
     def __str__(self):
         return f"RAM for {self.prod.name}"
-    
+
 class Computer(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     is_notebook = models.BooleanField()
@@ -190,3 +202,23 @@ class Computer(models.Model):
 
     def __str__(self):
         return f"{self.product.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
+    
+class Storage(models.Model):
+    # relacionamento 1-1 com o produto "base"
+    prod = models.OneToOneField(Product,on_delete=models.CASCADE,related_name='storage')
+
+    # campos específicos de Storage
+    capacity_gb    = models.CharField(max_length=255,help_text="Capacidade em GB")
+    storage_type   = models.CharField(max_length=255,choices=[('HDD', 'HDD'),('SSD', 'SSD'),('NVMe', 'NVMe')])
+    interface      = models.CharField(max_length=255,choices=[('SATA', 'SATA'),('PCIe', 'PCIe'),('USB', 'USB')])
+    form_factor    = models.CharField(max_length=255,help_text="Ex: 2.5, 3.5, M.2")
+    read_speed     = models.CharField(max_length=255, null=True,help_text="Velocidade de leitura em MB/s (opcional)")
+    write_speed    = models.CharField(max_length=255, null=True,help_text="Velocidade de gravação em MB/s (opcional)")
+
+    class Meta:
+        app_label = "api"
+        verbose_name = "Storage"
+        verbose_name_plural = "Storages"
+
+    def __str__(self):
+        return f"{self.prod.name} – {self.capacity_gb}GB {self.storage_type}"

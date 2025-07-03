@@ -12,7 +12,7 @@ class UserCategory(models.TextChoices):
 class User(AbstractUser):
     username = None # pra não usar esse campo
     name = models.CharField(max_length=255, blank=True, null=True)
-    
+
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     created_at = models.DateField(auto_now_add=True)
@@ -31,19 +31,19 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-    
+
 
 class UserSpecification(models.Model):
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)    
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
     cpu = models.CharField(max_length=100)
     ram = models.CharField(max_length=100)
     motherboard = models.CharField(max_length=100)
-    cooler = models.CharField(max_length=100)
-    gpu = models.CharField(max_length=100)
+    cooler = models.CharField(max_length=100, null=True, blank=True)
+    gpu = models.CharField(max_length=100, null=True, blank=True)
     storage = models.CharField(max_length=100)
-    psu = models.CharField(max_length=100) # fonte
-    
-    
+    psu = models.CharField(max_length=100, null=True, blank=True) # fonte
+
+
     class Meta:
         app_label = "api"
 
