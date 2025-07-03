@@ -185,11 +185,12 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                 case "storage":
                     Storage.objects.create(
                         prod_id=product.id,
-                        capacity_gb = int(spec_fields.get("capacity")),
+                        capacity_gb = spec_fields.get("capacity"),
                         storage_type = spec_fields.get("storage_type"),
-                        interface    = spec_fields.get("interface"),
-                        form_factor  = spec_fields.get("form_factor"),
-                        rpm          = spec_fields.get("rpm") and int(spec_fields.get("rpm"))
+                        interface = spec_fields.get("interface"),
+                        form_factor = spec_fields.get("form_factor"),
+                        read_speed = spec_fields.get("read_speed"),
+                        write_speed = spec_fields.get("write_speed"),
                     )
                 case _:
                     raise ValueError(f"Categorias não suportadas: {category}")
@@ -303,6 +304,16 @@ def get_specific_details(product):
                     "capacity": p.capacity,
                     "ddr": p.ddr,
                     "speed": p.speed
+                }
+            case "storage":
+                p = Storage.objects.get(prod_id=product)
+                return {
+                    "capacity":     p.capacity_gb,
+                    "storage_type": p.storage_type,
+                    "interface":    p.interface,
+                    "form_factor":  p.form_factor,
+                    "read_speed": p.read_speed,
+                    "write_speed": p.write_speed,
                 }
             case _:
                 return {}
@@ -522,7 +533,8 @@ def get_product_by_id(product_id):
                     "storage_type": storage.storage_type,
                     "interface":    storage.interface,
                     "form_factor":  storage.form_factor,
-                    "rpm":          storage.rpm,
+                    "read_speed": storage.read_speed,
+                    "write_speed": storage.write_speed,
                 }
             case _:
                 product_data["category_error"] = "Categoria não existe"
@@ -642,7 +654,8 @@ def get_product_by_name(product_name):
                         "storage_type": storage.storage_type,
                         "interface":    storage.interface,
                         "form_factor":  storage.form_factor,
-                        "rpm":          storage.rpm,
+                        "read_speed": storage.read_speed,
+                        "write_speed": storage.write_speed,
                     }
 
             product_data_list.append(product_data)
@@ -759,7 +772,8 @@ def get_product_by_category(product_category):
                         "storage_type": storage.storage_type,
                         "interface":    storage.interface,
                         "form_factor":  storage.form_factor,
-                        "rpm":          storage.rpm,
+                        "read_speed": storage.read_speed,
+                        "write_speed": storage.write_speed,
                     }
                 case _:
                     product_data["category_error"] = "Categoria não existe"
@@ -878,7 +892,8 @@ def get_product_by_category(product_category):
                         "storage_type": storage.storage_type,
                         "interface":    storage.interface,
                         "form_factor":  storage.form_factor,
-                        "rpm":          storage.rpm,
+                        "read_speed": storage.read_speed,
+                        "write_speed": storage.write_speed,
                     }
                 case _:
                     product_data["category_error"] = "Categoria não existe"
@@ -998,7 +1013,8 @@ def get_all_products():
                             "storage_type": storage.storage_type,
                             "interface":    storage.interface,
                             "form_factor":  storage.form_factor,
-                            "rpm":          storage.rpm,
+                            "read_speed": storage.read_speed,
+                            "write_speed": storage.write_speed,
                         }
                     case _:
                         product_data["category_error"] = "Categoria não existe"
@@ -1101,8 +1117,8 @@ def update_product(product_id, name=None, category=None, description=None,
                     storage.storage_type  = spec_fields.get("storage_type", storage.storage_type)
                     storage.interface     = spec_fields.get("interface", storage.interface)
                     storage.form_factor   = spec_fields.get("form_factor", storage.form_factor)
-                    if "rpm" in spec_fields:
-                        storage.rpm = int(spec_fields.get("rpm", storage.rpm))
+                    storage.read_speed    = spec_fields.get("read_speed", storage.read_speed)
+                    storage.write_speed   = spec_fields.get("write_speed", storage.write_speed)
                     storage.save()
                 case _:
                     raise ValueError(f"Categoria desconhecida: {product.category}")
