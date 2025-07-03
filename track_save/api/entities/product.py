@@ -201,4 +201,24 @@ class Computer(models.Model):
         app_label = "api"
 
     def __str__(self):
-        return f"{self.prod.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
+        return f"{self.product.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
+    
+class Storage(models.Model):
+    # relacionamento 1-1 com o produto "base"
+    prod = models.OneToOneField(Product,on_delete=models.CASCADE,related_name='storage')
+
+    # campos específicos de Storage
+    capacity_gb    = models.CharField(max_length=255,help_text="Capacidade em GB")
+    storage_type   = models.CharField(max_length=255,choices=[('HDD', 'HDD'),('SSD', 'SSD'),('NVMe', 'NVMe')])
+    interface      = models.CharField(max_length=255,choices=[('SATA', 'SATA'),('PCIe', 'PCIe'),('USB', 'USB')])
+    form_factor    = models.CharField(max_length=255,help_text="Ex: 2.5, 3.5, M.2")
+    read_speed     = models.CharField(max_length=255, null=True,help_text="Velocidade de leitura em MB/s (opcional)")
+    write_speed    = models.CharField(max_length=255, null=True,help_text="Velocidade de gravação em MB/s (opcional)")
+
+    class Meta:
+        app_label = "api"
+        verbose_name = "Storage"
+        verbose_name_plural = "Storages"
+
+    def __str__(self):
+        return f"{self.prod.name} – {self.capacity_gb}GB {self.storage_type}"
