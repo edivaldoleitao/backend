@@ -1,7 +1,7 @@
 from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
-from api.entities.product import Product, Store
+from api.entities.product import Product, Store, ProductStore, ProductCategory
 from api.controllers import product_controller
 import json
 

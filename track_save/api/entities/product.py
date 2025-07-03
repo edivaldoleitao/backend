@@ -208,12 +208,12 @@ class Storage(models.Model):
     prod = models.OneToOneField(Product,on_delete=models.CASCADE,related_name='storage')
 
     # campos específicos de Storage
-    capacity_gb    = models.IntegerField(help_text="Capacidade em GB")
-    storage_type   = models.CharField(max_length=20,choices=[('HDD', 'HDD'),('SSD', 'SSD'),('NVMe', 'NVMe')])
-    interface      = models.CharField(max_length=20,choices=[('SATA', 'SATA'),('PCIe', 'PCIe'),('USB', 'USB')])
-    form_factor    = models.CharField(max_length=20,help_text="Ex: 2.5, 3.5, M.2")
-    read_speed     = models.IntegerField(null=True, blank=True,help_text="Velocidade de leitura em MB/s (opcional)")
-    write_speed    = models.IntegerField(null=True, blank=True,help_text="Velocidade de gravação em MB/s (opcional)")
+    capacity_gb    = models.CharField(max_length=255,help_text="Capacidade em GB")
+    storage_type   = models.CharField(max_length=255,choices=[('HDD', 'HDD'),('SSD', 'SSD'),('NVMe', 'NVMe')])
+    interface      = models.CharField(max_length=255,choices=[('SATA', 'SATA'),('PCIe', 'PCIe'),('USB', 'USB')])
+    form_factor    = models.CharField(max_length=255,help_text="Ex: 2.5, 3.5, M.2")
+    read_speed     = models.CharField(max_length=255, null=True,help_text="Velocidade de leitura em MB/s (opcional)")
+    write_speed    = models.CharField(max_length=255, null=True,help_text="Velocidade de gravação em MB/s (opcional)")
 
     class Meta:
         app_label = "api"
