@@ -4,6 +4,7 @@ from .views import favorite_views
 from .views import price_views
 from .views import product_views
 from .views import user_views
+from .views import alert_views
 
 urlpatterns = [
     path("users/create/", user_views.create_user, name="create_user"),
@@ -115,5 +116,10 @@ urlpatterns = [
         favorite_views.delete_favorite_view,
         name="delete_favorite",
     ),
+    path('alerts/', alert_views.list_alerts_view,   name='list_alerts'),
+    path('alerts/create/', alert_views.create_alert_view,  name='create_alert'),
+    path('alerts/<int:alert_id>/', alert_views.get_alert_view,     name='get_alert'),
+    path('alerts/update/<int:alert_id>/', alert_views.update_alert_view, name='update_alert'),
+    path('alerts/delete/<int:alert_id>/', alert_views.delete_alert_view, name='delete_alert'),
 
 ]
