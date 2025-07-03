@@ -1,6 +1,7 @@
 from api.entities.product import (Product, Store, ProductStore, ProductCategory, Gpu,
-                                  Keyboard, Cpu, Mouse, Monitor, Ram, Computer)
+                                  Keyboard, Cpu, Mouse, Monitor, Ram, Computer, Storage)
 from api.entities.price import Price
+from api.entities.user import Product
 from api.entities.product import ProductCategory
 from django.db import transaction
 from django.db.models import Q, OuterRef, Subquery, Max, BooleanField, Exists
@@ -10,7 +11,7 @@ from django.db.models.functions import Coalesce
 def create_store(name):
     if Store.objects.filter(name=name).exists():
         raise ValueError("Esta loja já foi cadastrada.")
-    
+
     match name:
         case "Kabum":
             store = Store.objects.create(
@@ -30,48 +31,48 @@ def create_store(name):
                     url_base = "https://www.amazon.com/?language=pt_BR",
                     is_sponsor = False
                     )
-            
+
     return store
 
 def get_stores():
     stores = Store.objects.all()
-    
+
     if not stores:
         raise ValueError(f"Não há lojas cadastradas")
-        
+
     lst = []
     for store in stores:
-        
+
         store_data = {
         "name": store.name,
         "url_base": store.url_base,
         "is_sponsor": store.is_sponsor
         }
-        
+
         lst.append(store_data)
-        
+
     return lst
-        
-            
+
+
 def update_store(name, url=None, is_sponsor=None):
-    
+
     store = Store.objects.get(name=name)
-    
+
     if url:
         store.url_base = url
     if is_sponsor:
         store.is_sponsor = is_sponsor
-        
+
     store.save()
-    
+
     return store
 
 def delete_store(name):
-    
+
     stores = Store.objects.filter(name=name)
     count, _ = stores.delete()
     return f"{count} loja(s) com nome '{name}' foram deletadas com sucesso."
-    
+
 
 # no fim do código tem um exemplo do uso dessa função
 def create_product(name, category, description, image_url, brand, **spec_fields):
@@ -181,15 +182,24 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                         ddr=spec_fields.get("ddr"),
                         speed=spec_fields.get("speed")
                     )
+                case "storage":
+                    Storage.objects.create(
+                        prod_id=product.id,
+                        capacity_gb = int(spec_fields.get("capacity")),
+                        storage_type = spec_fields.get("storage_type"),
+                        interface    = spec_fields.get("interface"),
+                        form_factor  = spec_fields.get("form_factor"),
+                        rpm          = spec_fields.get("rpm") and int(spec_fields.get("rpm"))
+                    )
                 case _:
                     raise ValueError(f"Categorias não suportadas: {category}")
 
         except Exception as e:
             raise ValueError(f"Erro ao criar produto na categoria específica: {str(e)}")
-        
+
         # cria em ProductStore
         store = Store.objects.get(name=spec_fields.get("store"))
-        
+
         try:
             product_store = ProductStore.objects.create(
                 product = product,
@@ -197,10 +207,10 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                 url_product = spec_fields.get("url"),
                 available = spec_fields.get("available")
             )
-            
+
         except Exception as e:
             raise ValueError(f"Erro ao inserir em ProductStore: {str(e)}")
-        
+
         # cria em Price
         try:
             Price.objects.create(
@@ -208,7 +218,7 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                 value = spec_fields.get("value"),
                 collection_date = spec_fields.get("collection_date"),
             )
-            
+
         except Exception as e:
             raise ValueError(f"Erro ao inserir em Price: {str(e)}")
 
@@ -505,6 +515,15 @@ def get_product_by_id(product_id):
                     "ddr": ram.ddr,
                     "speed": ram.speed
                 }
+            case "storage":
+                storage = Storage.objects.get(prod=product)
+                product_data["specific_details"] = {
+                    "capacity":     storage.capacity_gb,
+                    "storage_type": storage.storage_type,
+                    "interface":    storage.interface,
+                    "form_factor":  storage.form_factor,
+                    "rpm":          storage.rpm,
+                }
             case _:
                 product_data["category_error"] = "Categoria não existe"
 
@@ -616,6 +635,15 @@ def get_product_by_name(product_name):
                         "ddr": ram.ddr,
                         "speed": ram.speed
                     }
+                case "storage":
+                    storage = Storage.objects.get(prod=product)
+                    product_data["specific_details"] = {
+                        "capacity":     storage.capacity_gb,
+                        "storage_type": storage.storage_type,
+                        "interface":    storage.interface,
+                        "form_factor":  storage.form_factor,
+                        "rpm":          storage.rpm,
+                    }
 
             product_data_list.append(product_data)
 
@@ -723,6 +751,134 @@ def get_product_by_category(product_category):
                         "capacity": ram.capacity,
                         "ddr": ram.ddr,
                         "speed": ram.speed
+                    }
+                case "storage":
+                    storage = Storage.objects.get(prod=product)
+                    product_data["specific_details"] = {
+                        "capacity":     storage.capacity_gb,
+                        "storage_type": storage.storage_type,
+                        "interface":    storage.interface,
+                        "form_factor":  storage.form_factor,
+                        "rpm":          storage.rpm,
+                    }
+                case _:
+                    product_data["category_error"] = "Categoria não existe"
+
+            product_data_list.append(product_data)
+
+        return product_data_list
+
+    except Exception as e:
+        raise ValueError(f"Erro ao obter produtos: {str(e)}")
+
+# pra pegar produto pela categoria
+def get_product_by_category(product_category):
+
+    try:
+        products = Product.objects.filter(category=product_category)
+
+        if not products.exists():
+            raise ValueError(f"Não há produtos na categoria: {product_category}")
+
+        product_data_list = []
+
+        for product in products:
+
+            product_data = {
+                "id": product.id,
+                "name": product.name,
+                "category": product.category,
+                "description": product.description,
+                "image_url": product.image_url,
+                "brand": product.brand,
+                "hash": product.hash
+            }
+
+            match product.category:
+                case "computer":
+                    computer = Computer.objects.get(prod=product)
+                    product_data["specific_details"] = {
+                        "is_notebook": computer.is_notebook,
+                        "motherboard": computer.motherboard,
+                        "cpu": computer.cpu,
+                        "ram": computer.ram,
+                        "storage": computer.storage,
+                        "gpu": computer.gpu,
+                        "inches": computer.inches,
+                        "panel_type": computer.panel_type,
+                        "resolution": computer.resolution,
+                        "refresh_rate": computer.refresh_rate,
+                        "color_support": computer.color_support,
+                        "output": computer.output
+                    }
+                case "gpu":
+                    gpu = Gpu.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": gpu.model,
+                        "vram": gpu.vram,
+                        "chipset": gpu.chipset,
+                        "max_resolution": gpu.max_resolution,
+                        "output": gpu.output,
+                        "tech_support": gpu.tech_support
+                    }
+                case "keyboard":
+                    keyboard = Keyboard.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": keyboard.model,
+                        "key_type": keyboard.key_type,
+                        "layout": keyboard.layout,
+                        "connectivity": keyboard.connectivity,
+                        "dimension": keyboard.dimension
+                    }
+                case "cpu":
+                    cpu = Cpu.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": cpu.model,
+                        "integrated_video": cpu.integrated_video,
+                        "socket": cpu.socket,
+                        "core_number": cpu.core_number,
+                        "thread_number": cpu.thread_number,
+                        "frequency": cpu.frequency,
+                        "mem_speed": cpu.mem_speed
+                    }
+                case "mouse":
+                    mouse = Mouse.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": mouse.model,
+                        "brand": mouse.brand,
+                        "dpi": mouse.dpi,
+                        "connectivity": mouse.connectivity,
+                        "color": mouse.color
+                    }
+                case "monitor":
+                    monitor = Monitor.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": monitor.model,
+                        "inches": monitor.inches,
+                        "panel_type": monitor.panel_type,
+                        "proportion": monitor.proportion,
+                        "resolution": monitor.resolution,
+                        "refresh_rate": monitor.refresh_rate,
+                        "color_support": monitor.color_support,
+                        "output": monitor.output
+                    }
+                case "ram":
+                    ram = Ram.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "brand": ram.brand,
+                        "model": ram.model,
+                        "capacity": ram.capacity,
+                        "ddr": ram.ddr,
+                        "speed": ram.speed
+                    }
+                case "storage":
+                    storage = Storage.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "capacity":     storage.capacity_gb,
+                        "storage_type": storage.storage_type,
+                        "interface":    storage.interface,
+                        "form_factor":  storage.form_factor,
+                        "rpm":          storage.rpm,
                     }
                 case _:
                     product_data["category_error"] = "Categoria não existe"
@@ -835,6 +991,15 @@ def get_all_products():
                             "ddr": ram.ddr,
                             "speed": ram.speed
                         }
+                    case "storage":
+                        storage = Storage.objects.get(prod_id=product)
+                        product_data["specific_details"] = {
+                            "capacity":     storage.capacity_gb,
+                            "storage_type": storage.storage_type,
+                            "interface":    storage.interface,
+                            "form_factor":  storage.form_factor,
+                            "rpm":          storage.rpm,
+                        }
                     case _:
                         product_data["category_error"] = "Categoria não existe"
 
@@ -930,6 +1095,15 @@ def update_product(product_id, name=None, category=None, description=None,
                     ram = Ram.objects.get(prod=product)
                     ram.model = spec_fields.get("model", ram.model)
                     ram.save()
+                case "storage":
+                    storage = Storage.objects.get(prod=product)
+                    storage.capacity_gb   = int(spec_fields.get("capacity", storage.capacity_gb))
+                    storage.storage_type  = spec_fields.get("storage_type", storage.storage_type)
+                    storage.interface     = spec_fields.get("interface", storage.interface)
+                    storage.form_factor   = spec_fields.get("form_factor", storage.form_factor)
+                    if "rpm" in spec_fields:
+                        storage.rpm = int(spec_fields.get("rpm", storage.rpm))
+                    storage.save()
                 case _:
                     raise ValueError(f"Categoria desconhecida: {product.category}")
 
@@ -953,6 +1127,7 @@ def delete_product(product_id):
         raise ValueError("Produto não encontrado.")
     except Exception as e:
         raise ValueError(f"Erro ao excluir produto: {str(e)}")
+
 
 def create_product_store(product_id, store_id, url_product, available):
     """
