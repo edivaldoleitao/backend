@@ -50,8 +50,8 @@ def get_stores(request):
 
 @csrf_exempt
 def update_store(request, name):
-    if request.method not in ["POST", "PUT"]:
-        return HttpResponseNotAllowed(["POST", "PUT"])
+    if request.method not in ["PATCH", "PUT"]:
+        return HttpResponseNotAllowed(["PATCH", "PUT"])
 
     try:
         data = json.loads(request.body)
@@ -227,8 +227,8 @@ def get_products(request):
 # update pelo id
 @csrf_exempt
 def update_product(request, product_id):
-    if request.method not in ["POST", "PUT"]:
-        return HttpResponseNotAllowed(["POST", "PUT"])
+    if request.method not in ["PATCH", "PUT"]:
+        return HttpResponseNotAllowed(["PATCH", "PUT"])
 
     try:
         data = json.loads(request.body)
@@ -343,8 +343,8 @@ def get_product_store_by_id(request, product_store_id):
 # update pelo ID
 @csrf_exempt
 def update_product_store(request, product_store_id):
-    if request.method not in ["POST", "PUT"]:
-        return HttpResponseNotAllowed(["POST", "PUT"])
+    if request.method not in ["PATCH", "PUT"]:
+        return HttpResponseNotAllowed(["PATCH", "PUT"])
 
     try:
         data = json.loads(request.body)
