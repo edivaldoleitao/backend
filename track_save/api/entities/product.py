@@ -1,16 +1,18 @@
 import hashlib
+
 from django.db import models
 
+
 class ProductCategory(models.TextChoices):
-    COMPUTER = 'computer', 'Computer'
-    KEYBOARD = 'keyboard', 'Keyboard'
-    MOUSE = 'mouse', 'Mouse'
-    MONITOR = 'monitor', 'Monitor'
-    MOTHERBOARD = 'motherboard', 'Motherboard'
-    RAM = 'ram', 'Ram'
-    GPU = 'gpu', 'Gpu'
-    CPU = 'cpu', 'Cpu'
-    STORAGE = 'storage', 'Storage'
+    COMPUTER = "computer", "Computer"
+    KEYBOARD = "keyboard", "Keyboard"
+    MOUSE = "mouse", "Mouse"
+    MONITOR = "monitor", "Monitor"
+    MOTHERBOARD = "motherboard", "Motherboard"
+    RAM = "ram", "Ram"
+    GPU = "gpu", "Gpu"
+    CPU = "cpu", "Cpu"
+    STORAGE = "storage", "Storage"
 
 
 class Store(models.Model):
@@ -29,14 +31,19 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     category = models.CharField(
         max_length=20,
-        choices=ProductCategory.choices
+        choices=ProductCategory.choices,
     )
     description = models.TextField()
     image_url = models.TextField()
     brand = models.CharField(max_length=100, default="Generic Brand")
-    # identificador para evitar repetição de produtos, é feito um hash com o nome e a url do produto
-    hash = models.CharField(max_length=64, editable=False, unique=True, blank=True, null=True)
-
+    # identificador para evitar repetição de produtos, é feito um hash com o nome e a url do produto  # noqa: E501
+    hash = models.CharField(
+        max_length=64,
+        editable=False,
+        unique=True,
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         app_label = "api"
@@ -51,7 +58,7 @@ class Product(models.Model):
         com uma nova URL para garantir que o produto recebe seu hash.
         """
         if not self.hash:
-            base   = f"{self.name}{url}"
+            base = f"{self.name}{url}"
             digest = hashlib.sha256(base.encode("utf-8")).hexdigest()
             self.hash = digest
             # só salva o campo hash para não clobber os outros
@@ -61,7 +68,7 @@ class Product(models.Model):
 class ProductStore(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
-    rating = models.FloatField(default=0.0) # avaliação média do produto
+    rating = models.FloatField(default=0.0)  # avaliação média do produto
     url_product = models.TextField()
     available = models.BooleanField()
 
@@ -81,12 +88,13 @@ class ProductStore(models.Model):
 
 # TABELAS ESPECÍFICAS
 
+
 class Motherboard(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255, default="Generic Model")
     socket = models.CharField(max_length=50)
     chipset = models.CharField(max_length=100)
-    form_type = models.CharField(max_length=50) # atx, itx
+    form_type = models.CharField(max_length=50)  # atx, itx
     max_ram_capacity = models.IntegerField()
     ram_type = models.CharField(max_length=10)
     ram_slots = models.IntegerField()
@@ -107,8 +115,8 @@ class Gpu(models.Model):
     vram = models.IntegerField()
     chipset = models.CharField(max_length=255)
     max_resolution = models.CharField(max_length=255)
-    output = models.CharField(max_length=255) # HDMI, VGA etc
-    tech_support = models.TextField() # DLSS, Ray Tracing etc
+    output = models.CharField(max_length=255)  # HDMI, VGA etc
+    tech_support = models.TextField()  # DLSS, Ray Tracing etc
 
     class Meta:
         app_label = "api"
@@ -135,12 +143,12 @@ class Keyboard(models.Model):
 class Cpu(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    integrated_video = models.CharField(max_length=255) # se tiver, qual é
+    integrated_video = models.CharField(max_length=255)  # se tiver, qual é
     socket = models.CharField(max_length=255)
     core_number = models.IntegerField()
     thread_number = models.IntegerField()
-    frequency = models.FloatField() # freq. da cpu
-    mem_speed = models.FloatField() # freq. máx de memória suportada
+    frequency = models.FloatField()  # freq. da cpu
+    mem_speed = models.FloatField()  # freq. máx de memória suportada
 
     class Meta:
         app_label = "api"
@@ -167,12 +175,12 @@ class Monitor(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
     inches = models.FloatField()
-    panel_type = models.CharField(max_length=255) # ips, led etc
+    panel_type = models.CharField(max_length=255)  # ips, led etc
     proportion = models.CharField(max_length=255)
     resolution = models.CharField(max_length=255)
     refresh_rate = models.CharField(max_length=255)
     color_support = models.CharField(max_length=255)
-    output = models.CharField(max_length=255) # HDMI, VGA etc
+    output = models.CharField(max_length=255)  # HDMI, VGA etc
 
     class Meta:
         app_label = "api"
@@ -194,39 +202,61 @@ class Ram(models.Model):
     def __str__(self):
         return f"RAM for {self.prod.name}"
 
+
 class Computer(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     is_notebook = models.BooleanField()
     motherboard = models.CharField(max_length=100)
     cpu = models.CharField(max_length=100)
-    ram =  models.IntegerField()
-    storage =  models.IntegerField()
-    gpu = models.CharField(max_length=100) # se não tiver dedicada deve ser o vídedo integrado
+    ram = models.IntegerField()
+    storage = models.IntegerField()
+    gpu = models.CharField(
+        max_length=100,
+    )  # se não tiver dedicada deve ser o vídedo integrado
     # características de tela
     inches = models.FloatField()
     panel_type = models.CharField(max_length=50)
     resolution = models.CharField(max_length=50)
     refresh_rate = models.CharField(max_length=50)
     color_support = models.CharField(max_length=50)
-    output = models.CharField(max_length=50) # HDMI, VGA etc
+    output = models.CharField(max_length=50)  # HDMI, VGA etc
 
     class Meta:
         app_label = "api"
 
     def __str__(self):
-        return f"{self.product.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
+        return f"{self.prod.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
+
 
 class Storage(models.Model):
     # relacionamento 1-1 com o produto "base"
-    prod = models.OneToOneField(Product,on_delete=models.CASCADE,related_name='storage')
+    prod = models.OneToOneField(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="storage",
+    )
 
     # campos específicos de Storage
-    capacity_gb    = models.CharField(max_length=255,help_text="Capacidade em GB")
-    storage_type   = models.CharField(max_length=255,choices=[('HDD', 'HDD'),('SSD', 'SSD'),('NVMe', 'NVMe')])
-    interface      = models.CharField(max_length=255,choices=[('SATA', 'SATA'),('PCIe', 'PCIe'),('USB', 'USB')])
-    form_factor    = models.CharField(max_length=255,help_text="Ex: 2.5, 3.5, M.2")
-    read_speed     = models.CharField(max_length=255, null=True,help_text="Velocidade de leitura em MB/s (opcional)")
-    write_speed    = models.CharField(max_length=255, null=True,help_text="Velocidade de gravação em MB/s (opcional)")
+    capacity_gb = models.CharField(max_length=255, help_text="Capacidade em GB")
+    storage_type = models.CharField(
+        max_length=255,
+        choices=[("HDD", "HDD"), ("SSD", "SSD"), ("NVMe", "NVMe")],
+    )
+    interface = models.CharField(
+        max_length=255,
+        choices=[("SATA", "SATA"), ("PCIe", "PCIe"), ("USB", "USB")],
+    )
+    form_factor = models.CharField(max_length=255, help_text="Ex: 2.5, 3.5, M.2")
+    read_speed = models.CharField(
+        max_length=255,
+        default="",
+        help_text="Velocidade de leitura em MB/s (opcional)",
+    )
+    write_speed = models.CharField(
+        max_length=255,
+        default="",
+        help_text="Velocidade de gravação em MB/s (opcional)",
+    )
 
     class Meta:
         app_label = "api"
@@ -234,4 +264,4 @@ class Storage(models.Model):
         verbose_name_plural = "Storages"
 
     def __str__(self):
-        return f"{self.prod.name} – {self.capacity_gb}GB {self.storage_type}"
+        return f"{self.prod.name} - {self.capacity_gb}GB {self.storage_type}"
