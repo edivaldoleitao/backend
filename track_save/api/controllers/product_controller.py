@@ -1,11 +1,13 @@
+import hashlib
+from decimal import Decimal
 from api.entities.product import (Product, Store, ProductStore, ProductCategory, Gpu,
                                   Keyboard, Cpu, Mouse, Monitor, Ram, Computer, Storage)
 from api.entities.price import Price
 from api.entities.user import Product
 from api.entities.product import ProductCategory
 from django.db import transaction
-from django.db.models import Q, OuterRef, Subquery, Max, BooleanField, Exists
-from django.db.models.functions import Coalesce
+from django.db.models import Q, OuterRef, Subquery, Exists
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def create_store(name):
@@ -74,35 +76,32 @@ def delete_store(name):
     return f"{count} loja(s) com nome '{name}' foram deletadas com sucesso."
 
 
-# no fim do código tem um exemplo do uso dessa função
-def create_product(name, category, description, image_url, brand, **spec_fields):
-    if not all([name, category, description, image_url, brand]):
+def create_product(name, category, description, image_url, brand, store, url, available, value, **spec_fields):
+    # Verifica se todos os campos obrigatórios foram preenchidos
+    if not all([name, category, description, image_url, brand, store, url]):
         raise ValueError("Todos os campos são obrigatórios.")
 
-    if Product.objects.filter(hash=hash).exists():
-        raise ValueError("Este produto já foi cadastrado.")
-
-
+    # Verifica se a categoria existe
     if category not in [choice[0] for choice in ProductCategory.choices]:
         raise ValueError("Categoria inválida.")
 
+    # Cria o hash SHA-256 de nome + url
+    base = f"{name}{url}"
+    digest = hashlib.sha256(base.encode("utf-8")).hexdigest()
+
     with transaction.atomic():
-        try:
-            product = Product.objects.create(
-                name=name,
-                category=category,
-                description=description,
-                image_url=image_url,
-                brand=brand,
-            )
+        product, created = Product.objects.get_or_create(
+            hash=digest,
+            defaults={
+                "name": name,
+                "category": category,
+                "description": description,
+                "image_url": image_url,
+                "brand": brand,
+            },
+        )
 
-            if not product:
-                raise ValueError("Erro ao criar o produto.")
-
-        except Exception as e:
-            raise ValueError(f"Erro ao criar produto: {str(e)}")
-
-        try:
+        if created:
             match category:
                 case "computer":
                     if "is_notebook" not in spec_fields:
@@ -195,33 +194,38 @@ def create_product(name, category, description, image_url, brand, **spec_fields)
                 case _:
                     raise ValueError(f"Categorias não suportadas: {category}")
 
-        except Exception as e:
-            raise ValueError(f"Erro ao criar produto na categoria específica: {str(e)}")
-
-        # cria em ProductStore
-        store = Store.objects.get(name=spec_fields.get("store"))
-
+        # Verifica se a loja existe
         try:
-            product_store = ProductStore.objects.create(
-                product = product,
-                store = store,
-                url_product = spec_fields.get("url"),
-                available = spec_fields.get("available")
-            )
+            store = Store.objects.get(name=store)
+        except ObjectDoesNotExist:
+            raise ValueError(f"Loja '{store}' não encontrada.")
 
-        except Exception as e:
-            raise ValueError(f"Erro ao inserir em ProductStore: {str(e)}")
+        product_store, ps_created = ProductStore.objects.get_or_create(
+            product=product,
+            url_product=url,
+            defaults={"store": store, "available": available},
+        )
 
-        # cria em Price
-        try:
+        # Se o produto já existe na loja, atualiza o campo 'available'
+        if not ps_created and product_store.available != available:
+            product_store.available = available
+            product_store.save(update_fields=["available"])
+
+        new_value = Decimal(str(value))
+        last_price = (
+            Price.objects
+                 .filter(product_store=product_store)
+                 .order_by('-collection_date', '-id')
+                 .first()
+        )
+
+        # Se não houver preço anterior ou o novo valor for diferente, cria um novo registro de preço
+        if not last_price or last_price.value != new_value:
             Price.objects.create(
-                product_store = product_store,
-                value = spec_fields.get("value"),
-                collection_date = spec_fields.get("collection_date"),
+                product_store=product_store,
+                value=new_value,
+                collection_date=spec_fields.get("collection_date"),
             )
-
-        except Exception as e:
-            raise ValueError(f"Erro ao inserir em Price: {str(e)}")
 
     return product
 
