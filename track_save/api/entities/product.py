@@ -1,4 +1,4 @@
-
+import hashlib
 from django.db import models
 
 class ProductCategory(models.TextChoices):
@@ -34,8 +34,8 @@ class Product(models.Model):
     description = models.TextField()
     image_url = models.TextField()
     brand = models.CharField(max_length=100, default="Generic Brand")
-    # identificador para evitar repetição de produtos, composto por nome + url do produto
-    hash = models.TextField(editable=False, unique=True, blank=True, null=True)
+    # identificador para evitar repetição de produtos, é feito um hash com o nome e a url do produto
+    hash = models.CharField(max_length=64, editable=False, unique=True, blank=True, null=True)
 
 
     class Meta:
@@ -43,6 +43,19 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def ensure_hash(self, url: str):
+        """
+        Gera e salva o hash se ainda não existir.
+        Deve ser chamado sempre que você criar um ProductStore novo
+        com uma nova URL para garantir que o produto recebe seu hash.
+        """
+        if not self.hash:
+            base   = f"{self.name}{url}"
+            digest = hashlib.sha256(base.encode("utf-8")).hexdigest()
+            self.hash = digest
+            # só salva o campo hash para não clobber os outros
+            self.save(update_fields=["hash"])
 
 
 class ProductStore(models.Model):
@@ -57,13 +70,13 @@ class ProductStore(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.store.name}"
-    
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
 
-        if not self.product.hash:
-            self.product.hash = self.product.name + self.url_product
-            self.product.save()
+    def save(self, *args, **kwargs):
+        # Garante que o hash do produto é gerado com a URL do produto
+        self.product.ensure_hash(self.url_product)
+
+        # Salva o produto
+        super().save(*args, **kwargs)
 
 
 # TABELAS ESPECÍFICAS
@@ -202,7 +215,7 @@ class Computer(models.Model):
 
     def __str__(self):
         return f"{self.product.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
-    
+
 class Storage(models.Model):
     # relacionamento 1-1 com o produto "base"
     prod = models.OneToOneField(Product,on_delete=models.CASCADE,related_name='storage')
