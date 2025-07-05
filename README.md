@@ -6,7 +6,7 @@ O uso de Dev Containers garante que todos os desenvolvedores trabalhem em um amb
 
 ---
 
-### ✅ Pré-requisitos
+## ✅ Pré-requisitos
 
 Antes de começar, garanta que você tenha instalado:
 
