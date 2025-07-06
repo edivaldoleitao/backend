@@ -1,13 +1,6 @@
 import hashlib
 from decimal import Decimal
 
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import transaction
-from django.db.models import Exists
-from django.db.models import OuterRef
-from django.db.models import Q
-from django.db.models import Subquery
-
 from api.entities.price import Price
 from api.entities.product import Computer
 from api.entities.product import Cpu
@@ -21,6 +14,12 @@ from api.entities.product import ProductStore
 from api.entities.product import Ram
 from api.entities.product import Storage
 from api.entities.product import Store
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
+from django.db.models import Exists
+from django.db.models import OuterRef
+from django.db.models import Q
+from django.db.models import Subquery
 
 
 def create_store(name):
@@ -99,6 +98,7 @@ def create_product(  # noqa: C901, PLR0912, PLR0913
     store,
     url,
     available,
+    rating,
     value,
     **spec_fields,
 ):
@@ -233,13 +233,27 @@ def create_product(  # noqa: C901, PLR0912, PLR0913
         product_store, ps_created = ProductStore.objects.get_or_create(
             product=product,
             url_product=url,
-            defaults={"store": store, "available": available},
+            defaults={
+                "store": store,
+                "available": available,
+                "rating": rating,
+            },
         )
 
-        # Se o produto já existe na loja, atualiza o campo 'available'
-        if not ps_created and product_store.available != available:
-            product_store.available = available
-            product_store.save(update_fields=["available"])
+        # Se o produto já existe na loja, atualiza o campo 'available' e 'rating'  # noqa: E501
+        if not ps_created:
+            changed = False
+
+            if product_store.available != available:
+                product_store.available = available
+                changed = True
+
+            if product_store.rating != rating:
+                product_store.rating = rating
+                changed = True
+
+            if changed:
+                product_store.save(update_fields=["available", "rating"])
 
         new_value = Decimal(str(value))
         last_price = (
