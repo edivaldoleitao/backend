@@ -8,10 +8,14 @@ from track_save.webscraping.enums import Categories
 class Scraper:
     def init_browser(self):
         """Inicializa o navegador com Playwright."""
-        playwright = sync_playwright().start()
-        browser = playwright.chromium.launch(headless=True)
+        self.playwright = sync_playwright().start()
+        browser = self.playwright.chromium.launch(headless=True)
         page = browser.new_page()
-        return playwright, browser, page
+        return browser, page
+
+    def close_browser(self, browser):
+        browser.close()
+        self.playwright.stop()
 
     def element_visible(self, locator):
         result = False

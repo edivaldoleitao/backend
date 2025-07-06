@@ -7,6 +7,7 @@ from api.entities.product import Cpu
 from api.entities.product import Gpu
 from api.entities.product import Keyboard
 from api.entities.product import Monitor
+from api.entities.product import Motherboard
 from api.entities.product import Mouse
 from api.entities.product import Product
 from api.entities.product import ProductCategory
@@ -14,6 +15,7 @@ from api.entities.product import ProductStore
 from api.entities.product import Ram
 from api.entities.product import Storage
 from api.entities.product import Store
+from api.enums.category_specs import CATEGORY_SPECS
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Exists
@@ -89,7 +91,7 @@ def delete_store(name):
     return f"{count} loja(s) com nome '{name}' foram deletadas com sucesso."
 
 
-def create_product(  # noqa: C901, PLR0912, PLR0913
+def create_product(  # noqa: C901, PLR0912, PLR0913, PLR0915
     name,
     category,
     description,
@@ -102,14 +104,18 @@ def create_product(  # noqa: C901, PLR0912, PLR0913
     value,
     **spec_fields,
 ):
-    # Verifica se todos os campos obrigatórios foram preenchidos
-    if not all([name, category, description, image_url, brand, store, url]):
-        msg = "Todos os campos são obrigatórios."
-        raise ValueError(msg)
-
     # Verifica se a categoria existe
     if category not in [choice[0] for choice in ProductCategory.choices]:
         msg = "Categoria inválida."
+        raise ValueError(msg)
+
+    # Extrai só os campos específicos daquela categoria
+    allowed = CATEGORY_SPECS.get(category, [])
+    payload = {key: spec_fields.get(key) for key in allowed}
+
+    # Verifica os campos obrigatórios comuns
+    if not all([name, image_url, brand, store, url]):
+        msg = "Todos os campos obrigatórios devem ser informados."
         raise ValueError(msg)
 
     # Cria o hash SHA-256 de nome + url
@@ -131,96 +137,27 @@ def create_product(  # noqa: C901, PLR0912, PLR0913
         if created:
             match category:
                 case "computer":
-                    if "is_notebook" not in spec_fields:
-                        msg = "Campo 'is_notebook' é obrigatório para a categoria 'computer'."  # noqa: E501
-                        raise ValueError(msg)
-                    Computer.objects.create(
-                        prod=product,
-                        is_notebook=spec_fields.get("is_notebook"),
-                        motherboard=spec_fields.get("motherboard"),
-                        cpu=spec_fields.get("cpu"),
-                        ram=spec_fields.get("ram"),
-                        storage=spec_fields.get("storage"),
-                        gpu=spec_fields.get("gpu"),
-                        inches=spec_fields.get("inches"),
-                        panel_type=spec_fields.get("panel_type"),
-                        resolution=spec_fields.get("resolution"),
-                        refresh_rate=spec_fields.get("refresh_rate"),
-                        color_support=spec_fields.get("color_support"),
-                        output=spec_fields.get("output"),
-                    )
+                    # exemplo de como usar o payload em vez de spec_fields direto
+                    Computer.objects.create(prod=product, **payload)
                 case "gpu":
-                    Gpu.objects.create(
-                        prod=product,
-                        model=spec_fields.get("model"),
-                        vram=spec_fields.get("vram"),
-                        chipset=spec_fields.get("chipset"),
-                        max_resolution=spec_fields.get("max_resolution"),
-                        output=spec_fields.get("output"),
-                        tech_support=spec_fields.get("tech_support"),
-                    )
-                case "keyboard":
-                    Keyboard.objects.create(
-                        prod=product,
-                        model=spec_fields.get("model"),
-                        key_type=spec_fields.get("key_type"),
-                        layout=spec_fields.get("layout"),
-                        connectivity=spec_fields.get("connectivity"),
-                        dimension=spec_fields.get("dimension"),
-                    )
-                case "cpu":
-                    Cpu.objects.create(
-                        prod=product,
-                        model=spec_fields.get("model"),
-                        integrated_video=spec_fields.get("integrated_video"),
-                        socket=spec_fields.get("socket"),
-                        core_number=spec_fields.get("core_number"),
-                        thread_number=spec_fields.get("thread_number"),
-                        frequency=spec_fields.get("frequency"),
-                        mem_speed=spec_fields.get("mem_speed"),
-                    )
-                case "mouse":
-                    Mouse.objects.create(
-                        prod=product,
-                        model=spec_fields.get("model"),
-                        brand=spec_fields.get("brand"),
-                        dpi=spec_fields.get("dpi"),
-                        connectivity=spec_fields.get("connectivity"),
-                        color=spec_fields.get("color"),
-                    )
-                case "monitor":
-                    Monitor.objects.create(
-                        prod=product,
-                        model=spec_fields.get("model"),
-                        inches=spec_fields.get("inches"),
-                        panel_type=spec_fields.get("panel_type"),
-                        proportion=spec_fields.get("proportion"),
-                        resolution=spec_fields.get("resolution"),
-                        refresh_rate=spec_fields.get("refresh_rate"),
-                        color_support=spec_fields.get("color_support"),
-                        output=spec_fields.get("output"),
-                    )
+                    Gpu.objects.create(prod=product, **payload)
                 case "ram":
-                    Ram.objects.create(
-                        prod=product,
-                        brand=spec_fields.get("brand"),
-                        model=spec_fields.get("model"),
-                        capacity=spec_fields.get("capacity"),
-                        ddr=spec_fields.get("ddr"),
-                        speed=spec_fields.get("speed"),
-                    )
+                    Ram.objects.create(prod=product, **payload)
+                case "cpu":
+                    Cpu.objects.create(prod=product, **payload)
+                case "mouse":
+                    Mouse.objects.create(prod=product, **payload)
+                case "monitor":
+                    Monitor.objects.create(prod=product, **payload)
+                case "keyboard":
+                    Keyboard.objects.create(prod=product, **payload)
+                case "motherboard":
+                    Motherboard.objects.create(prod=product, **payload)
                 case "storage":
-                    Storage.objects.create(
-                        prod=product,
-                        capacity_gb=spec_fields.get("capacity"),
-                        storage_type=spec_fields.get("storage_type"),
-                        interface=spec_fields.get("interface"),
-                        form_factor=spec_fields.get("form_factor"),
-                        read_speed=spec_fields.get("read_speed"),
-                        write_speed=spec_fields.get("write_speed"),
-                    )
+                    Storage.objects.create(prod=product, **payload)
                 case _:
-                    msg = f"Categorias não suportadas: {category}"
+                    # nunca deve chegar aqui, pois já validamos acima
+                    msg = f"Categoria não suportada: {category}"
                     raise ValueError(msg)
 
         # Verifica se a loja existe

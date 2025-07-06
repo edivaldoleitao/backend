@@ -178,7 +178,7 @@ def get_max_resolution(section: Locator) -> str:
 
     # fallback: busca qualquer "1234 x 5678" no texto completo
     full = section.inner_text()
-    m = re.search(r"(\d{3,4})\s*[x×]\s*(\d{3,4})", full)
+    m = re.search(r"(\d{3,4})\s*[x×]\s*(\d{3,4})", full)  # noqa: RUF001
     if m:
         return f"{m.group(1)} x {m.group(2)}"
 

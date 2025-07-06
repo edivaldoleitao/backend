@@ -7,6 +7,7 @@ from pathlib import Path
 import requests
 from playwright.sync_api import Locator
 from playwright.sync_api import Page
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 from track_save.webscraping.enums import Categories
 
@@ -23,17 +24,19 @@ class KabumScraper(Scraper):
         self,
         category: Categories,
         limit: int = 100,
-        local_results: bool = False,  # noqa: FBT001
+        local_results: bool = False,
+        save_print: bool = True,
     ):
         self.category = category
         self.limit = limit
         self.local_results = local_results
+        self.save_print = save_print
 
-    def run(self) -> list[dict]:
+    def run(self) -> list[dict]:  # noqa: C901, PLR0915
         print("🤖 Iniciando a coleta de dados da Kabum...")
         print(f"> Categoria: {self.category.name}, Limite: {self.limit}")
         results = []
-        playwright, browser, page = self.init_browser()
+        browser, page = self.init_browser()
 
         url = self.parse_category(self.category, get_url=True)
         page.goto(url)
@@ -96,8 +99,9 @@ class KabumScraper(Scraper):
 
         if self.local_results:
             print(f"🗂️ Salvando resultados em {results_dir}...")
-            screenshot_path = results_dir / f"{base_name}.png"
-            page.screenshot(path=str(screenshot_path), full_page=True)
+            if self.save_print:
+                screenshot_path = results_dir / f"{base_name}.png"
+                page.screenshot(path=str(screenshot_path), full_page=True)
 
             results_str = json.dumps(results, ensure_ascii=False, indent=4)
 
@@ -130,7 +134,8 @@ class KabumScraper(Scraper):
         else:
             print("⚠️ Nenhum produto encontrado ou capturado.")
 
-        browser.close()
+        self.close_browser(browser)
+        print("🤖 Coleta finalizada.\n")
 
         return results
 
@@ -149,6 +154,13 @@ class KabumScraper(Scraper):
         rating_loc = reviewsSection.locator("span").first
         self.wait_element(rating_loc, timeout=2000)
 
+        try:
+            txt_rating = rating_loc.inner_text(timeout=2000).strip()
+            rating = float(txt_rating) if txt_rating else 0.0
+        except (PlaywrightTimeoutError, ValueError):
+            # timeout ou texto não-numérico
+            rating = 0.0
+
         name = name_loc.inner_text().strip()
         category = self.category.name.lower()
         price = self.get_price(priceSection)
@@ -156,7 +168,6 @@ class KabumScraper(Scraper):
         img_url = page.locator("#carouselDetails img").first.get_attribute("src")
         brand = self.get_brand(techInfoSection)
         description = self.get_description(descriptionSection)
-        rating = float(rating_loc.inner_text().strip())
         collection_date = date.today().isoformat()  # noqa: DTZ011
 
         return {
@@ -269,9 +280,7 @@ class KabumScraper(Scraper):
 
         price_raw = price_locator.first.inner_text()
         price_clean = re.sub(r"[^\d\.,]", "", price_raw)
-        return (
-            price_clean.replace(".", "").replace(",", ".") if price_clean else "Unknown"
-        )
+        return price_clean.replace(".", "").replace(",", ".") if price_clean else "0.00"
 
     def get_brand(self, section: Locator) -> str:
         candidates = [
@@ -296,39 +305,54 @@ class KabumScraper(Scraper):
         brand = re.search(r"Marca:\s*(.+)$", brand_name, flags=re.IGNORECASE)
         return brand.group(1) if brand else ""
 
-    def get_description(self, section: Locator) -> str:
+    def get_description(self, section: Locator) -> str:  # noqa: C901
         """
-        Retorna a descrição completa: título + parágrafo
-        Suporta tanto o padrão <h3> + <p> quanto segunda <h2> + <p>.
+        Retorna a descrição completa: título + parágrafo.
         """
         skip_texts = {"Compre agora no KaBuM!"}
 
+        # 1) tenta achar <h3>
         heading = None
-        h3s = section.locator("h3")
-        for i in range(h3s.count()):
-            h = h3s.nth(i)
-            text = h.inner_text().strip()
-            if text and text not in skip_texts:
+        for i in range(section.locator("h3").count()):
+            h = section.locator("h3").nth(i)
+            txt = h.inner_text().strip()
+            if txt and txt not in skip_texts:
                 heading = h
                 break
 
+        # 2) se não achou, tenta segunda <h2>
         if not heading:
             h2s = section.locator("h2")
             if h2s.count() > 1:
                 heading = h2s.nth(1)
             else:
-                return "No description available"
+                return ""  # <-- não quebra, retorna vazio
 
         title = heading.inner_text().strip()
-        para_locator = heading.locator(
-            "xpath=following-sibling::p[normalize-space()][1]",
-        )
+
+        # 3) tenta pegar o parágrafo seguinte, mas captura timeout
+        para = heading.locator("xpath=following-sibling::p[normalize-space()][1]").first
         try:
-            paragraph = para_locator.first.inner_text(timeout=500).strip()
-        except AttributeError:
+            paragraph = para.inner_text(timeout=500).strip()
+        except (AttributeError, PlaywrightTimeoutError):
             paragraph = ""
 
-        return f"{title}\n\n{paragraph}"
+        # Se tiver apenas um parágrafo, captura também
+        paras = section.locator("p")
+        if not paragraph and paras.count() > 0:
+            try:
+                paragraph = paras.first.inner_text(timeout=500).strip()
+            except (AttributeError, PlaywrightTimeoutError):
+                paragraph = ""
+
+        # 4) monta o retorno (se title existir, mesmo sem parágrafo você tem algo)
+        if title and paragraph:
+            return f"{title}\n\n{paragraph}"
+        if title:
+            return title
+        if paragraph:
+            return paragraph
+        return ""
 
     def get_model(self, section: Locator) -> str:
         candidates = [
@@ -355,6 +379,16 @@ class KabumScraper(Scraper):
 
 
 if __name__ == "__main__":
-    # exemplo de uso
-    scraper = KabumScraper(category=Categories.GPU, limit=5, local_results=True)
-    resultados = scraper.run()
+    # Teste de coleta para todas as categorias
+    for category in Categories:
+        scraper = KabumScraper(
+            category=category,
+            limit=100,
+            local_results=True,
+            save_print=False,
+        )
+        scraper.run()
+
+    # # Teste específico para GPU
+    # scraper = KabumScraper(category=Categories.GPU, limit=5, local_results=True, save_print=True)
+    # scraper.run()

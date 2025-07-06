@@ -33,7 +33,7 @@ class Product(models.Model):
         max_length=20,
         choices=ProductCategory.choices,
     )
-    description = models.TextField()
+    description = models.TextField(blank=True, default="")
     image_url = models.TextField()
     brand = models.CharField(max_length=100, default="Generic Brand")
     # identificador para evitar repetição de produtos, é feito um hash com o nome e a url do produto  # noqa: E501
@@ -94,13 +94,13 @@ class Motherboard(models.Model):
     model = models.CharField(max_length=255, default="Generic Model")
     socket = models.CharField(max_length=50)
     chipset = models.CharField(max_length=100)
-    form_type = models.CharField(max_length=50)  # atx, itx
-    max_ram_capacity = models.CharField(max_length=255)
-    ram_type = models.CharField(max_length=10)
-    ram_slots = models.CharField(max_length=255)
-    pcie_slots = models.CharField(max_length=255)
-    sata_ports = models.CharField(max_length=255)
-    m2_slot = models.CharField(max_length=255)
+    form_type = models.CharField(max_length=50, blank=True, default="")  # atx, itx
+    max_ram_capacity = models.CharField(max_length=255, blank=True, default="")
+    ram_type = models.CharField(max_length=10, blank=True, default="")
+    ram_slots = models.CharField(max_length=255, blank=True, default="")
+    pcie_slots = models.CharField(max_length=255, blank=True, default="")
+    sata_ports = models.CharField(max_length=255, blank=True, default="")
+    m2_slot = models.CharField(max_length=255, blank=True, default="")
 
     class Meta:
         app_label = "api"
@@ -114,9 +114,9 @@ class Gpu(models.Model):
     model = models.CharField(max_length=255)
     vram = models.CharField(max_length=255)
     chipset = models.CharField(max_length=255)
-    max_resolution = models.CharField(max_length=255)
-    output = models.CharField(max_length=255)  # HDMI, VGA etc
-    tech_support = models.TextField()  # DLSS, Ray Tracing etc
+    max_resolution = models.CharField(max_length=255, blank=True, default="")
+    output = models.CharField(max_length=255, blank=True, default="")  # HDMI, VGA etc
+    tech_support = models.TextField(blank=True, default="")  # DLSS, Ray Tracing etc
 
     class Meta:
         app_label = "api"
@@ -128,10 +128,10 @@ class Gpu(models.Model):
 class Keyboard(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    key_type = models.CharField(max_length=255)
-    layout = models.CharField(max_length=255)
-    connectivity = models.CharField(max_length=255)
-    dimension = models.CharField(max_length=255)
+    key_type = models.CharField(max_length=255, blank=True, default="")
+    layout = models.CharField(max_length=255, blank=True, default="")
+    connectivity = models.CharField(max_length=255, blank=True, default="")
+    dimension = models.CharField(max_length=255, blank=True, default="")
 
     class Meta:
         app_label = "api"
@@ -143,12 +143,20 @@ class Keyboard(models.Model):
 class Cpu(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    integrated_video = models.CharField(max_length=255)  # se tiver, qual é
-    socket = models.CharField(max_length=255)
-    core_number = models.CharField(max_length=255)
-    thread_number = models.CharField(max_length=255)
-    frequency = models.CharField(max_length=255)  # freq. da cpu
-    mem_speed = models.CharField(max_length=255)  # freq. máx de memória suportada
+    integrated_video = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+    )  # se tiver, qual é
+    socket = models.CharField(max_length=255, blank=True, default="")
+    core_number = models.CharField(max_length=255, blank=True, default="")
+    thread_number = models.CharField(max_length=255, blank=True, default="")
+    frequency = models.CharField(max_length=255, blank=True, default="")  # freq. da cpu
+    mem_speed = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+    )  # freq. máx de memória suportada
 
     class Meta:
         app_label = "api"
@@ -160,9 +168,9 @@ class Cpu(models.Model):
 class Mouse(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    dpi = models.CharField(max_length=255)
-    connectivity = models.CharField(max_length=255)
-    color = models.CharField(max_length=255)
+    dpi = models.CharField(max_length=255, blank=True, default="")
+    connectivity = models.CharField(max_length=255, blank=True, default="")
+    color = models.CharField(max_length=255, blank=True, default="")
 
     class Meta:
         app_label = "api"
@@ -174,12 +182,16 @@ class Mouse(models.Model):
 class Monitor(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    inches = models.CharField(max_length=255)
-    panel_type = models.CharField(max_length=255)  # ips, led etc
-    proportion = models.CharField(max_length=255)
-    resolution = models.CharField(max_length=255)
-    refresh_rate = models.CharField(max_length=255)
-    color_support = models.CharField(max_length=255)
+    inches = models.CharField(max_length=255, blank=True, default="")
+    panel_type = models.CharField(
+        max_length=255,
+        blank=True,
+        default="",
+    )  # ips, led etc
+    proportion = models.CharField(max_length=255, blank=True, default="")
+    resolution = models.CharField(max_length=255, blank=True, default="")
+    refresh_rate = models.CharField(max_length=255, blank=True, default="60hz")
+    color_support = models.CharField(max_length=255, blank=True, default="")
     output = models.CharField(max_length=255)  # HDMI, VGA etc
 
     class Meta:
@@ -193,8 +205,8 @@ class Ram(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
     capacity = models.CharField(max_length=255)
-    ddr = models.CharField(max_length=255)
-    speed = models.CharField(max_length=255)
+    ddr = models.CharField(max_length=255, blank=True, default="")
+    speed = models.CharField(max_length=255, blank=True, default="")
 
     class Meta:
         app_label = "api"
@@ -212,14 +224,16 @@ class Computer(models.Model):
     storage = models.CharField(max_length=100)
     gpu = models.CharField(
         max_length=100,
+        blank=True,
+        default="",
     )  # se não tiver dedicada deve ser o vídedo integrado
     # características de tela
-    inches = models.CharField(max_length=50)
-    panel_type = models.CharField(max_length=50)
-    resolution = models.CharField(max_length=50)
-    refresh_rate = models.CharField(max_length=50)
-    color_support = models.CharField(max_length=50)
-    output = models.CharField(max_length=50)  # HDMI, VGA etc
+    inches = models.CharField(max_length=50, blank=True, default="")
+    panel_type = models.CharField(max_length=50, blank=True, default="")
+    resolution = models.CharField(max_length=50, blank=True, default="")
+    refresh_rate = models.CharField(max_length=50, blank=True, default="")
+    color_support = models.CharField(max_length=50, blank=True, default="")
+    output = models.CharField(max_length=50, blank=True, default="")  # HDMI, VGA etc
 
     class Meta:
         app_label = "api"
@@ -249,11 +263,13 @@ class Storage(models.Model):
     form_factor = models.CharField(max_length=255, help_text="Ex: 2.5, 3.5, M.2")
     read_speed = models.CharField(
         max_length=255,
+        blank=True,
         default="",
         help_text="Velocidade de leitura em MB/s (opcional)",
     )
     write_speed = models.CharField(
         max_length=255,
+        blank=True,
         default="",
         help_text="Velocidade de gravação em MB/s (opcional)",
     )

@@ -130,6 +130,7 @@ ignore = [
   "S110",
   "FBT002",
   "T201",
+  "FBT001",
 ]
 # The fixes in extend-unsafe-fixes will require
 # provide the `--unsafe-fixes` flag when fixing.
