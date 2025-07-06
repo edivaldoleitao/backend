@@ -11,6 +11,7 @@ from playwright.sync_api import Page
 from track_save.webscraping.enums import Categories
 
 from .scraper import Scraper
+from .specific_data import gpu as gpu_specific_data
 
 BASE = Path(__file__).parent
 API_URL = "http://localhost:8001/api/products/create/"
@@ -69,7 +70,7 @@ class KabumScraper(Scraper):
                 techInfoSection,
                 reviewsSection,
             )
-            specific_info = self.get_specific_data(techInfoSection)
+            specific_info = self.get_specific_data(techInfoSection, common_data["name"])
 
             product_data = {
                 **common_data,
@@ -145,6 +146,9 @@ class KabumScraper(Scraper):
         if not self.element_visible(name_loc):
             name_loc = page.locator("#container-purchase h1")
 
+        rating_loc = reviewsSection.locator("span").first
+        self.wait_element(rating_loc, timeout=2000)
+
         name = name_loc.inner_text().strip()
         category = self.category.name.lower()
         price = self.get_price(priceSection)
@@ -152,7 +156,7 @@ class KabumScraper(Scraper):
         img_url = page.locator("#carouselDetails img").first.get_attribute("src")
         brand = self.get_brand(techInfoSection)
         description = self.get_description(descriptionSection)
-        rating = float(reviewsSection.locator("span").first.inner_text().strip())
+        rating = float(rating_loc.inner_text().strip())
         collection_date = date.today().isoformat()  # noqa: DTZ011
 
         return {
@@ -167,12 +171,12 @@ class KabumScraper(Scraper):
             "collection_date": collection_date,
         }
 
-    def get_specific_data(self, section: Locator) -> dict:  # noqa: PLR0911
+    def get_specific_data(self, section: Locator, name: str) -> dict:  # noqa: PLR0911
         if self.category == Categories.MOTHERBOARD:
             return {
                 "socket": "AM4/AM5/LGA1200",
                 "model": self.get_model(section),
-                "chipset": "AMD/NVIDIA",
+                "chipset": gpu_specific_data.get_chipset(name=name),
                 "form_type": "ATX/ITX",
                 "max_ram_capacity": "64GB",
                 "ram_type": "DDR4/DDR5",
@@ -185,11 +189,11 @@ class KabumScraper(Scraper):
         if self.category == Categories.GPU:
             return {
                 "model": self.get_model(section),
-                "vram": self.get_vram(section),
-                "chipset": "AMD/NVIDIA",
-                "max_resolution": "1920x1080",
-                "output": "HDMI, DisplayPort",
-                "tech_support": "DirectX 12, OpenGL 4.6",
+                "vram": gpu_specific_data.get_vram(section),
+                "chipset": gpu_specific_data.get_chipset(name=name),
+                "max_resolution": gpu_specific_data.get_max_resolution(section),
+                "output": gpu_specific_data.get_output(section),
+                "tech_support": gpu_specific_data.get_tech_support(section),
             }
 
         if self.category == Categories.CPU:
@@ -348,129 +352,6 @@ class KabumScraper(Scraper):
 
         model = re.search(r"Modelo:\s*(.+)$", model_name, flags=re.IGNORECASE)
         return model.group(1) if model else ""
-
-    def get_vram(self, section: Locator) -> str:  # noqa: C901, PLR0911, PLR0912
-        """
-        Retorna VRAM no formato "8GB GDDR6", cobrindo ambos os layouts só com <p>:
-          - vários <p> com "- Chave: Valor"
-          - <p><span><strong>Memória</strong></span></p>
-            <p><span>- GDDR6 16 GB</span></p>
-          - <p>- Memória: 16 GB GDDR6</p>
-        """
-
-        # 1º método: procura por "Capacidade" ou "Tamanho" em <p> com "- Chave: Valor"
-        # ex: <p>- Capacidade: 8 GB</p> ou <p>- Tamanho máximo da memória: 8 GB</p>
-        vram = ""
-
-        specs = {}
-        paras = section.locator("p")
-        for i in range(paras.count()):
-            try:
-                text = paras.nth(i).inner_text().strip()
-                # limpa traço e espaços
-                text = text.lstrip("- ").strip()
-                if ":" not in text:
-                    continue
-                key, val = [s.strip() for s in text.split(":", 1)]
-                specs[key] = val
-            except AttributeError:
-                vram = ""
-
-        vram_size = (
-            specs.get("Capacidade")
-            or specs.get("Tamanho máximo da memória", "")
-            or specs.get("Tamanho da memória", "")
-        )
-        if vram_size:
-            vram_size = re.sub(r"\s+", "", vram_size)  # "8 GB" -> "8GB"
-
-        vram_type = specs.get("Tipo") or specs.get("Tipo de memória", "")
-
-        if vram_size or vram_type:
-            return (
-                f"{vram_size or ''}"
-                f"{(' ' + vram_type) if vram_size and vram_type else vram_type or ''}"
-            ).strip()
-
-        # 2º método: procura por "Memória" em <p> com <strong>
-        # ex: <p><strong>Memória</strong></p> <p>- GDDR6 16 GB</p>
-        headings = section.locator("p:has(strong)").all()
-        for p in headings:
-            strong_txt = p.locator("strong").inner_text().strip().rstrip(":").lower()
-            if (
-                "memória" not in strong_txt
-                or "relógio" in strong_txt
-                or "velocidade" in strong_txt
-            ):
-                continue
-
-            try:
-                sib = p.locator(
-                    "xpath=following-sibling::p[normalize-space()][1]",
-                ).first
-                vram_raw = sib.inner_text(timeout=500).strip()  # ex: "- 16 GB GDDR6"
-                return vram_raw.lstrip("- ").strip()  # → "16 GB GDDR6"
-            except AttributeError:
-                vram = ""
-
-        # 3º método: procura por "Memória" em <span> com "Memória:"
-        # ex: <p><span>- Memória: 12 GB GDDR7</span></p>
-        candidates = [
-            "span:has-text('Memória')",
-            "p:has-text('Memória')",
-        ]
-
-        for sel in candidates:
-            locs = section.locator(sel)
-            for i in range(locs.count()):
-                try:
-                    vram_raw = locs.nth(i).inner_text(timeout=500).strip()
-                except AttributeError:
-                    vram = ""
-                # só prossegue se começar realmente com "- Memória:"
-                vram_clean = vram_raw.lstrip(
-                    "- ",
-                ).strip()  # ex: "- Memória: 8 GB GDDR6"
-                if re.match(r"^Memória:", vram_clean, flags=re.IGNORECASE):
-                    vram = re.match(
-                        r"Memória:\s*(.+)$",
-                        vram_clean,
-                        flags=re.IGNORECASE,
-                    )
-                    if vram:
-                        return vram.group(1).strip()
-                elif re.match(r"^Tamanho da Memória:", vram_clean, flags=re.IGNORECASE):
-                    vram = re.match(
-                        r"Tamanho da Memória:\s*(.+)$",
-                        vram_clean,
-                        flags=re.IGNORECASE,
-                    )
-                    if vram:
-                        return vram.group(1).strip()
-                elif re.match(
-                    r"^Tamanho da memória/barramento:",
-                    vram_clean,
-                    flags=re.IGNORECASE,
-                ):
-                    vram = re.match(
-                        r"Tamanho da memória/barramento:\s*(.+)$",
-                        vram_clean,
-                        flags=re.IGNORECASE,
-                    )
-                    if vram:
-                        return vram.group(1).strip()
-                elif re.match(r"^Tamanho da memória", vram_clean, flags=re.IGNORECASE):
-                    vram = re.match(
-                        r"Tamanho da memória\s*(.+)$",
-                        vram_clean,
-                        flags=re.IGNORECASE,
-                    )
-                    if vram:
-                        return vram.group(1).strip()
-                else:
-                    continue
-
-        return vram or ""
 
 
 if __name__ == "__main__":
