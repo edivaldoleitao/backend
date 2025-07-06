@@ -108,10 +108,10 @@ async def scrape_terabyte(termo_pesquisa):
             if "/" in termo_pesquisa:
                 termo_pesquisa = termo_pesquisa.split("/")[1]
             filename = f"terabyte_produtos_{termo_pesquisa}.json"
-            output_path = os.path.join(OUTPUT_DIR_TERA, filename)
+            #  output_path = os.path.join(OUTPUT_DIR_TERA, filename)
 
-            with open(output_path, "w", encoding="utf-8") as f:
-                json.dump(produtos, f, ensure_ascii=False, indent=2)
+            #    with open(output_path, "w", encoding="utf-8") as f:
+            #       json.dump(produtos, f, ensure_ascii=False, indent=2)
 
             print(f"\n✅ Sucesso! {len(produtos)} produtos salvos em '{filename}'")
 
@@ -185,9 +185,9 @@ async def search():
         if todos_amazon:
             timestamp = time.strftime("%Y%m%d-%H%M%S")
             filename = f"amazon_{termo}.json"
-            path = os.path.join(OUTPUT_DIR, filename)
-            with open(path, "w", encoding="utf-8") as f:
-                json.dump(todos_amazon, f, ensure_ascii=False, indent=2)
+            #  path = os.path.join(OUTPUT_DIR, filename)
+            # with open(path, "w", encoding="utf-8") as f:
+            #    json.dump(todos_amazon, f, ensure_ascii=False, indent=2)
             print(f"✅ Amazon: {len(todos_amazon)} produtos salvos em {filename}")
             todos_amazon.clear()
 
