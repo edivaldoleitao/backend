@@ -269,6 +269,7 @@ dump.rdb
 
 ### Project template
 track_save/media/
+track_save/webscraping/scrapers/results/
 
 .pytest_cache/
 .ipython/
