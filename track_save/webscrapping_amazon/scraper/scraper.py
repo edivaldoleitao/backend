@@ -4,7 +4,9 @@ import os
 import re
 import time
 import urllib.parse
+from datetime import datetime
 
+from api.controllers.product_controller import create_product
 from playwright.async_api import async_playwright
 
 AMAZON = "https://www.amazon.com.br/s?k="
@@ -203,6 +205,7 @@ async def get_product_details(url):
         await page.goto(url, timeout=60_000)
         await page.wait_for_timeout(2000)
 
+        # Remove popups
         try:
             await page.wait_for_selector("#bannerPop", timeout=5000)
             await page.evaluate("""
@@ -215,6 +218,7 @@ async def get_product_details(url):
         except:
             pass
 
+        # Scroll e clicar em "Especificações Técnicas"
         try:
             await page.evaluate(
                 "document.querySelector('a[href=\"#esptec\"]').scrollIntoView()"
@@ -232,8 +236,8 @@ async def get_product_details(url):
         except:
             pass
 
+        # Descrição
         descricao = ""
-
         try:
             el = await page.query_selector("div.descricao section.bg_branco p")
             if el:
@@ -263,8 +267,8 @@ async def get_product_details(url):
             except:
                 pass
 
+        # Specs
         specs_dict = {}
-
         try:
             await page.wait_for_selector("div.tecnicas", timeout=20000)
             p_tags = await page.query_selector_all("div.tecnicas > p")
@@ -284,17 +288,26 @@ async def get_product_details(url):
         except:
             pass
 
+        image_url = ""
+        try:
+            img_element = await page.query_selector("img.zoomImg")
+            if img_element:
+                image_url = await img_element.get_attribute("src")
+        except:
+            pass
+
         await browser.close()
-        return descricao.strip(), specs_dict
+        return descricao.strip(), specs_dict, image_url
 
 
 async def search_details():
     if banco_produtos_terabyte:
         for produto in banco_produtos_terabyte:
             try:
-                desc, esp = await get_product_details(produto["url"])
+                desc, esp, img = await get_product_details(produto["url"])
                 produto["descricao"] = desc
                 produto["tecnica"] = esp
+                produto["imagem"] = img
                 print(desc)
             except Exception as e:
                 print(produto["url"])
@@ -323,7 +336,6 @@ async def search_details():
     monitores = [
         p for p in banco_produtos_terabyte if p.get("tipo_produto") == "monitores"
     ]
-
     print(teclados[0])
     print(processadores[0])
     print(mouse[0])
@@ -331,10 +343,185 @@ async def search_details():
     print(gpu[0])
 
 
+MAP_CATEGORIAS = {
+    "perifericos/teclado": "keyboard",
+    "perifericos/mouse": "mouse",
+    "hardware/placas-de-video": "gpu",
+    "hardware/processadores": "cpu",
+    "monitores": "monitor",
+}
+
+
+def buscar_campo(tecnica, *possiveis_nomes):
+    for nome in possiveis_nomes:
+        if nome in tecnica:
+            return tecnica[nome]
+    return None
+
+
+def salvar_produtos_django(produtos):
+    for produto in produtos:
+        tipo_scraping = produto.get("tipo_produto")
+        categoria_django = MAP_CATEGORIAS.get(tipo_scraping)
+
+        if not categoria_django:
+            print(
+                f"⚠️ Categoria não mapeada: {tipo_scraping}. Produto ignorado: {produto.get('nome')}"
+            )
+            continue
+
+        tecnica = produto.get("tecnica", {})
+        descricao = produto.get("descricao", "")
+        preco_str = (
+            produto.get("preco", "0")
+            .replace("R$", "")
+            .replace(".", "")
+            .replace(",", ".")
+            .strip()
+        )
+
+        try:
+            preco_float = float(preco_str)
+        except ValueError:
+            preco_float = 0.0
+
+        # Preparar spec_fields padrão
+        spec_fields = {
+            "model": buscar_campo(tecnica, "Modelo", "Model"),
+            "store": "Terabyte Shop",
+            "url": produto.get("url"),
+            "available": True,
+            "value": preco_float,
+            "collection_date": datetime.now(),
+        }
+
+        match categoria_django:
+            case "keyboard":
+                spec_fields.update(
+                    {
+                        "key_type": buscar_campo(
+                            tecnica, "Switch", "Tipo de switch", "Tipo de tecla"
+                        ),
+                        "layout": buscar_campo(
+                            tecnica, "Nomeros de teclas", "Número de teclas", "Layout"
+                        ),
+                        "connectivity": buscar_campo(
+                            tecnica, "Cabo", "Conectividade", "Tipo de conexão"
+                        )
+                        or "Fio",
+                        "dimension": buscar_campo(
+                            tecnica, "Tamanho do teclado", "Dimensão", "Tamanho"
+                        ),
+                    }
+                )
+            case "cpu":
+                spec_fields.update(
+                    {
+                        "integrated_video": buscar_campo(
+                            tecnica, "Vídeo Integrado", "Vídeo onboard", "GPU Integrada"
+                        )
+                        or "Não informado",
+                        "socket": buscar_campo(tecnica, "Soquete", "Socket"),
+                        "core_number": buscar_campo(
+                            tecnica, "Núcleos de CPU", "Núcleos"
+                        ),
+                        "thread_number": buscar_campo(
+                            tecnica, "Threads", "Número de threads"
+                        ),
+                        "frequency": buscar_campo(
+                            tecnica, "Clock base", "Frequência base", "Clock"
+                        ),
+                        "mem_speed": buscar_campo(
+                            tecnica, "Memória", "Velocidade Memória", "Velocidade RAM"
+                        ),
+                    }
+                )
+            case "gpu":
+                spec_fields.update(
+                    {
+                        "vram": buscar_campo(
+                            tecnica, "Memory Size", "Memória", "Capacidade de memória"
+                        ),
+                        "chipset": buscar_campo(tecnica, "Chipset", "Modelo", "GPU"),
+                        "max_resolution": buscar_campo(
+                            tecnica, "Digital max resolution", "Resolução Máxima"
+                        ),
+                        "output": buscar_campo(
+                            tecnica, "Output", "Saídas", "Conectores", "Portas"
+                        ),
+                        "tech_support": buscar_campo(
+                            tecnica, "DirectX", "OpenGL", "Tecnologias suportadas"
+                        ),
+                    }
+                )
+            case "mouse":
+                spec_fields.update(
+                    {
+                        "brand": buscar_campo(tecnica, "Marca"),
+                        "dpi": buscar_campo(tecnica, "DPI", "Resolução"),
+                        "connectivity": buscar_campo(
+                            tecnica, "Conectividade", "Cabo", "Tipo de conexão"
+                        )
+                        or "Fio",
+                        "color": buscar_campo(tecnica, "Cor", "Cor predominante"),
+                    }
+                )
+            case "monitor":
+                spec_fields.update(
+                    {
+                        "inches": buscar_campo(
+                            tecnica, "Tamanho da tela", "Polegadas", "Tamanho"
+                        ),
+                        "panel_type": buscar_campo(
+                            tecnica, "Tipo de luz de fundo", "Painel", "Tipo Painel"
+                        ),
+                        "proportion": buscar_campo(
+                            tecnica, "Proporção", "Aspect Ratio"
+                        ),
+                        "resolution": buscar_campo(
+                            tecnica, "Resolução", "Resolução Máxima"
+                        ),
+                        "refresh_rate": buscar_campo(
+                            tecnica,
+                            "Taxa de atualização",
+                            "Frequência",
+                            "Taxa de contraste",
+                        ),
+                        "color_support": buscar_campo(
+                            tecnica, "RGB", "Suporte a cores", "Cores"
+                        ),
+                        "output": buscar_campo(
+                            tecnica, "Portas", "Conectores", "Entradas", "Saídas"
+                        ),
+                    }
+                )
+            case _:
+                pass
+
+        brand = buscar_campo(tecnica, "Marca")
+
+        image_url = produto.get("image")
+
+        try:
+            create_product(
+                name=produto.get("nome"),
+                category=categoria_django,
+                description=descricao,
+                image_url=image_url,
+                brand=brand,
+                **spec_fields,
+            )
+            print(f"✅ Produto criado: {produto.get('nome')} [{categoria_django}]")
+
+        except Exception as e:
+            print(f"❌ Erro ao criar produto '{produto.get('nome')}': {str(e)}")
+
+
 async def main():
     await search()
     print("buscar detalhes")
     await search_details()
+    salvar_produtos_django(banco_produtos_terabyte)
 
 
 if __name__ == "__main__":
