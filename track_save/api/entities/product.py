@@ -95,12 +95,12 @@ class Motherboard(models.Model):
     socket = models.CharField(max_length=50)
     chipset = models.CharField(max_length=100)
     form_type = models.CharField(max_length=50)  # atx, itx
-    max_ram_capacity = models.IntegerField()
+    max_ram_capacity = models.CharField(max_length=255)
     ram_type = models.CharField(max_length=10)
-    ram_slots = models.IntegerField()
-    pcie_slots = models.PositiveIntegerField()
-    sata_ports = models.IntegerField()
-    m2_slot = models.IntegerField()
+    ram_slots = models.CharField(max_length=255)
+    pcie_slots = models.CharField(max_length=255)
+    sata_ports = models.CharField(max_length=255)
+    m2_slot = models.CharField(max_length=255)
 
     class Meta:
         app_label = "api"
@@ -112,7 +112,7 @@ class Motherboard(models.Model):
 class Gpu(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    vram = models.IntegerField()
+    vram = models.CharField(max_length=255)
     chipset = models.CharField(max_length=255)
     max_resolution = models.CharField(max_length=255)
     output = models.CharField(max_length=255)  # HDMI, VGA etc
@@ -145,10 +145,10 @@ class Cpu(models.Model):
     model = models.CharField(max_length=255)
     integrated_video = models.CharField(max_length=255)  # se tiver, qual é
     socket = models.CharField(max_length=255)
-    core_number = models.IntegerField()
-    thread_number = models.IntegerField()
-    frequency = models.FloatField()  # freq. da cpu
-    mem_speed = models.FloatField()  # freq. máx de memória suportada
+    core_number = models.CharField(max_length=255)
+    thread_number = models.CharField(max_length=255)
+    frequency = models.CharField(max_length=255)  # freq. da cpu
+    mem_speed = models.CharField(max_length=255)  # freq. máx de memória suportada
 
     class Meta:
         app_label = "api"
@@ -160,7 +160,7 @@ class Cpu(models.Model):
 class Mouse(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    dpi = models.IntegerField()
+    dpi = models.CharField(max_length=255)
     connectivity = models.CharField(max_length=255)
     color = models.CharField(max_length=255)
 
@@ -174,7 +174,7 @@ class Mouse(models.Model):
 class Monitor(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    inches = models.FloatField()
+    inches = models.CharField(max_length=255)
     panel_type = models.CharField(max_length=255)  # ips, led etc
     proportion = models.CharField(max_length=255)
     resolution = models.CharField(max_length=255)
@@ -192,9 +192,9 @@ class Monitor(models.Model):
 class Ram(models.Model):
     prod = models.OneToOneField(Product, on_delete=models.CASCADE)
     model = models.CharField(max_length=255)
-    capacity = models.FloatField()
+    capacity = models.CharField(max_length=255)
     ddr = models.CharField(max_length=255)
-    speed = models.FloatField()
+    speed = models.CharField(max_length=255)
 
     class Meta:
         app_label = "api"
@@ -208,13 +208,13 @@ class Computer(models.Model):
     is_notebook = models.BooleanField()
     motherboard = models.CharField(max_length=100)
     cpu = models.CharField(max_length=100)
-    ram = models.IntegerField()
-    storage = models.IntegerField()
+    ram = models.CharField(max_length=100)
+    storage = models.CharField(max_length=100)
     gpu = models.CharField(
         max_length=100,
     )  # se não tiver dedicada deve ser o vídedo integrado
     # características de tela
-    inches = models.FloatField()
+    inches = models.CharField(max_length=50)
     panel_type = models.CharField(max_length=50)
     resolution = models.CharField(max_length=50)
     refresh_rate = models.CharField(max_length=50)
