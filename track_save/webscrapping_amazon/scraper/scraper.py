@@ -4,9 +4,7 @@ import os
 import re
 import time
 import urllib.parse
-from datetime import datetime
 
-from api.controllers.product_controller import create_product
 from playwright.async_api import async_playwright
 
 AMAZON = "https://www.amazon.com.br/s?k="
@@ -16,6 +14,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR_TERA, exist_ok=True)
 
 banco_produtos_terabyte = []
+banco_produtos_amazon = []
 
 produtos_terabyte = {
     "teclado": "perifericos/teclado",
@@ -33,7 +32,6 @@ async def scrape_terabyte(termo_pesquisa):
             viewport={"width": 1920, "height": 1080},
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36",
         )
-
         page = await context.new_page()
 
         try:
@@ -55,7 +53,6 @@ async def scrape_terabyte(termo_pesquisa):
             print("🔍 Coletando dados dos produtos...")
             produtos = []
             items = await page.query_selector_all(".product-item__box")
-
             print(f"✅ Encontrados {len(items)} produtos na página inicial")
 
             for item in items:
@@ -104,17 +101,15 @@ async def scrape_terabyte(termo_pesquisa):
 
             banco_produtos_terabyte.extend(produtos)
 
-            timestamp = time.strftime("%Y%m%d-%H%M%S")
             if "/" in termo_pesquisa:
                 termo_pesquisa = termo_pesquisa.split("/")[1]
             filename = f"terabyte_produtos_{termo_pesquisa}.json"
-            #  output_path = os.path.join(OUTPUT_DIR_TERA, filename)
+            output_path = os.path.join(OUTPUT_DIR_TERA, filename)
 
-            #    with open(output_path, "w", encoding="utf-8") as f:
-            #       json.dump(produtos, f, ensure_ascii=False, indent=2)
+            with open(output_path, "w", encoding="utf-8") as f:
+                json.dump(produtos, f, ensure_ascii=False, indent=2)
 
             print(f"\n✅ Sucesso! {len(produtos)} produtos salvos em '{filename}'")
-
             return filename
 
         except Exception as e:
@@ -134,25 +129,25 @@ async def scrape_amazon(url: str):
 
         items = await page.query_selector_all("a.s-no-outline")
 
-        for i, item in enumerate(items):
+        for item in items:
             href = await item.get_attribute("href")
             nome = await item.query_selector("img")
             nome_texto = await nome.get_attribute("alt") if nome else ""
 
-            preco_span = await page.query_selector_all("span.a-price span.a-offscreen")
-            nota_span = await page.query_selector_all("span.a-icon-alt")
+            preco_element = await item.query_selector("span.a-price span.a-offscreen")
+            preco = await preco_element.inner_text() if preco_element else ""
 
-            preco = await preco_span[i].inner_text() if i < len(preco_span) else ""
-            nota = await nota_span[i].inner_text() if i < len(nota_span) else ""
-
-            produtos.append(
-                {
-                    "url": "https://www.amazon.com.br" + href if href else "",
-                    "name": nome_texto,
-                    "price": preco,
-                    "rating": nota[:3] if nota else "",
-                }
-            )
+            nota_element = await item.query_selector("span.a-icon-alt")
+            nota = await nota_element.inner_text() if nota_element else ""
+            if "cooler" not in nome_texto.lower():
+                produtos.append(
+                    {
+                        "url": "https://www.amazon.com.br" + href if href else "",
+                        "name": nome_texto,
+                        "price": preco,
+                        "rating": nota[:3] if nota else "",
+                    }
+                )
 
         await browser.close()
     return produtos
@@ -174,7 +169,7 @@ def montar_url(termo_pesquisa):
 async def search():
     todos_amazon = []
     for termo in lista_produtos:
-        for page_num in range(1, 11):
+        for page_num in range(1, 3):
             url = f"{AMAZON}{montar_url(termo)}&page={page_num}"
             print(f"[+] Buscando: {url}")
             resultados = await scrape_amazon(url)
@@ -183,15 +178,108 @@ async def search():
             await asyncio.sleep(1)
 
         if todos_amazon:
-            timestamp = time.strftime("%Y%m%d-%H%M%S")
             filename = f"amazon_{termo}.json"
-            #  path = os.path.join(OUTPUT_DIR, filename)
-            # with open(path, "w", encoding="utf-8") as f:
-            #    json.dump(todos_amazon, f, ensure_ascii=False, indent=2)
+            path = os.path.join(OUTPUT_DIR, filename)
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(todos_amazon, f, ensure_ascii=False, indent=2)
             print(f"✅ Amazon: {len(todos_amazon)} produtos salvos em {filename}")
+            banco_produtos_amazon.extend(todos_amazon)
             todos_amazon.clear()
 
         await scrape_terabyte(produtos_terabyte[termo])
+
+
+async def scrape_amazon_product(url):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        await page.goto(url)
+
+        # Verifica se existe o botão "Continuar comprando" e clica
+        try:
+            continuar_btn = page.locator(
+                "button.a-button-text", has_text="Continuar comprando"
+            )
+            if await continuar_btn.is_visible():
+                await continuar_btn.click()
+                await page.wait_for_timeout(
+                    1000
+                )  # pequena espera para a página atualizar
+        except:
+            pass  # se não aparecer, segue normal
+
+        # Aguarda o título do produto
+        try:
+            await page.wait_for_selector("#productTitle", timeout=15000)
+            nome = (await page.locator("#productTitle").inner_text()).strip()
+        except Exception as e:
+            print(e)
+            nome = ""
+
+        # Preço
+        try:
+            preco = await page.locator(".a-price .a-offscreen").first.inner_text()
+        except:
+            preco = "Preço não encontrado"
+
+        # Nota
+        try:
+            nota = await page.locator("span.a-icon-alt").first.inner_text()
+        except:
+            nota = "Sem nota"
+
+        # Descrição curta
+        try:
+            descricao_curta = await page.locator("#feature-bullets").inner_text()
+        except:
+            descricao_curta = "Descrição curta não encontrada"
+
+        # Descrição detalhada
+        try:
+            descricao_detalhada = await page.locator("#productDescription").inner_text()
+        except:
+            descricao_detalhada = "Descrição detalhada não encontrada"
+
+        # Tabela de detalhes adicionais
+        detalhes = {}
+        try:
+            linhas = page.locator("table.a-keyvalue.prodDetTable tbody tr")
+            count = await linhas.count()
+            for i in range(count):
+                chave = await linhas.nth(i).locator("th").inner_text()
+                valor = await linhas.nth(i).locator("td").inner_text()
+                detalhes[chave.strip()] = valor.strip()
+        except:
+            detalhes = {}
+
+        await browser.close()
+        dados = None
+        if nome:
+            dados = {
+                "nome": nome,
+                "preco": preco,
+                "nota": nota,
+                "descricao_curta": descricao_curta,
+                "descricao_detalhada": descricao_detalhada,
+                "detalhes_adicionais": detalhes,
+                "url": url,
+            }
+        if dados:
+            return dados
+        return dados
+
+
+async def search_details_amazon():
+    output = []
+    for produto in banco_produtos_amazon:
+        results = await scrape_amazon_product(produto["url"])
+        output.append(results)
+
+    filename = "amazon_perfeito.json"
+    path = os.path.join(OUTPUT_DIR, filename)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+    print(f"✅ Amazon: {len(output)} produtos salvos em {filename}")
 
 
 async def get_product_details(url):
@@ -202,10 +290,9 @@ async def get_product_details(url):
             viewport={"width": 1280, "height": 800},
         )
         page = await context.new_page()
-        await page.goto(url, timeout=60_000)
+        await page.goto(url, timeout=60000)
         await page.wait_for_timeout(2000)
 
-        # Remove popups
         try:
             await page.wait_for_selector("#bannerPop", timeout=5000)
             await page.evaluate("""
@@ -218,7 +305,6 @@ async def get_product_details(url):
         except:
             pass
 
-        # Scroll e clicar em "Especificações Técnicas"
         try:
             await page.evaluate(
                 "document.querySelector('a[href=\"#esptec\"]').scrollIntoView()"
@@ -236,7 +322,6 @@ async def get_product_details(url):
         except:
             pass
 
-        # Descrição
         descricao = ""
         try:
             el = await page.query_selector("div.descricao section.bg_branco p")
@@ -267,7 +352,6 @@ async def get_product_details(url):
             except:
                 pass
 
-        # Specs
         specs_dict = {}
         try:
             await page.wait_for_selector("div.tecnicas", timeout=20000)
@@ -313,215 +397,18 @@ async def search_details():
                 print(produto["url"])
                 print(e)
 
-    teclados = [
-        p
-        for p in banco_produtos_terabyte
-        if p.get("tipo_produto") == "perifericos/teclado"
-    ]
-    processadores = [
-        p
-        for p in banco_produtos_terabyte
-        if p.get("tipo_produto") == "hardware/processadores"
-    ]
-    mouse = [
-        p
-        for p in banco_produtos_terabyte
-        if p.get("tipo_produto") == "perifericos/mouse"
-    ]
-    gpu = [
-        p
-        for p in banco_produtos_terabyte
-        if p.get("tipo_produto") == "hardware/placas-de-video"
-    ]
-    monitores = [
-        p for p in banco_produtos_terabyte if p.get("tipo_produto") == "monitores"
-    ]
-    print(teclados[0])
-    print(processadores[0])
-    print(mouse[0])
-    print(monitores[0])
-    print(gpu[0])
-
-
-MAP_CATEGORIAS = {
-    "perifericos/teclado": "keyboard",
-    "perifericos/mouse": "mouse",
-    "hardware/placas-de-video": "gpu",
-    "hardware/processadores": "cpu",
-    "monitores": "monitor",
-}
-
-
-def buscar_campo(tecnica, *possiveis_nomes):
-    for nome in possiveis_nomes:
-        if nome in tecnica:
-            return tecnica[nome]
-    return None
-
-
-def salvar_produtos_django(produtos):
-    for produto in produtos:
-        tipo_scraping = produto.get("tipo_produto")
-        categoria_django = MAP_CATEGORIAS.get(tipo_scraping)
-
-        if not categoria_django:
-            print(
-                f"⚠️ Categoria não mapeada: {tipo_scraping}. Produto ignorado: {produto.get('nome')}"
-            )
-            continue
-
-        tecnica = produto.get("tecnica", {})
-        descricao = produto.get("descricao", "")
-        preco_str = (
-            produto.get("preco", "0")
-            .replace("R$", "")
-            .replace(".", "")
-            .replace(",", ".")
-            .strip()
-        )
-
-        try:
-            preco_float = float(preco_str)
-        except ValueError:
-            preco_float = 0.0
-
-        # Preparar spec_fields padrão
-        spec_fields = {
-            "model": buscar_campo(tecnica, "Modelo", "Model"),
-            "store": "Terabyte Shop",
-            "url": produto.get("url"),
-            "available": True,
-            "value": preco_float,
-            "collection_date": datetime.now(),
-        }
-
-        match categoria_django:
-            case "keyboard":
-                spec_fields.update(
-                    {
-                        "key_type": buscar_campo(
-                            tecnica, "Switch", "Tipo de switch", "Tipo de tecla"
-                        ),
-                        "layout": buscar_campo(
-                            tecnica, "Nomeros de teclas", "Número de teclas", "Layout"
-                        ),
-                        "connectivity": buscar_campo(
-                            tecnica, "Cabo", "Conectividade", "Tipo de conexão"
-                        )
-                        or "Fio",
-                        "dimension": buscar_campo(
-                            tecnica, "Tamanho do teclado", "Dimensão", "Tamanho"
-                        ),
-                    }
-                )
-            case "cpu":
-                spec_fields.update(
-                    {
-                        "integrated_video": buscar_campo(
-                            tecnica, "Vídeo Integrado", "Vídeo onboard", "GPU Integrada"
-                        )
-                        or "Não informado",
-                        "socket": buscar_campo(tecnica, "Soquete", "Socket"),
-                        "core_number": buscar_campo(
-                            tecnica, "Núcleos de CPU", "Núcleos"
-                        ),
-                        "thread_number": buscar_campo(
-                            tecnica, "Threads", "Número de threads"
-                        ),
-                        "frequency": buscar_campo(
-                            tecnica, "Clock base", "Frequência base", "Clock"
-                        ),
-                        "mem_speed": buscar_campo(
-                            tecnica, "Memória", "Velocidade Memória", "Velocidade RAM"
-                        ),
-                    }
-                )
-            case "gpu":
-                spec_fields.update(
-                    {
-                        "vram": buscar_campo(
-                            tecnica, "Memory Size", "Memória", "Capacidade de memória"
-                        ),
-                        "chipset": buscar_campo(tecnica, "Chipset", "Modelo", "GPU"),
-                        "max_resolution": buscar_campo(
-                            tecnica, "Digital max resolution", "Resolução Máxima"
-                        ),
-                        "output": buscar_campo(
-                            tecnica, "Output", "Saídas", "Conectores", "Portas"
-                        ),
-                        "tech_support": buscar_campo(
-                            tecnica, "DirectX", "OpenGL", "Tecnologias suportadas"
-                        ),
-                    }
-                )
-            case "mouse":
-                spec_fields.update(
-                    {
-                        "brand": buscar_campo(tecnica, "Marca"),
-                        "dpi": buscar_campo(tecnica, "DPI", "Resolução"),
-                        "connectivity": buscar_campo(
-                            tecnica, "Conectividade", "Cabo", "Tipo de conexão"
-                        )
-                        or "Fio",
-                        "color": buscar_campo(tecnica, "Cor", "Cor predominante"),
-                    }
-                )
-            case "monitor":
-                spec_fields.update(
-                    {
-                        "inches": buscar_campo(
-                            tecnica, "Tamanho da tela", "Polegadas", "Tamanho"
-                        ),
-                        "panel_type": buscar_campo(
-                            tecnica, "Tipo de luz de fundo", "Painel", "Tipo Painel"
-                        ),
-                        "proportion": buscar_campo(
-                            tecnica, "Proporção", "Aspect Ratio"
-                        ),
-                        "resolution": buscar_campo(
-                            tecnica, "Resolução", "Resolução Máxima"
-                        ),
-                        "refresh_rate": buscar_campo(
-                            tecnica,
-                            "Taxa de atualização",
-                            "Frequência",
-                            "Taxa de contraste",
-                        ),
-                        "color_support": buscar_campo(
-                            tecnica, "RGB", "Suporte a cores", "Cores"
-                        ),
-                        "output": buscar_campo(
-                            tecnica, "Portas", "Conectores", "Entradas", "Saídas"
-                        ),
-                    }
-                )
-            case _:
-                pass
-
-        brand = buscar_campo(tecnica, "Marca")
-
-        image_url = produto.get("image")
-
-        try:
-            create_product(
-                name=produto.get("nome"),
-                category=categoria_django,
-                description=descricao,
-                image_url=image_url,
-                brand=brand,
-                **spec_fields,
-            )
-            print(f"✅ Produto criado: {produto.get('nome')} [{categoria_django}]")
-
-        except Exception as e:
-            print(f"❌ Erro ao criar produto '{produto.get('nome')}': {str(e)}")
+    filename = "terabyte_perfeito.json"
+    path = os.path.join(OUTPUT_DIR_TERA, filename)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(banco_produtos_terabyte, f, ensure_ascii=False, indent=2)
+    print(f"✅ Terabyte: {len(banco_produtos_terabyte)} produtos salvos em {filename}")
 
 
 async def main():
     await search()
     print("buscar detalhes")
     await search_details()
-    salvar_produtos_django(banco_produtos_terabyte)
+    await search_details_amazon()
 
 
 if __name__ == "__main__":
