@@ -17,7 +17,9 @@ urlpatterns = [
         name="update_password",
     ),
     path("users/delete/<int:user_id>/", user_views.delete_user, name="delete_user"),
-    path("users/recover_password/", user_views.recover_password, name="recover_password"),
+    path(
+        "users/recover_password/", user_views.recover_password, name="recover_password"
+    ),
     path("users/login/", user_views.EmailLoginView.as_view(), name="email_login"),
     path("users/me/", user_views.CurrentUserView.as_view(), name="current_user"),
     path(
@@ -25,11 +27,29 @@ urlpatterns = [
         user_views.confirm_email,
         name="confirm_email",
     ),
-    path("users/specification/create/", user_views.create_user_specification, name="create_user_spec"),
-    path("users/specification/<int:user_id>/", user_views.get_user_specification_id, name="get_user_spec"),
-    path("users/specification/", user_views.get_all_specifications, name="get_all_spec"),
-    path("users/specification/update/<int:user_id>/", user_views.update_user_specification, name="update_user_spec"),
-    path("users/specification/delete/<int:user_id>/", user_views.delete_user_specification, name="delete_user_spec"),
+    path(
+        "users/specification/create/",
+        user_views.create_user_specification,
+        name="create_user_spec",
+    ),
+    path(
+        "users/specification/<int:user_id>/",
+        user_views.get_user_specification_id,
+        name="get_user_spec",
+    ),
+    path(
+        "users/specification/", user_views.get_all_specifications, name="get_all_spec"
+    ),
+    path(
+        "users/specification/update/<int:user_id>/",
+        user_views.update_user_specification,
+        name="update_user_spec",
+    ),
+    path(
+        "users/specification/delete/<int:user_id>/",
+        user_views.delete_user_specification,
+        name="delete_user_spec",
+    ),
     path("stores/create/", product_views.create_store, name="create_store"),
     path("stores/get/", product_views.get_stores, name="get_store"),
     path("stores/update/<str:name>", product_views.update_store, name="update_store"),
@@ -85,6 +105,11 @@ urlpatterns = [
         product_views.delete_product_store,
         name="delete_product_store",
     ),
+    path(
+        "product_stores/details/<int:ps_id>/",
+        product_views.get_product_details,
+        name="get_product_price",
+    ),
     path("prices/", price_views.list_prices, name="list_prices"),
     path("prices/create/", price_views.create_price_view, name="create_price"),
     path("prices/<int:price_id>/", price_views.get_price, name="get_price"),
@@ -115,5 +140,4 @@ urlpatterns = [
         favorite_views.delete_favorite_view,
         name="delete_favorite",
     ),
-
 ]
