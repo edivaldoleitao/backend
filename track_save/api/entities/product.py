@@ -201,7 +201,7 @@ class Computer(models.Model):
         app_label = "api"
 
     def __str__(self):
-        return f"{self.product.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
+        return f"{self.prod.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
     
 class Storage(models.Model):
     # relacionamento 1-1 com o produto "base"

@@ -1,14 +1,18 @@
-from django.shortcuts import render
-
 # Create your views here.
+
+import json
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-import json
 
-from .agents.agent_use import processar_recomendacao
 from .agents.agent_upgrade import processar_upgrade
-import pandas as pd
+from .agents.agent_use import generate_schema_string
+from .agents.agent_use import processar_recomendacao
+from .agents.agent_upgrade import generate_schema_string
+
+
+schema_str = generate_schema_string("api")
+
 
 @csrf_exempt
 def agent_use(request):
@@ -17,8 +21,8 @@ def agent_use(request):
             data = json.loads(request.body)
         except json.JSONDecodeError:
             return JsonResponse({"error": "JSON inválido"}, status=400)
-
-        resultado = processar_recomendacao(data)
+        print("TESTEEEE")
+        resultado = processar_recomendacao(data, schema_str)
 
         return JsonResponse(resultado, safe=False)
 
@@ -33,47 +37,15 @@ def agent_upgrade(request):
             setup = data.get("setup")
             descricao = data.get("descricao")
 
-            # Mock do banco
-            df_cpu = pd.DataFrame([
-                {"model": "Ryzen 5 5600X", "socket": "AM4", "core_number": "6", "frequency": "4.6GHz"},
-                {"model": "Ryzen 7 5800X", "socket": "AM4", "core_number": "8", "frequency": "4.7GHz"},
-                {"model": "Ryzen 5 3600",  "socket": "AM4", "core_number": "6", "frequency": "4.2GHz"}
-            ])
+            if not setup or not descricao:
+                return JsonResponse(
+                    {"error": "Campos 'setup' e 'descricao' são obrigatórios."},
+                    status=400,
+                )
 
-            df_ram = pd.DataFrame([
-                {"model": "Corsair Vengeance", "capacity": "32GB", "ddr": "DDR4", "speed": "3200MHz"},
-                {"model": "Kingston Fury",     "capacity": "32GB", "ddr": "DDR4", "speed": "3200MHz"},
-                {"model": "Corsair Vengeance", "capacity": "16GB", "ddr": "DDR4", "speed": "2666MHz"}
-            ])
+            # Chama o agent que agora usa a API de busca
+            resultado = processar_upgrade(setup, descricao, schema_str)
 
-            df_graphics = pd.DataFrame([
-                {"model": "RTX 3060", "vram": "12GB", "chipset": "NVIDIA"},
-                {"model": "RTX 3060 Ti", "vram": "8GB", "chipset": "NVIDIA"},
-                {"model": "RTX 4060", "vram": "8GB", "chipset": "NVIDIA"}
-            ])
-
-            df_monitor = pd.DataFrame([
-                {"model": "LG UltraGear", "inches": "27", "resolution": "2560x1440", "refresh_rate": "144Hz"}
-            ])
-
-            df_mouse = pd.DataFrame([
-                {"model": "Logitech G502", "dpi": "16000"}
-            ])
-
-            df_keyboard = pd.DataFrame([
-                {"model": "HyperX Alloy", "layout": "ABNT2", "key_type": "Mecânico"}
-            ])
-
-            dfs = {
-                "cpu": df_cpu,
-                "ram": df_ram,
-                "graphics": df_graphics,
-                "monitor": df_monitor,
-                "mouse": df_mouse,
-                "keyboard": df_keyboard
-            }
-
-            resultado = processar_upgrade(setup, descricao, dfs)
             return JsonResponse(resultado, safe=False)
 
         except Exception as e:
