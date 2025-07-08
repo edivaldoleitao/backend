@@ -1,3 +1,5 @@
+import datetime
+
 from api.entities.price import Price
 from api.entities.product import ProductStore
 
@@ -83,3 +85,13 @@ def delete_price(price_id):
     p = Price.objects.get(id=price_id)
     p.delete()
     return "Price excluído com sucesso."
+
+
+def list_prices_by_product(product_id, number_of_days):
+    data = Price.objects.filter(
+        product_store__product_id=product_id,
+        collection_date__gte=(
+            datetime.date.today() - datetime.timedelta(days=float(number_of_days))
+        ),
+    ).order_by("collection_date")
+    return data.values()
