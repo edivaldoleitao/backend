@@ -49,7 +49,6 @@ CATEGORY_SPECS = {
         "output",
     ],
     "storage": [
-        "model",
         "capacity_gb",
         "storage_type",
         "interface",

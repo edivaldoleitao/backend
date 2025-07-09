@@ -32,11 +32,11 @@ class KabumScraper(Scraper):
         self.local_results = local_results
         self.save_print = save_print
 
-    def run(self) -> list[dict]:  # noqa: C901, PLR0915
+    def run(self, headless) -> list[dict]:  # noqa: C901, PLR0915
         print("🤖 Iniciando a coleta de dados da Kabum...")
         print(f"> Categoria: {self.category.name}, Limite: {self.limit}")
         results = []
-        browser, page = self.init_browser()
+        browser, page = self.init_browser(headless=headless)
 
         url = self.parse_category(self.category, get_url=True)
         page.goto(url)
@@ -57,14 +57,15 @@ class KabumScraper(Scraper):
 
             card.click()
 
-            priceSection = page.locator("#blocoValores")
+            priceSection = page.locator("span.block.my-12 b")
             descriptionSection = page.locator("#description")
             techInfoSection = page.locator("#technicalInfoSection")
             reviewsSection = page.locator("#reviewsSection")
             self.wait_elements(
                 page,
-                [descriptionSection, techInfoSection, reviewsSection],
+                [priceSection, descriptionSection, techInfoSection, reviewsSection],
             )
+            print("> Coletando produto da url:", page.url)
 
             common_data = self.get_common_data(
                 page,
@@ -149,7 +150,7 @@ class KabumScraper(Scraper):
     ) -> dict:
         name_loc = descriptionSection.locator("h2").first
         if not self.element_visible(name_loc):
-            name_loc = page.locator("#container-purchase h1")
+            name_loc = page.locator("h1.text-sm").first
 
         rating_loc = reviewsSection.locator("span").first
         self.wait_element(rating_loc, timeout=2000)
@@ -165,8 +166,10 @@ class KabumScraper(Scraper):
         category = self.category.name.lower()
         price = self.get_price(priceSection)
         url = page.url
-        img_url = page.locator("#carouselDetails img").first.get_attribute("src")
-        brand = self.get_brand(techInfoSection)
+        img_url = page.locator(
+            "div.swiper-slide.swiper-slide-active img",
+        ).first.get_attribute("src")
+        brand = self.get_brand(techInfoSection, name)
         description = self.get_description(descriptionSection)
         collection_date = date.today().isoformat()  # noqa: DTZ011
 
@@ -216,6 +219,16 @@ class KabumScraper(Scraper):
                 "thread_number": "12/16/24",
                 "frequency": "3.0GHz",
                 "mem_speed": "3200MHz",
+            }
+
+        if self.category == Categories.STORAGE:
+            return {
+                "capacity_gb": "256/512/1024",
+                "storage_type": "SSD/HDD",
+                "interface": "SATA/PCIe NVMe",
+                "form_factor": '2.5"/M.2',
+                "read_speed": "500MB/s",
+                "write_speed": "450MB/s",
             }
 
         if self.category == Categories.KEYBOARD:
@@ -274,15 +287,15 @@ class KabumScraper(Scraper):
         return {}
 
     def get_price(self, section: Locator) -> str:
-        price_locator = section.locator("b.regularPrice")
-        if not self.element_visible(price_locator):
-            price_locator = section.locator("h4.finalPrice")
+        if not self.wait_element(section, timeout=2000):
+            return "0.00"
 
+        price_locator = section
         price_raw = price_locator.first.inner_text()
         price_clean = re.sub(r"[^\d\.,]", "", price_raw)
         return price_clean.replace(".", "").replace(",", ".") if price_clean else "0.00"
 
-    def get_brand(self, section: Locator) -> str:
+    def get_brand(self, section: Locator, name: str) -> str:
         candidates = [
             "span:has-text('Marca')",
             "p:has-text('Marca')",
@@ -300,10 +313,34 @@ class KabumScraper(Scraper):
                     brand_name = ""
 
         if not brand_name:
-            return ""
+            brands = [
+                "Corsair",
+                "ASUS",
+                "Gigabyte",
+                "MSI",
+                "Samsung",
+                "Kingston",
+                "Rise Mode",
+                "Logitech",
+                "Dell",
+                "HP",
+                "Redragon",
+                "HyperX",
+                "Acer",
+                "Lenovo",
+                "Neologic",
+                "3green",
+                "2eletro",
+            ]
+            for brand in brands:
+                if brand.lower() in name.lower():
+                    return brand
+
+        if not brand_name:
+            return "Generic"
 
         brand = re.search(r"Marca:\s*(.+)$", brand_name, flags=re.IGNORECASE)
-        return brand.group(1) if brand else ""
+        return brand.group(1) if brand else "Generic"
 
     def get_description(self, section: Locator) -> str:  # noqa: C901
         """
@@ -380,15 +417,20 @@ class KabumScraper(Scraper):
 
 if __name__ == "__main__":
     # Teste de coleta para todas as categorias
-    for category in Categories:
-        scraper = KabumScraper(
-            category=category,
-            limit=100,
-            local_results=True,
-            save_print=False,
-        )
-        scraper.run()
+    # for category in Categories:
+    #     scraper = KabumScraper(
+    #         category=category,
+    #         limit=10,
+    #         local_results=True,
+    #         save_print=False,
+    #     )
+    #     scraper.run(headless=True)
 
-    # # Teste específico para GPU
-    # scraper = KabumScraper(category=Categories.GPU, limit=5, local_results=True, save_print=True)
-    # scraper.run()
+    # Teste específico para GPU
+    scraper = KabumScraper(
+        category=Categories.COMPUTER,
+        limit=5,
+        local_results=True,
+        save_print=True,
+    )
+    scraper.run(headless=True)

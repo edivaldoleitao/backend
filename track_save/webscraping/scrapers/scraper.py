@@ -6,10 +6,10 @@ from track_save.webscraping.enums import Categories
 
 
 class Scraper:
-    def init_browser(self):
+    def init_browser(self, headless=True):
         """Inicializa o navegador com Playwright."""
         self.playwright = sync_playwright().start()
-        browser = self.playwright.chromium.launch(headless=True)
+        browser = self.playwright.chromium.launch(headless=headless)
         page = browser.new_page()
         return browser, page
 
