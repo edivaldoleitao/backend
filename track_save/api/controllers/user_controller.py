@@ -145,10 +145,10 @@ def create_user_specification(
     if not user_id:
         raise ValueError("É necessário o id do usuário.")
 
-    if not all([cpu, ram, motherboard, gpu]):
+    if not all([cpu, ram, motherboard]):
         raise ValueError(
             "É necessário informar pelo menos os campos a seguir: "
-            "Processador, Ram, Armazenamento e Placa Mãe"
+            "Processador, Ram e Placa Mãe"
         )
 
     try:

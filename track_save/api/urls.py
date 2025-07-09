@@ -164,4 +164,5 @@ urlpatterns = [
         alert_views.delete_alert_view,
         name="delete_alert",
     ),
+    path("search/", product_views.search_view, name="generic_search"),
 ]
