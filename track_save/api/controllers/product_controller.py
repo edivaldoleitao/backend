@@ -16,6 +16,7 @@ from api.entities.product import Ram
 from api.entities.product import Storage
 from api.entities.product import Store
 from api.enums.category_specs import CATEGORY_SPECS
+from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Exists
@@ -1182,3 +1183,105 @@ def delete_product_store(product_store_id):
     ps = ProductStore.objects.get(id=product_store_id)
     ps.delete()
     return "ProductStore excluído com sucesso."
+
+
+def generic_search(searches):
+    results = []
+
+    for search in searches:
+        model_name = search.get("model_name")
+        columns = search.get("columns", [])
+        search_values = search.get("search_values", [])
+
+        if not model_name or not columns or not search_values:
+            continue
+
+        if len(columns) != len(search_values):
+            raise ValueError("A quantidade de colunas e valores deve ser igual.")
+
+        Model = apps.get_model("api", model_name)
+        if not Model:
+            raise ValueError(f"Model {model_name} não encontrado no app 'api'.")
+
+        model_fields = [f.name for f in Model._meta.get_fields()]
+        field_types = {f.name: f.get_internal_type() for f in Model._meta.get_fields()}
+
+        query = Q()
+        price_limit = None  # ✅ Aqui vamos guardar o valor do filtro de price
+
+        for column, value in zip(columns, search_values, strict=False):
+            if column == "price":
+                price_limit = float(value)  # ✅ Salva o valor e não filtra no Model
+                continue
+
+            if column not in model_fields:
+                print(
+                    f"⚠️ Ignorando filtro: coluna '{column}' não existe no model '{model_name}'"
+                )
+                continue
+
+            field_type = field_types.get(column)
+
+            if field_type in ["CharField", "TextField"]:
+                query &= Q(**{f"{column}__iexact": value})
+            elif field_type in ["IntegerField", "FloatField", "DecimalField"]:
+                query &= Q(**{f"{column}": value})
+            else:
+                print(
+                    f"⚠️ Ignorando filtro: tipo '{field_type}' da coluna '{column}' não tratado."
+                )
+                continue
+
+        technical_results = Model.objects.filter(query)
+        product_ids = technical_results.values_list("prod_id", flat=True)
+
+        # Busca produtos
+        products = Product.objects.filter(id__in=product_ids)
+
+        # Busca stores disponíveis
+        stores = ProductStore.objects.filter(product_id__in=product_ids, available=True)
+        store_data = stores.values("id", "product_id", "url_product", "store_id")
+
+        store_ids = [s["store_id"] for s in store_data]
+        store_names = Store.objects.filter(id__in=store_ids).values("id", "name")
+        store_name_map = {s["id"]: s["name"] for s in store_names}
+
+        price_data = (
+            Price.objects.filter(product_store_id__in=[s["id"] for s in store_data])
+            .order_by("product_store_id", "-collection_date")
+            .values("product_store_id", "value", "collection_date")
+        )
+
+        price_map = {}
+        for price in price_data:
+            ps_id = price["product_store_id"]
+            if ps_id not in price_map:
+                price_map[ps_id] = float(price["value"])
+
+        for product in products:
+            product_stores = [s for s in store_data if s["product_id"] == product.id]
+            for store in product_stores:
+                store_name = store_name_map.get(store["store_id"], "Unknown Store")
+                price = price_map.get(store["id"])
+
+                if price is None:
+                    continue
+
+                # ✅ Aqui filtra pelo preço máximo, se tiver
+                if price_limit is not None and price > price_limit:
+                    continue
+
+                results.append(
+                    {
+                        "name": product.name,
+                        "description": product.description,
+                        "image_url": product.image_url,
+                        "category": product.category,
+                        "brand": product.brand,
+                        "price": str(price),
+                        "store_name": store_name,
+                        "url_product": store["url_product"],
+                    },
+                )
+
+    return {"results": results}
