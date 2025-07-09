@@ -1,14 +1,13 @@
 import os
 
+from api.entities.user import User
+from api.entities.user import UserCategory
+from api.entities.user import UserSpecification
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
-
-from api.entities.user import User
-from api.entities.user import UserCategory
-from api.entities.user import UserSpecification
 
 
 def get_categories():
@@ -44,7 +43,8 @@ def create_user(name, email, password, categories):
 
     send_mail(
         subject="Confirmação de email - Track&Save",
-        message=f"Obrigado por se cadastrar no Track&Save! Para confirmar o email clique no link abaixo. Link: http://localhost:8001/api/users/confirm_email/{user.id}/",
+        # ALTERAR O LINK DPS PARA A DA TELA DE CONFIRMAÇÃO DE EMAIL
+        message=f"Obrigado por se cadastrar no Track&Save! Para confirmar o email clique no link abaixo. Link: http://localhost:5173/ConfirmAccount/{user.id}/",
         recipient_list=[email],
         from_email=os.getenv("DEFAULT_FROM_EMAIL"),
     )
@@ -111,7 +111,7 @@ def recover_password(email):
     except User.DoesNotExist:
         raise User.DoesNotExist("Este email não pertence a nenhuma conta!")
 
-    link_redefinicao = f"http://localhost:8001/api/update_password/{user.id}"
+    link_redefinicao = f"http://localhost:5173/ChangePassword/{user.id}"
 
     send_mail(
         subject="Redefinição de senha da conta Track&Save",
