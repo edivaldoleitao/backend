@@ -121,5 +121,5 @@ urlpatterns = [
     path('alerts/<int:alert_id>/', alert_views.get_alert_view,     name='get_alert'),
     path('alerts/update/<int:alert_id>/', alert_views.update_alert_view, name='update_alert'),
     path('alerts/delete/<int:alert_id>/', alert_views.delete_alert_view, name='delete_alert'),
-
+    path('search/', product_views.search_view, name='generic_search'),
 ]

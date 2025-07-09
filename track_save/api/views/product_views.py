@@ -382,3 +382,24 @@ def delete_product_store(request, product_store_id):
         return HttpResponseNotFound("ProductStore não encontrado")
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
+
+@csrf_exempt
+@require_POST
+def search_view(request):
+    try:
+        # Lê o corpo da requisição
+        data = json.loads(request.body)
+
+        # Espera receber um array chamado 'searches'
+        searches = data.get("searches")
+        if not searches:
+            return HttpResponseBadRequest("Campo 'searches' é obrigatório.")
+
+        # Chama o controller
+        results = product_controller.generic_search(searches)
+
+        # Retorna JSON
+        return JsonResponse(results, safe=False)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
