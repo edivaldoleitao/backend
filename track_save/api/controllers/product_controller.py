@@ -955,6 +955,43 @@ def get_all_products():  # noqa: C901, PLR0912, PLR0915
         raise ValueError(msg)  # noqa: B904
 
 
+def get_product_stores_by_product(ps_id):
+    """
+    Retorna uma lista dos prices que possuem o mesmo product store
+    """
+    lst = [
+        {
+            "product": ps.product.id,
+            "store": Store.objects.get(id=ps.store.id).name,
+            "url_product": ps.url_product,
+            "available": ps.available,
+        }
+        for ps in ProductStore.objects.filter(product=ps_id)
+    ]
+    return lst
+
+
+def get_recent_price_stores(product_id):
+    """
+    Retorna o preço mais recente de cada ProductStore para um produto específico.
+    """
+    latest_prices = (
+        Price.objects.filter(product_store__product_id=product_id)
+        .order_by("product_store_id", "-collection_date")
+        .distinct("product_store_id")
+        .select_related("product_store__store")
+    )
+
+    return [
+        {
+            "store_name": price.product_store.store.name,
+            "value": str(price.value),
+            "ps_id": price.product_store.id,
+        }
+        for price in latest_prices
+    ]
+
+
 def update_product(  # noqa: C901, PLR0912, PLR0913, PLR0915
     product_id,
     name=None,
@@ -1124,15 +1161,19 @@ def get_all_product_stores():
     """
     Retorna lista de dicts com todos os ProductStore.
     """
-    return [
-        {
-            "product": ps.product.id,
-            "store": ps.store.id,
-            "url_product": ps.url_product,
-            "available": ps.available,
-        }
-        for ps in ProductStore.objects.select_related("product", "store").all()
-    ]
+    lst = []
+    for ps in ProductStore.objects.select_related("product", "store").all():
+        lst.append(
+            {
+                "id": ps.id,
+                "product": ps.product.id,
+                "store": ps.store.id,
+                "url_product": ps.url_product,
+                "rating": ps.rating,
+                "available": ps.available,
+            }
+        )
+    return lst
 
 
 def get_product_store_by_id(product_store_id):
@@ -1147,13 +1188,14 @@ def get_product_store_by_id(product_store_id):
         "store": ps.store.id,
         "url_product": ps.url_product,
         "available": ps.available,
+        "rating": ps.rating,
     }
 
 
 def update_product_store(product_store_id, **data):
     """
     Atualiza campos de um ProductStore existente.
-    Campos aceitos em data: product_id, store_id, url_product, available.
+    Campos aceitos em data: product_id, store_id, url_product, available e rating.
     Raises:
       ProductStore.DoesNotExist se não existir.
       Product.DoesNotExist / Store.DoesNotExist se IDs inválidos.
@@ -1168,6 +1210,8 @@ def update_product_store(product_store_id, **data):
         ps.url_product = data["url_product"]
     if "available" in data:
         ps.available = data["available"]
+    if "rating" in data:
+        ps.rating = data["rating"]
 
     ps.save()
     return ps

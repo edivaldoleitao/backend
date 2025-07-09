@@ -1,15 +1,15 @@
 from api.entities.alert import Alert
-from api.entities.user import User
 from api.entities.product import Product
+from api.entities.user import User
 
 
-def create_alert(user_id: int,
-                 product_id: int,
-                 desired_price: str,
-                 expires_at,
-                 created_at) -> Alert:
+def create_alert(
+    user_id: int, product_id: int, desired_price: str, expires_at, created_at
+) -> Alert:
     if not all([user_id, product_id, desired_price, expires_at, created_at]):
-        raise ValueError("user_id, product_id, desired_price, expires_at e created_at são obrigatórios.")
+        raise ValueError(
+            "user_id, product_id, desired_price, expires_at e created_at são obrigatórios."
+        )
 
     user = User.objects.get(id=user_id)
     product = Product.objects.get(id=product_id)
@@ -20,7 +20,7 @@ def create_alert(user_id: int,
         desired_price=desired_price,
         is_active=True,
         expires_at=expires_at,
-        created_at=created_at
+        created_at=created_at,
     )
     return alert
 
@@ -29,28 +29,54 @@ def get_all_alerts() -> list[dict]:
     out = []
     qs = Alert.objects.select_related("user", "product").all()
     for a in qs:
-        out.append({
-            "id":            a.id,
-            "user":          a.user.id,
-            "product":       a.product.id,
-            "desired_price": str(a.desired_price),
-            "is_active":     a.is_active,
-            "expires_at":    a.expires_at.isoformat(),
-            "created_at":    a.created_at.isoformat(),
-        })
+        out.append(
+            {
+                "id": a.id,
+                "user": a.user.id,
+                "product": a.product.id,
+                "desired_price": str(a.desired_price),
+                "is_active": a.is_active,
+                "expires_at": a.expires_at.isoformat(),
+                "created_at": a.created_at.isoformat(),
+            }
+        )
     return out
+
+
+def get_alert_by_user(user_id: int, product_id: int) -> dict:
+    """
+    Checa se esse alerta existe, caso positivo ele retorna juntamente o indice
+    """
+    a = Alert.objects.filter(user=user_id, product=product_id).last()
+    if a:
+        return {
+            "isAlert": True,
+            "alert": {
+                "id": a.id,
+                "user": a.user.id,
+                "product": a.product.id,
+                "desired_price": str(a.desired_price),
+                "is_active": a.is_active,
+                "expires_at": a.expires_at.isoformat(),
+                "created_at": a.created_at.isoformat(),
+            },
+        }
+
+    return {
+        "isAlert": False,
+    }
 
 
 def get_alert_by_id(alert_id: int) -> dict:
     a = Alert.objects.select_related("user", "product").get(id=alert_id)
     return {
-        "id":            a.id,
-        "user":          a.user.id,
-        "product":       a.product.id,
+        "id": a.id,
+        "user": a.user.id,
+        "product": a.product.id,
         "desired_price": str(a.desired_price),
-        "is_active":     a.is_active,
-        "expires_at":    a.expires_at.isoformat(),
-        "created_at":    a.created_at.isoformat(),
+        "is_active": a.is_active,
+        "expires_at": a.expires_at.isoformat(),
+        "created_at": a.created_at.isoformat(),
     }
 
 

@@ -1,10 +1,10 @@
 from django.urls import path
 
+from .views import alert_views
 from .views import favorite_views
 from .views import price_views
 from .views import product_views
 from .views import user_views
-from .views import alert_views
 
 urlpatterns = [
     path("users/create/", user_views.create_user, name="create_user"),
@@ -18,7 +18,9 @@ urlpatterns = [
         name="update_password",
     ),
     path("users/delete/<int:user_id>/", user_views.delete_user, name="delete_user"),
-    path("users/recover_password/", user_views.recover_password, name="recover_password"),
+    path(
+        "users/recover_password/", user_views.recover_password, name="recover_password"
+    ),
     path("users/login/", user_views.EmailLoginView.as_view(), name="email_login"),
     path("users/me/", user_views.CurrentUserView.as_view(), name="current_user"),
     path(
@@ -26,11 +28,29 @@ urlpatterns = [
         user_views.confirm_email,
         name="confirm_email",
     ),
-    path("users/specification/create/", user_views.create_user_specification, name="create_user_spec"),
-    path("users/specification/<int:user_id>/", user_views.get_user_specification_id, name="get_user_spec"),
-    path("users/specification/", user_views.get_all_specifications, name="get_all_spec"),
-    path("users/specification/update/<int:user_id>/", user_views.update_user_specification, name="update_user_spec"),
-    path("users/specification/delete/<int:user_id>/", user_views.delete_user_specification, name="delete_user_spec"),
+    path(
+        "users/specification/create/",
+        user_views.create_user_specification,
+        name="create_user_spec",
+    ),
+    path(
+        "users/specification/<int:user_id>/",
+        user_views.get_user_specification_id,
+        name="get_user_spec",
+    ),
+    path(
+        "users/specification/", user_views.get_all_specifications, name="get_all_spec"
+    ),
+    path(
+        "users/specification/update/<int:user_id>/",
+        user_views.update_user_specification,
+        name="update_user_spec",
+    ),
+    path(
+        "users/specification/delete/<int:user_id>/",
+        user_views.delete_user_specification,
+        name="delete_user_spec",
+    ),
     path("stores/create/", product_views.create_store, name="create_store"),
     path("stores/get/", product_views.get_stores, name="get_store"),
     path("stores/update/<str:name>", product_views.update_store, name="update_store"),
@@ -86,6 +106,11 @@ urlpatterns = [
         product_views.delete_product_store,
         name="delete_product_store",
     ),
+    path(
+        "product_stores/details/<int:ps_id>/",
+        product_views.get_product_details,
+        name="get_product_details",
+    ),
     path("prices/", price_views.list_prices, name="list_prices"),
     path("prices/create/", price_views.create_price_view, name="create_price"),
     path("prices/<int:price_id>/", price_views.get_price, name="get_price"),
@@ -107,6 +132,11 @@ urlpatterns = [
         "favorites/<int:fav_id>/", favorite_views.get_favorite_view, name="get_favorite"
     ),
     path(
+        "favorites/user/",
+        favorite_views.get_favorite_view_by_user,
+        name="get_favorite_by_user",
+    ),
+    path(
         "favorites/update/<int:fav_id>/",
         favorite_views.update_favorite_view,
         name="update_favorite",
@@ -116,10 +146,23 @@ urlpatterns = [
         favorite_views.delete_favorite_view,
         name="delete_favorite",
     ),
-    path('alerts/', alert_views.list_alerts_view,   name='list_alerts'),
-    path('alerts/create/', alert_views.create_alert_view,  name='create_alert'),
-    path('alerts/<int:alert_id>/', alert_views.get_alert_view,     name='get_alert'),
-    path('alerts/update/<int:alert_id>/', alert_views.update_alert_view, name='update_alert'),
-    path('alerts/delete/<int:alert_id>/', alert_views.delete_alert_view, name='delete_alert'),
-    path('search/', product_views.search_view, name='generic_search'),
+    path("alerts/", alert_views.list_alerts_view, name="list_alerts"),
+    path("alerts/create/", alert_views.create_alert_view, name="create_alert"),
+    path(
+        "alerts/user/",
+        alert_views.get_alert_view_by_user,
+        name="get_alert_view_by_user",
+    ),
+    path("alerts/<int:alert_id>/", alert_views.get_alert_view, name="get_alert"),
+    path(
+        "alerts/update/<int:alert_id>/",
+        alert_views.update_alert_view,
+        name="update_alert",
+    ),
+    path(
+        "alerts/delete/<int:alert_id>/",
+        alert_views.delete_alert_view,
+        name="delete_alert",
+    ),
+    path("search/", product_views.search_view, name="generic_search"),
 ]
