@@ -148,13 +148,9 @@ def delete_price_view(request, price_id):
 @csrf_exempt
 @require_GET
 def list_prices_by_product_view(request, product_id):
-    number_of_days = request.GET.get("number_of_days", 30)  # padrão
-    print("ALberto")
-    print(product_id)
-    print(number_of_days)
+    number_of_days = request.GET.get("number_of_days", 30)
     try:
         lst = list_prices_by_product(product_id, number_of_days)
         return JsonResponse({"prices": list(lst)}, status=200)
     except Exception as e:
-        print(e)
         return HttpResponseBadRequest(f"Erro interno: {e}")
