@@ -421,6 +421,7 @@ def delete_product_store(request, product_store_id):
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
 
+
 @csrf_exempt
 @require_POST
 def search_view(request):
@@ -441,3 +442,22 @@ def search_view(request):
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+
+@csrf_exempt
+@require_GET
+def list_product_stores_by_best_rating(request):
+    try:
+        category = request.GET.get("category", None)
+        limit = request.GET.get("limit", None)
+        products = product_controller.list_product_stores_by_best_rating(
+            category,
+            limit,
+        )
+        return JsonResponse(products, safe=False, status=200)
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
+    except TypeError as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
+    except Exception as e:  # noqa: BLE001
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
