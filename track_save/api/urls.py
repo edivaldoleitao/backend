@@ -64,6 +64,11 @@ urlpatterns = [
     ),
     path("products/", product_views.get_products, name="get_products"),
     path(
+        "products/best_rating/",
+        product_views.list_product_stores_by_best_rating,
+        name="list_product_stores_by_best_rating",
+    ),
+    path(
         "products/name/<str:product_name>/",
         product_views.get_product_name,
         name="get_product",

@@ -20,6 +20,8 @@ from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.db.models import Exists
+from django.db.models import F
+from django.db.models import Max
 from django.db.models import OuterRef
 from django.db.models import Q
 from django.db.models import Subquery
@@ -1329,3 +1331,48 @@ def generic_search(searches):
                 )
 
     return {"results": results}
+
+
+def list_product_stores_by_best_rating(category=None, limit=None):
+    """
+    Retorna o ProductStore de maior rating para cada produto, com filtro opcional por categoria e limite.
+    """
+    qs = ProductStore.objects.filter(available=True)
+    if category:
+        qs = qs.filter(product__category=category)
+
+    # Subquery para pegar o maior rating de cada produto
+    max_rating_subquery = (
+        ProductStore.objects.filter(
+            product=OuterRef("product"),
+            available=True,
+            **({"product__category": category} if category else {}),
+        )
+        .order_by("-rating")
+        .values("rating")[:1]
+    )
+
+    # Filtra apenas o ProductStore com maior rating de cada produto
+    qs = qs.annotate(max_rating=Subquery(max_rating_subquery)).filter(
+        rating=F("max_rating")
+    )
+
+    # Remove duplicados por produto (caso empate, pega só o primeiro)
+    qs = qs.order_by("product", "-rating").distinct("product")
+
+    if limit:
+        qs = qs[: int(limit)]
+
+    return [
+        {
+            "id": ps.id,
+            "product": ps.product.id,
+            "product_name": ps.product.name,
+            "store": ps.store.id,
+            "store_name": ps.store.name,
+            "rating": ps.rating,
+            "url_product": ps.url_product,
+            "available": ps.available,
+        }
+        for ps in qs.select_related("product", "store")
+    ]
