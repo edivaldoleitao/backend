@@ -1333,11 +1333,6 @@ def generic_search(searches):
     return {"results": results}
 
 
-from django.db.models import Max
-from django.db.models import OuterRef
-from django.db.models import Subquery
-
-
 def list_product_stores_by_best_rating(category=None, limit=None):
     """
     Retorna o ProductStore de maior rating para cada produto, com filtro opcional por categoria e limite.
