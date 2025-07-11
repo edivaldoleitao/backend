@@ -6,11 +6,12 @@ from django.http import HttpResponseNotFound
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
-from rest_framework import status, generics
+from rest_framework import generics
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from rest_framework.permissions import IsAuthenticated
 from api.controllers import user_controller
 from api.serielizers.login_serielizers import EmailLoginSerializer
 from api.serielizers.user_data_serializers import CurrentUserSerializer
@@ -52,9 +53,9 @@ def create_user(request):
     except Exception as e:
         return HttpResponseBadRequest(str(e))
 
+
 @require_GET
 def get_user_id(request, user_id):
-
     try:
         user = user_controller.get_user_by_id(user_id)
 
@@ -72,9 +73,9 @@ def get_user_id(request, user_id):
     except user_controller.User.DoesNotExist:
         return HttpResponseNotFound("Usuário não encontrado")
 
+
 @require_GET
 def get_all_users(request):
-
     users = user_controller.get_all_users()
 
     users_data = [
@@ -212,6 +213,7 @@ def confirm_email(request, user_id):
 
 ### USER SPECIFICATION ###
 
+
 @csrf_exempt
 def create_user_specification(request):
     if request.method != "POST":
@@ -230,16 +232,19 @@ def create_user_specification(request):
             psu=data.get("psu"),
         )
 
-        return JsonResponse({
-            "user_id": spec.user_id.id,
-            "cpu": spec.cpu,
-            "ram": spec.ram,
-            "motherboard": spec.motherboard,
-            "cooler": spec.cooler,
-            "gpu": spec.gpu,
-            "storage": spec.storage,
-            "psu": spec.psu,
-        }, status=201)
+        return JsonResponse(
+            {
+                "user_id": spec.user_id.id,
+                "cpu": spec.cpu,
+                "ram": spec.ram,
+                "motherboard": spec.motherboard,
+                "cooler": spec.cooler,
+                "gpu": spec.gpu,
+                "storage": spec.storage,
+                "psu": spec.psu,
+            },
+            status=201,
+        )
 
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")
@@ -251,36 +256,40 @@ def create_user_specification(request):
 def get_user_specification_id(request, user_id):
     try:
         spec = user_controller.get_user_specification_by_user_id(user_id)
-        return JsonResponse({
-            "user_id": spec.user_id.id,
-            "cpu": spec.cpu,
-            "ram": spec.ram,
-            "motherboard": spec.motherboard,
-            "cooler": spec.cooler,
-            "gpu": spec.gpu,
-            "storage": spec.storage,
-            "psu": spec.psu,
-        })
+        return JsonResponse(
+            {
+                "user_id": spec.user_id.id,
+                "cpu": spec.cpu,
+                "ram": spec.ram,
+                "motherboard": spec.motherboard,
+                "cooler": spec.cooler,
+                "gpu": spec.gpu,
+                "storage": spec.storage,
+                "psu": spec.psu,
+            }
+        )
     except Exception as e:
         return HttpResponseNotFound(str(e))
-    
+
+
 @require_GET
 def get_all_specifications(request):
     specs = user_controller.get_all_specifications()
-        
-    specs_data = [{
-        "user_id": s.user_id.id,
-        "cpu": s.cpu,
-        "ram": s.ram,
-        "motherboard": s.motherboard,
-        "cooler": s.cooler,
-        "gpu": s.gpu,
-        "storage": s.storage,
-        "psu": s.psu,
+
+    specs_data = [
+        {
+            "user_id": s.user_id.id,
+            "cpu": s.cpu,
+            "ram": s.ram,
+            "motherboard": s.motherboard,
+            "cooler": s.cooler,
+            "gpu": s.gpu,
+            "storage": s.storage,
+            "psu": s.psu,
         }
         for s in specs
     ]
-        
+
     return JsonResponse(specs_data, safe=False)
 
 
@@ -293,16 +302,18 @@ def update_user_specification(request, user_id):
         data = json.loads(request.body)
         spec = user_controller.update_user_specification(user_id, data)
 
-        return JsonResponse({
-            "user_id": spec.user_id.id,
-            "cpu": spec.cpu,
-            "ram": spec.ram,
-            "motherboard": spec.motherboard,
-            "cooler": spec.cooler,
-            "gpu": spec.gpu,
-            "storage": spec.storage,
-            "psu": spec.psu,
-        })
+        return JsonResponse(
+            {
+                "user_id": spec.user_id.id,
+                "cpu": spec.cpu,
+                "ram": spec.ram,
+                "motherboard": spec.motherboard,
+                "cooler": spec.cooler,
+                "gpu": spec.gpu,
+                "storage": spec.storage,
+                "psu": spec.psu,
+            }
+        )
 
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")

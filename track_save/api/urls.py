@@ -19,7 +19,9 @@ urlpatterns = [
     ),
     path("users/delete/<int:user_id>/", user_views.delete_user, name="delete_user"),
     path(
-        "users/recover_password/", user_views.recover_password, name="recover_password"
+        "users/recover_password/",
+        user_views.recover_password,
+        name="recover_password",
     ),
     path("users/login/", user_views.EmailLoginView.as_view(), name="email_login"),
     path("users/me/", user_views.CurrentUserView.as_view(), name="current_user"),
@@ -39,7 +41,9 @@ urlpatterns = [
         name="get_user_spec",
     ),
     path(
-        "users/specification/", user_views.get_all_specifications, name="get_all_spec"
+        "users/specification/",
+        user_views.get_all_specifications,
+        name="get_all_spec",
     ),
     path(
         "users/specification/update/<int:user_id>/",
@@ -84,7 +88,9 @@ urlpatterns = [
         name="delete_product",
     ),
     path(
-        "product_stores/", product_views.list_product_stores, name="list_product_stores"
+        "product_stores/",
+        product_views.list_product_stores,
+        name="list_product_stores",
     ),
     path(
         "product_stores/create/",
@@ -106,6 +112,11 @@ urlpatterns = [
         product_views.delete_product_store,
         name="delete_product_store",
     ),
+    path(
+        "product_stores/details/<int:ps_id>/",
+        product_views.get_product_details,
+        name="get_product_details",
+    ),
     path("prices/", price_views.list_prices, name="list_prices"),
     path("prices/create/", price_views.create_price_view, name="create_price"),
     path("prices/<int:price_id>/", price_views.get_price, name="get_price"),
@@ -126,10 +137,19 @@ urlpatterns = [
     ),
     path("favorites/", favorite_views.list_favorites_view, name="list_favorites"),
     path(
-        "favorites/create/", favorite_views.create_favorite_view, name="create_favorite"
+        "favorites/create/",
+        favorite_views.create_favorite_view,
+        name="create_favorite",
     ),
     path(
-        "favorites/<int:fav_id>/", favorite_views.get_favorite_view, name="get_favorite"
+        "favorites/<int:fav_id>/",
+        favorite_views.get_favorite_view,
+        name="get_favorite",
+    ),
+    path(
+        "favorites/user/",
+        favorite_views.get_favorite_view_by_user,
+        name="get_favorite_by_user",
     ),
     path(
         "favorites/update/<int:fav_id>/",
@@ -143,6 +163,11 @@ urlpatterns = [
     ),
     path("alerts/", alert_views.list_alerts_view, name="list_alerts"),
     path("alerts/create/", alert_views.create_alert_view, name="create_alert"),
+    path(
+        "alerts/user/",
+        alert_views.get_alert_view_by_user,
+        name="get_alert_view_by_user",
+    ),
     path("alerts/<int:alert_id>/", alert_views.get_alert_view, name="get_alert"),
     path(
         "alerts/update/<int:alert_id>/",
@@ -154,4 +179,5 @@ urlpatterns = [
         alert_views.delete_alert_view,
         name="delete_alert",
     ),
+    path("search/", product_views.search_view, name="generic_search"),
 ]

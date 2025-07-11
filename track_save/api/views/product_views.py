@@ -1,5 +1,6 @@
 import json
 
+from api.controllers import price_controller
 from api.controllers import product_controller
 from api.entities.product import Product
 from api.entities.product import ProductStore
@@ -161,6 +162,42 @@ def search_products(request):
         return HttpResponseNotFound(str(e))
     except TypeError as e:
         return HttpResponseBadRequest(f"Erro interno: {e!s}")
+
+
+# Busca os detalhes de um produto pelo productStore
+@require_GET
+def get_product_details(request, ps_id):
+    try:
+        product_store = product_controller.get_product_store_by_id(ps_id)
+
+        price_history = price_controller.get_price_by_ps(ps_id)
+
+        price = price_history[-1]
+
+        product = product_controller.get_product_by_id(product_store["product"])
+
+        other_stores = product_controller.get_recent_price_stores(product["id"])
+
+        return JsonResponse(
+            {
+                "price": price,
+                "product_store": product_store,
+                "product": product,
+                "price_history": price_history,
+                "other_stores": other_stores,
+            },
+            safe=False,
+            status=200,
+        )
+
+    except price_controller.Price.DoesNotExist:
+        return HttpResponseNotFound("Produto não encontrado")
+    except product_controller.Product.DoesNotExist:
+        return HttpResponseNotFound("Produto não encontrado")
+    except product_controller.ProductStore.DoesNotExist:
+        return HttpResponseNotFound("ProductStore não encontrado")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
 
 
 # buscar produto pelo id
@@ -356,6 +393,7 @@ def update_product_store(request, product_store_id):
                 "store": ps.store.id,
                 "url_product": ps.url_product,
                 "available": ps.available,
+                "rating": ps.rating,
             },
             status=200,
         )
@@ -382,3 +420,24 @@ def delete_product_store(request, product_store_id):
         return HttpResponseNotFound("ProductStore não encontrado")
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
+
+@csrf_exempt
+@require_POST
+def search_view(request):
+    try:
+        # Lê o corpo da requisição
+        data = json.loads(request.body)
+
+        # Espera receber um array chamado 'searches'
+        searches = data.get("searches")
+        if not searches:
+            return HttpResponseBadRequest("Campo 'searches' é obrigatório.")
+
+        # Chama o controller
+        results = product_controller.generic_search(searches)
+
+        # Retorna JSON
+        return JsonResponse(results, safe=False)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

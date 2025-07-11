@@ -1,9 +1,9 @@
 from django.contrib.auth import authenticate
-from api.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.controllers import user_controller
+from api.models import User
+
 
 class EmailLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -14,7 +14,7 @@ class EmailLoginSerializer(serializers.Serializer):
         password = attrs.get("password")
 
         try:
-            user = user_controller.get_user_by_email(email)
+            user = User.objects.get(email=email)
         except User.DoesNotExist:
             raise serializers.ValidationError("Usuario não existe.")
 

@@ -5,6 +5,7 @@ from api.controllers.price_controller import create_price
 from api.controllers.price_controller import delete_price
 from api.controllers.price_controller import get_all_prices
 from api.controllers.price_controller import get_price_by_id
+from api.controllers.price_controller import get_price_by_ps
 from api.controllers.price_controller import list_prices_by_product
 from api.controllers.price_controller import update_price
 from api.entities.price import Price
@@ -24,6 +25,7 @@ from django.views.decorators.http import require_POST
 def create_price_view(request):
     try:
         data = json.loads(request.body)
+
         # converte a string em date
         date_str = data.get("collection_date")
         try:
@@ -79,6 +81,20 @@ def get_price(request, price_id):
     try:
         data = get_price_by_id(price_id)
         return JsonResponse(data, status=200)
+    except Price.DoesNotExist:
+        return HttpResponseNotFound("Price não encontrado")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+@csrf_exempt
+@require_GET
+def get_price_by_product_store(request, ps_id):
+    try:
+        data = get_price_by_ps(ps_id)
+        if not data:
+            return HttpResponseNotFound("Nenhum Price cadastrado")
+        return JsonResponse({"prices": data}, safe=False, status=200)
     except Price.DoesNotExist:
         return HttpResponseNotFound("Price não encontrado")
     except Exception as e:

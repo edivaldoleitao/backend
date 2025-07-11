@@ -1,25 +1,22 @@
 import json
 from datetime import datetime
 
-from django.http import (
-    JsonResponse,
-    HttpResponseBadRequest,
-    HttpResponseNotAllowed,
-    HttpResponseNotFound,
-)
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
-
-from api.controllers.alert_controller import (
-    create_alert,
-    get_all_alerts,
-    get_alert_by_id,
-    update_alert,
-    delete_alert,
-)
+from api.controllers.alert_controller import create_alert
+from api.controllers.alert_controller import delete_alert
+from api.controllers.alert_controller import get_alert_by_id
+from api.controllers.alert_controller import get_alert_by_user
+from api.controllers.alert_controller import get_all_alerts
+from api.controllers.alert_controller import update_alert
 from api.entities.alert import Alert
-from api.entities.user import User
 from api.entities.product import Product
+from api.entities.user import User
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotFound
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_POST
 
 
 # POST /api/alerts/create/
@@ -34,25 +31,30 @@ def create_alert_view(request):
             expires = datetime.strptime(data.get("expires_at"), "%Y-%m-%d").date()
             created = datetime.strptime(data.get("created_at"), "%Y-%m-%d").date()
         except (TypeError, ValueError):
-            return HttpResponseBadRequest("expires_at e created_at devem ser YYYY-MM-DD")
+            return HttpResponseBadRequest(
+                "expires_at e created_at devem ser YYYY-MM-DD"
+            )
 
         alert = create_alert(
-            user_id       = data.get("user_id"),
-            product_id    = data.get("product_id"),
-            desired_price = data.get("desired_price"),
-            expires_at    = expires,
-            created_at    = created,
+            user_id=data.get("user_id"),
+            product_id=data.get("product_id"),
+            desired_price=data.get("desired_price"),
+            expires_at=expires,
+            created_at=created,
         )
 
-        return JsonResponse({
-            "id":            alert.id,
-            "user":          alert.user.id,
-            "product":       alert.product.id,
-            "desired_price": str(alert.desired_price),
-            "is_active":     alert.is_active,
-            "expires_at":    alert.expires_at.isoformat(),
-            "created_at":    alert.created_at.isoformat(),
-        }, status=201)
+        return JsonResponse(
+            {
+                "id": alert.id,
+                "user": alert.user.id,
+                "product": alert.product.id,
+                "desired_price": str(alert.desired_price),
+                "is_active": alert.is_active,
+                "expires_at": alert.expires_at.isoformat(),
+                "created_at": alert.created_at.isoformat(),
+            },
+            status=201,
+        )
 
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")
@@ -79,6 +81,17 @@ def list_alerts_view(request):
         return HttpResponseBadRequest(f"Erro interno: {e}")
 
 
+# GET /api/alerts/user/
+@csrf_exempt
+def get_alert_view_by_user(request):
+    try:
+        data = json.loads(request.body)
+        response = get_alert_by_user(data.get("user_id"), data.get("product_id"))
+        return JsonResponse(response, status=200)
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
 # GET /api/alerts/<id>/
 @csrf_exempt
 @require_GET
@@ -95,7 +108,7 @@ def get_alert_view(request, alert_id):
 # PUT /api/alerts/update/<id>/
 @csrf_exempt
 def update_alert_view(request, alert_id):
-    if request.method not in ["POST", "PUT"]:
+    if request.method not in ["PATCH", "PUT"]:
         return HttpResponseNotAllowed(["POST", "PUT"])
     try:
         data = json.loads(request.body)
@@ -117,15 +130,18 @@ def update_alert_view(request, alert_id):
                 return HttpResponseBadRequest("created_at deve ser YYYY-MM-DD")
 
         a = update_alert(alert_id, **data)
-        return JsonResponse({
-            "id":            a.id,
-            "user":          a.user.id,
-            "product":       a.product.id,
-            "desired_price": str(a.desired_price),
-            "is_active":     a.is_active,
-            "expires_at":    a.expires_at.isoformat(),
-            "created_at":    a.created_at.isoformat(),
-        }, status=200)
+        return JsonResponse(
+            {
+                "id": a.id,
+                "user": a.user.id,
+                "product": a.product.id,
+                "desired_price": str(a.desired_price),
+                "is_active": a.is_active,
+                "expires_at": a.expires_at.isoformat(),
+                "created_at": a.created_at.isoformat(),
+            },
+            status=200,
+        )
 
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")

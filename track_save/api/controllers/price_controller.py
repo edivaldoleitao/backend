@@ -53,6 +53,21 @@ def get_price_by_id(price_id):
     }
 
 
+def get_price_by_ps(ps_id):
+    """
+    Retorna uma lista dos prices que possuem o mesmo product store
+    """
+    lst = [
+        {
+            "product_store": p.product_store.id,
+            "value": str(p.value),
+            "collection_date": p.collection_date.isoformat(),
+        }
+        for p in Price.objects.filter(product_store=ps_id).order_by("collection_date")
+    ]
+    return lst
+
+
 def update_price(price_id, **data):
     """
     Atualiza um Price existente.
