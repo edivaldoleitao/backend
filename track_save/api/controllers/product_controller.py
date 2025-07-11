@@ -19,10 +19,19 @@ from api.enums.category_specs import CATEGORY_SPECS
 from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
+from django.db import connection
 from django.db.models import Exists
 from django.db.models import OuterRef
 from django.db.models import Q
 from django.db.models import Subquery
+from django.db.models import Value
+from django.db.models import FloatField
+from django.db.models import Case
+from django.db.models import When
+from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchQuery
+from django.contrib.postgres.search import SearchRank
+
 
 
 def create_store(name):
@@ -155,7 +164,15 @@ def create_product(  # noqa: C901, PLR0912, PLR0913, PLR0915
                 case "motherboard":
                     Motherboard.objects.create(prod=product, **payload)
                 case "storage":
-                    Storage.objects.create(prod=product, **payload)
+                    storage_data = {
+                        "capacity_gb": spec_fields.get("capacity_gb"),
+                        "storage_type": spec_fields.get("storage_type"),
+                        "interface": spec_fields.get("interface"),
+                        "form_factor": spec_fields.get("form_factor"),
+                        "read_speed": spec_fields.get("read_speed"),
+                        "write_speed": spec_fields.get("write_speed"),
+                    }
+                    Storage.objects.create(prod=product, **storage_data)
                 case _:
                     # nunca deve chegar aqui, pois já validamos acima
                     msg = f"Categoria não suportada: {category}"
@@ -289,7 +306,7 @@ def get_specific_details(product):  # noqa: PLR0911
                     "speed": p.speed,
                 }
             case "storage":
-                p = Storage.objects.get(prod_id=product)
+                p = Storage.objects.get(prod=product)
                 return {
                     "capacity": p.capacity_gb,
                     "storage_type": p.storage_type,
@@ -297,6 +314,20 @@ def get_specific_details(product):  # noqa: PLR0911
                     "form_factor": p.form_factor,
                     "read_speed": p.read_speed,
                     "write_speed": p.write_speed,
+                }
+            case "motherboard":
+                p = Motherboard.objects.get(prod=product)
+                return {
+                    "model": p.model,
+                    "socket": p.socket,
+                    "chipset": p.chipset,
+                    "form_type": p.form_type,
+                    "max_ram_capacity": p.max_ram_capacity,
+                    "ram_type": p.ram_type,
+                    "ram_slots": p.ram_slots,
+                    "pcie_slots": p.pcie_slots,
+                    "sata_ports": p.sata_ports,
+                    "m2_slot": p.m2_slot,
                 }
             case _:
                 return {}
@@ -309,6 +340,7 @@ def get_specific_details(product):  # noqa: PLR0911
         Monitor.DoesNotExist,
         Ram.DoesNotExist,
         Storage.DoesNotExist,
+        Motherboard.DoesNotExist,
     ):
         return {}
 
@@ -319,15 +351,49 @@ http://localhost:8001/api/products/search/?name=nvidia rtx 3080&brand=NVIDIA
 http://localhost:8001/api/products/search/?brand=NVIDIA&category=gpu&price_min=2000&price_max=3000&store=Kabum
 """
 
-
-def search_products(filters: dict):  # noqa: C901, PLR0912, PLR0915
+def search_products(filters: dict):
     try:
         base_query = Q()
+        product_ranks = {}
 
+        # ====== FILTRO POR TEXTO ======
+        if "name" in filters:
+            search_query = SearchQuery(filters["name"], config='portuguese')
+            search_vector = SearchVector('name', 'description', config='portuguese')
+
+            # Busca no full-text
+            fulltext_match = Product.objects.annotate(
+                search=search_vector,
+                rank=SearchRank(search_vector, search_query),
+            ).filter(search=search_query)
+
+            combined_products = list(fulltext_match.values('pk', 'rank'))
+
+            # Se full-text não encontrou, faz a busca unaccent manual
+            if not combined_products:
+                like_pattern = f"%{filters['name']}%"
+                sql = """
+                    SELECT id FROM api_product
+                    WHERE unaccent(name || ' ' || description) ILIKE unaccent(%s)
+                """
+
+                with connection.cursor() as cursor:
+                    cursor.execute(sql, [like_pattern])
+                    product_ids = [row[0] for row in cursor.fetchall()]
+
+                if not product_ids:
+                    raise ValueError("Nenhum produto encontrado com os filtros fornecidos.")
+
+                # Simula rank baixo no fallback
+                combined_products = [{"pk": pid, "rank": 0.1} for pid in product_ids]
+
+            # Gera os ranks e monta query base
+            product_ranks = {item['pk']: item['rank'] for item in combined_products}
+            base_query &= Q(pk__in=product_ranks.keys())
+
+        # ====== FILTROS EXTRAS ======
         if "id" in filters:
             base_query &= Q(id=filters["id"])
-        if "name" in filters:
-            base_query &= Q(name__icontains=filters["name"])
         if "category" in filters:
             base_query &= Q(category__iexact=filters["category"])
         if "brand" in filters:
@@ -335,91 +401,83 @@ def search_products(filters: dict):  # noqa: C901, PLR0912, PLR0915
         if "store" in filters:
             base_query &= Q(productstore__store__name__icontains=filters["store"])
 
-        # último preço coletado
+        # ====== ANOTAÇÕES ======
         latest_price_subquery = (
-            Price.objects.filter(
-                product_store__product=OuterRef("pk"),
-            )
+            Price.objects.filter(product_store__product=OuterRef("pk"))
             .order_by("-collection_date")
             .values("value")[:1]
         )
 
-        # rating máximo entre as lojas
-        rating_subquery = (
-            ProductStore.objects.filter(
-                product=OuterRef("pk"),
-            )
+        max_rating_subquery = (
+            ProductStore.objects.filter(product=OuterRef("pk"))
             .order_by("-rating")
             .values("rating")[:1]
         )
 
-        # se o produto pertence a alguma loja patrocinada
         sponsor_subquery = Store.objects.filter(
             productstore__product=OuterRef("pk"),
             is_sponsor=True,
         )
 
-        # produtos patrocinados
+        # ====== PRODUTOS PATROCINADOS ======
         sponsored_products = Product.objects.annotate(
             latest_price=Subquery(latest_price_subquery),
-            rating=Subquery(rating_subquery),
+            rating=Subquery(max_rating_subquery),
             is_sponsored=Exists(sponsor_subquery),
         ).filter(base_query, is_sponsored=True)
 
+        sponsored_products = sponsored_products.annotate(
+            search_rank=Case(
+                *[When(pk=pk, then=Value(rank)) for pk, rank in product_ranks.items()],
+                default=Value(0.0),
+                output_field=FloatField(),
+            )
+        )
+
         if "price_min" in filters:
-            sponsored_products = sponsored_products.filter(
-                latest_price__gte=filters["price_min"],
-            )
+            sponsored_products = sponsored_products.filter(latest_price__gte=filters["price_min"])
         if "price_max" in filters:
-            sponsored_products = sponsored_products.filter(
-                latest_price__lte=filters["price_max"],
-            )
+            sponsored_products = sponsored_products.filter(latest_price__lte=filters["price_max"])
         if "rating_min" in filters:
-            sponsored_products = sponsored_products.filter(
-                rating__gte=filters["rating_min"],
-            )
+            sponsored_products = sponsored_products.filter(rating__gte=filters["rating_min"])
 
-        sponsored_products = sponsored_products.order_by("-rating")[:3]
+        sponsored_products = sponsored_products.order_by("-search_rank", "-rating")[:3]
 
-        # produtos não patrocinados
+        # ====== PRODUTOS NÃO PATROCINADOS ======
         non_sponsored_products = Product.objects.annotate(
             latest_price=Subquery(latest_price_subquery),
-            rating=Subquery(rating_subquery),
+            rating=Subquery(max_rating_subquery),
             is_sponsored=Exists(sponsor_subquery),
         ).filter(base_query, is_sponsored=False)
 
+        non_sponsored_products = non_sponsored_products.annotate(
+            search_rank=Case(
+                *[When(pk=pk, then=Value(rank)) for pk, rank in product_ranks.items()],
+                default=Value(0.0),
+                output_field=FloatField(),
+            )
+        )
+
         if "price_min" in filters:
-            non_sponsored_products = non_sponsored_products.filter(
-                latest_price__gte=filters["price_min"],
-            )
+            non_sponsored_products = non_sponsored_products.filter(latest_price__gte=filters["price_min"])
         if "price_max" in filters:
-            non_sponsored_products = non_sponsored_products.filter(
-                latest_price__lte=filters["price_max"],
-            )
+            non_sponsored_products = non_sponsored_products.filter(latest_price__lte=filters["price_max"])
         if "rating_min" in filters:
-            non_sponsored_products = non_sponsored_products.filter(
-                rating__gte=filters["rating_min"],
-            )
+            non_sponsored_products = non_sponsored_products.filter(rating__gte=filters["rating_min"])
 
-        non_sponsored_products = non_sponsored_products.order_by("-rating")
+        non_sponsored_products = non_sponsored_products.order_by("-search_rank", "-rating")
 
-        # concatenar resultados
+        # ====== RESULTADOS ======
         final_products = list(sponsored_products) + list(non_sponsored_products)
 
-        def _raise_not_found():
-            msg = "Nenhum produto encontrado com os filtros fornecidos."
-            raise ValueError(msg)  # noqa: TRY301
-
         if not final_products:
-            _raise_not_found()
+            raise ValueError("Nenhum produto encontrado com os filtros fornecidos.")
 
+        # MONTA JSON DE RETORNO
         product_data_list = []
         for product in final_products:
-            # tenta buscar a entrada de preço mais recente com loja associada
             latest_price_entry = (
-                Price.objects.filter(
-                    product_store__product=product,
-                )
+                Price.objects.filter(product_store__product=product)
                 .order_by("-collection_date")
                 .select_related("product_store__store")
                 .first()
@@ -430,9 +488,12 @@ def search_products(filters: dict):  # noqa: C901, PLR0912, PLR0915
                 store_name = ps.store.name
                 available = ps.available
                 collection_date = latest_price_entry.collection_date
+                store_rating = ps.rating
             else:
                 store_name = None
                 available = None
+                collection_date = None
+                store_rating = None
 
             product_data = {
                 "id": product.pk,
@@ -441,21 +502,22 @@ def search_products(filters: dict):  # noqa: C901, PLR0912, PLR0915
                 "description": product.description,
                 "image_url": product.image_url,
                 "brand": product.brand,
-                "rating": ps.rating,
-                "latest_price": ps.latest_price,
-                "is_sponsored": ps.is_sponsored,
+                "rating": product.rating,
+                "latest_price": product.latest_price,
+                "is_sponsored": product.is_sponsored,
                 "store": store_name,
                 "available": available,
                 "collection_date": collection_date,
+                "store_rating": store_rating,
                 "specific_details": get_specific_details(product),
             }
             product_data_list.append(product_data)
 
         return product_data_list if len(product_data_list) > 1 else product_data_list[0]
 
-    except Exception as e:  # noqa: BLE001
-        msg = f"Erro ao buscar produto(s): {e!s}"
-        raise ValueError(msg)  # noqa: B904
+    except Exception as e:
+        raise ValueError(f"Erro ao buscar produto(s): {e!s}")
+
 
 
 # pra pegar produto pelo id
@@ -557,6 +619,20 @@ def get_product_by_id(product_id):  # noqa: C901
                     "form_factor": storage.form_factor,
                     "read_speed": storage.read_speed,
                     "write_speed": storage.write_speed,
+                }
+            case "motherboard":
+                motherboard = Motherboard.objects.get(prod_id=product)
+                product_data["specific_details"] = {
+                    "model": motherboard.model,
+                    "socket": motherboard.socket,
+                    "chipset": motherboard.chipset,
+                    "form_type": motherboard.form_type,
+                    "max_ram_capacity": motherboard.max_ram_capacity,
+                    "ram_type": motherboard.ram_type,
+                    "ram_slots": motherboard.ram_slots,
+                    "pcie_slots": motherboard.pcie_slots,
+                    "sata_ports": motherboard.sata_ports,
+                    "m2_slot": motherboard.m2_slot,
                 }
             case _:
                 product_data["category_error"] = "Categoria não existe"
@@ -680,6 +756,20 @@ def get_product_by_name(product_name):  # noqa: C901
                         "read_speed": storage.read_speed,
                         "write_speed": storage.write_speed,
                     }
+                case "motherboard":
+                    motherboard = Motherboard.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": motherboard.model,
+                        "socket": motherboard.socket,
+                        "chipset": motherboard.chipset,
+                        "form_type": motherboard.form_type,
+                        "max_ram_capacity": motherboard.max_ram_capacity,
+                        "ram_type": motherboard.ram_type,
+                        "ram_slots": motherboard.ram_slots,
+                        "pcie_slots": motherboard.pcie_slots,
+                        "sata_ports": motherboard.sata_ports,
+                        "m2_slot": motherboard.m2_slot,
+                    }
 
             product_data_list.append(product_data)
 
@@ -795,6 +885,20 @@ def get_product_by_category(product_category):  # noqa: C901
                         "form_factor": storage.form_factor,
                         "read_speed": storage.read_speed,
                         "write_speed": storage.write_speed,
+                    }
+                case "motherboard":
+                    motherboard = Motherboard.objects.get(prod_id=product)
+                    product_data["specific_details"] = {
+                        "model": motherboard.model,
+                        "socket": motherboard.socket,
+                        "chipset": motherboard.chipset,
+                        "form_type": motherboard.form_type,
+                        "max_ram_capacity": motherboard.max_ram_capacity,
+                        "ram_type": motherboard.ram_type,
+                        "ram_slots": motherboard.ram_slots,
+                        "pcie_slots": motherboard.pcie_slots,
+                        "sata_ports": motherboard.sata_ports,
+                        "m2_slot": motherboard.m2_slot,
                     }
                 case _:
                     product_data["category_error"] = "Categoria não existe"
@@ -914,6 +1018,20 @@ def get_all_products():  # noqa: C901, PLR0912, PLR0915
                             "form_factor": storage.form_factor,
                             "read_speed": storage.read_speed,
                             "write_speed": storage.write_speed,
+                        }
+                    case "motherboard":
+                        motherboard = Motherboard.objects.get(prod_id=product)
+                        product_data["specific_details"] = {
+                            "model": motherboard.model,
+                            "socket": motherboard.socket,
+                            "chipset": motherboard.chipset,
+                            "form_type": motherboard.form_type,
+                            "max_ram_capacity": motherboard.max_ram_capacity,
+                            "ram_type": motherboard.ram_type,
+                            "ram_slots": motherboard.ram_slots,
+                            "pcie_slots": motherboard.pcie_slots,
+                            "sata_ports": motherboard.sata_ports,
+                            "m2_slot": motherboard.m2_slot,
                         }
                     case _:
                         product_data["category_error"] = "Categoria não existe"
@@ -1063,6 +1181,35 @@ def update_product(  # noqa: C901, PLR0912, PLR0913, PLR0915
                         storage.write_speed,
                     )
                     storage.save()
+                case "motherboard":
+                    motherboard = Motherboard.objects.get(prod=product)
+                    motherboard.model = spec_fields.get("model", motherboard.model)
+                    motherboard.socket = spec_fields.get("socket", motherboard.socket)
+                    motherboard.chipset = spec_fields.get(
+                        "chipset", motherboard.chipset
+                    )
+                    motherboard.form_type = spec_fields.get(
+                        "form_type", motherboard.form_type
+                    )
+                    motherboard.max_ram_capacity = spec_fields.get(
+                        "max_ram_capacity", motherboard.max_ram_capacity
+                    )
+                    motherboard.ram_type = spec_fields.get(
+                        "ram_type", motherboard.ram_type
+                    )
+                    motherboard.ram_slots = spec_fields.get(
+                        "ram_slots", motherboard.ram_slots
+                    )
+                    motherboard.pcie_slots = spec_fields.get(
+                        "pcie_slots", motherboard.pcie_slots
+                    )
+                    motherboard.sata_ports = spec_fields.get(
+                        "sata_ports", motherboard.sata_ports
+                    )
+                    motherboard.m2_slot = spec_fields.get(
+                        "m2_slot", motherboard.m2_slot
+                    )
+                    motherboard.save()
                 case _:
                     msg = f"Categoria desconhecida: {product.category}"
                     raise ValueError(msg)  # noqa: TRY301

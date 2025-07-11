@@ -104,6 +104,10 @@ class Motherboard(models.Model):
 
     class Meta:
         app_label = "api"
+        
+        indexes = [
+        models.Index(fields=["socket", "form_type", "ram_type"]),
+        ]
 
     def __str__(self):
         return f"Motherboard for {self.prod.name}"
@@ -120,6 +124,10 @@ class Gpu(models.Model):
 
     class Meta:
         app_label = "api"
+        
+        indexes = [
+        models.Index(fields=["vram"]),
+        ]
 
     def __str__(self):
         return f"Gpu for {self.prod.name}"
@@ -135,6 +143,10 @@ class Keyboard(models.Model):
 
     class Meta:
         app_label = "api"
+        
+        indexes = [
+        models.Index(fields=["key_type"]),
+        ]
 
     def __str__(self):
         return f"Keyboard for {self.prod.name}"
@@ -160,6 +172,10 @@ class Cpu(models.Model):
 
     class Meta:
         app_label = "api"
+        
+        indexes = [
+        models.Index(fields=["core_number", "frequency"]),
+        ]
 
     def __str__(self):
         return f"CPU for {self.prod.name}"
@@ -174,6 +190,10 @@ class Mouse(models.Model):
 
     class Meta:
         app_label = "api"
+        
+        indexes = [
+            models.Index(fields=["connectivity"]),
+        ]
 
     def __str__(self):
         return f"Mouse for {self.prod.name}"
@@ -196,6 +216,10 @@ class Monitor(models.Model):
 
     class Meta:
         app_label = "api"
+        
+        indexes = [
+            models.Index(fields=["panel_type", "inches", "refresh_rate"]),
+        ]
 
     def __str__(self):
         return f"Monitor for {self.prod.name}"
@@ -210,6 +234,10 @@ class Ram(models.Model):
 
     class Meta:
         app_label = "api"
+        
+        indexes = [
+            models.Index(fields=["speed", "ddr"]),
+        ]
 
     def __str__(self):
         return f"RAM for {self.prod.name}"
@@ -237,6 +265,10 @@ class Computer(models.Model):
 
     class Meta:
         app_label = "api"
+        
+        indexes = [
+            models.Index(fields=["cpu", "gpu", "ram", "panel_type"]),
+        ]
 
     def __str__(self):
         return f"{self.prod.name} ({'Notebook' if self.is_notebook else 'Desktop'})"
@@ -278,6 +310,10 @@ class Storage(models.Model):
         app_label = "api"
         verbose_name = "Storage"
         verbose_name_plural = "Storages"
+        
+        indexes = [
+        models.Index(fields=["capacity_gb", "storage_type"]),
+        ]
 
     def __str__(self):
         return f"{self.prod.name} - {self.capacity_gb}GB {self.storage_type}"

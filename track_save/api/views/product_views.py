@@ -214,7 +214,7 @@ def get_products(request):
         products = product_controller.get_all_products()
 
         if not products:
-            return HttpResponseNotFound("Nenhum pproduto cadastrado")
+            return HttpResponseNotFound("Nenhum produto cadastrado")
 
         return JsonResponse({"products": products}, safe=False, status=200)
 
