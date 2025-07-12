@@ -14,6 +14,7 @@ from track_save.webscraping.enums import Categories
 from .scraper import Scraper
 from .specific_data import cpu as cpu_specific_data
 from .specific_data import gpu as gpu_specific_data
+from .specific_data import mouse as mouse_specific_data
 
 BASE = Path(__file__).parent
 API_URL = "http://localhost:8001/api/products/create/"
@@ -244,9 +245,9 @@ class KabumScraper(Scraper):
         if self.category == Categories.MOUSE:
             return {
                 "model": self.get_model(section),
-                "dpi": "8000/16000",
-                "connectivity": "Wired/Wireless",
-                "color": "Preto/Branco",
+                "dpi": mouse_specific_data.get_dpi(section),
+                "connectivity": mouse_specific_data.get_connectivity(section),
+                "color": mouse_specific_data.get_color(section),
             }
 
         if self.category == Categories.MONITOR:
@@ -430,7 +431,7 @@ if __name__ == "__main__":
 
     # Teste específico para GPU
     scraper = KabumScraper(
-        category=Categories.CPU,
+        category=Categories.MOUSE,
         limit=10,
         local_results=True,
         save_print=True,
