@@ -12,6 +12,7 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from track_save.webscraping.enums import Categories
 
 from .scraper import Scraper
+from .specific_data import cpu as cpu_specific_data
 from .specific_data import gpu as gpu_specific_data
 
 BASE = Path(__file__).parent
@@ -213,12 +214,12 @@ class KabumScraper(Scraper):
         if self.category == Categories.CPU:
             return {
                 "model": self.get_model(section),
-                "integrated_video": "Vega 8/12",
-                "socket": "AM4/AM5/LGA1200",
-                "core_number": "6/8/12",
-                "thread_number": "12/16/24",
-                "frequency": "3.0GHz",
-                "mem_speed": "3200MHz",
+                "integrated_video": cpu_specific_data.get_integrated_video(section),
+                "socket": cpu_specific_data.get_socket(section),
+                "core_number": cpu_specific_data.get_core_number(section),
+                "thread_number": cpu_specific_data.get_threads(section),
+                "frequency": cpu_specific_data.get_frequency(section, name=name),
+                "mem_speed": cpu_specific_data.get_mem_speed(section),
             }
 
         if self.category == Categories.STORAGE:
@@ -331,6 +332,7 @@ class KabumScraper(Scraper):
                 "Neologic",
                 "3green",
                 "2eletro",
+                "Skill",
             ]
             for brand in brands:
                 if brand.lower() in name.lower():
@@ -428,8 +430,8 @@ if __name__ == "__main__":
 
     # Teste específico para GPU
     scraper = KabumScraper(
-        category=Categories.COMPUTER,
-        limit=5,
+        category=Categories.CPU,
+        limit=10,
         local_results=True,
         save_print=True,
     )
