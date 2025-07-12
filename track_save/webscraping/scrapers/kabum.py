@@ -26,119 +26,147 @@ class KabumScraper(Scraper):
         self,
         category: Categories,
         limit: int = 100,
+        page_limit: int = 3,
         local_results: bool = False,
         save_print: bool = True,
     ):
         self.category = category
         self.limit = limit
+        self.page_limit = page_limit
         self.local_results = local_results
         self.save_print = save_print
 
-    def run(self, headless) -> list[dict]:  # noqa: C901, PLR0915
+    def run(self, headless) -> list[dict]:  # noqa: C901, PLR0912, PLR0915
         print("🤖 Iniciando a coleta de dados da Kabum...")
         print(f"> Categoria: {self.category.name}, Limite: {self.limit}")
         results = []
         browser, page = self.init_browser(headless=headless)
 
-        url = self.parse_category(self.category, get_url=True)
-        page.goto(url)
+        try:
+            url = self.parse_category(self.category, get_url=True)
+            page.goto(url, timeout=60000)
 
-        locBarraFiltro = page.locator("#Filter")
-        locFiltroItens = locBarraFiltro.locator("select.sc-dcf1314f-0")
-        self.wait_element(locFiltroItens)
+            locBarraFiltro = page.locator("#Filter")
+            locFiltroItens = locBarraFiltro.locator("select.sc-dcf1314f-0")
+            self.wait_element(locFiltroItens)
 
-        locFiltroItens.select_option(value="100")
+            locFiltroItens.select_option(value="100")
+            page.wait_for_load_state("domcontentloaded")
 
-        locItens = page.locator("article.productCard")
-        self.wait_element(locItens)
-        print(
-            f"> Encontrados {locItens.count()} produtos na categoria {self.category.name}.",  # noqa: E501
-        )
-        for i in range(min(locItens.count(), self.limit)):
-            card = locItens.nth(i)
+            page_num = 1
+            while len(results) < self.limit and page_num <= self.page_limit:
+                locItens = page.locator("article.productCard")
+                self.wait_element(locItens)
+                item_count_on_page = locItens.count()
 
-            card.click()
+                if item_count_on_page == 0:
+                    print("> Nenhum produto encontrado nesta página. Encerrando.")
+                    break
 
-            priceSection = page.locator("span.block.my-12 b")
-            descriptionSection = page.locator("#description")
-            techInfoSection = page.locator("#technicalInfoSection")
-            reviewsSection = page.locator("#reviewsSection")
-            self.wait_elements(
-                page,
-                [priceSection, descriptionSection, techInfoSection, reviewsSection],
-            )
-            print("> Coletando produto da url:", page.url)
+                print(
+                    f"> Encontrados {locItens.count()} produtos na categoria {self.category.name}.",  # noqa: E501
+                )
 
-            common_data = self.get_common_data(
-                page,
-                priceSection,
-                descriptionSection,
-                techInfoSection,
-                reviewsSection,
-            )
-            specific_info = self.get_specific_data(techInfoSection, common_data["name"])
-
-            product_data = {
-                **common_data,
-                **specific_info,
-                "store": "Kabum",
-                "available": True,
-            }
-
-            results.append(product_data)
-            if self.local_results:
-                print(f"Produto {i + 1} capturado: {product_data['name']}")
-                # print("URL:", product_data["url"])
-                # print("> Product Data:", product_data)
-                print("=" * 50 + "\n")
-
-            page.go_back()
-
-        results_dir = BASE / "results"
-        results_dir.mkdir(exist_ok=True, parents=True)
-
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
-        base_name = f"{self.category.name.lower()}_{timestamp}"
-
-        if self.local_results:
-            print(f"🗂️ Salvando resultados em {results_dir}...")
-            if self.save_print:
-                screenshot_path = results_dir / f"{base_name}.png"
-                page.screenshot(path=str(screenshot_path), full_page=True)
-
-            results_str = json.dumps(results, ensure_ascii=False, indent=4)
-
-            json_path = results_dir / f"{base_name}.json"
-            with json_path.open("w", encoding="utf-8") as f:
-                f.write(results_str)
-
-        if results:
-            print(f"✅ {len(results)} produtos capturados com sucesso!")
-
-            for result in results:
-                try:
-                    response = requests.post(API_URL, json=result, timeout=10)
-                    if response.status_code == HTTP_STATUS_CREATED:
+                for i in range(item_count_on_page):
+                    if len(results) >= self.limit:
                         print(
-                            f"✅ Produto {result['name']} enviado com sucesso para a API!",  # noqa: E501
+                            "\n> Limite total de produtos atingido. Encerrando coleta de itens.",  # noqa: E501
                         )
-                    else:
-                        print(
-                            f"⚠️ Erro ao enviar dado para a API: {response.status_code} - {response.text}",  # noqa: E501
-                        )
-                except requests.exceptions.ConnectionError as e:
-                    print(f"⚠️ Erro de conexão ao enviar '{result['name']}': {e}")
-                except requests.exceptions.Timeout as e:
-                    # timeout de 10s expirou
-                    print(f"⚠️ Timeout ao enviar '{result['name']}': {e}")
-                except requests.exceptions.RequestException as e:
-                    # qualquer outro erro de HTTP/Request
-                    print(f"⚠️ Erro inesperado ao enviar '{result['name']}': {e}")
-        else:
-            print("⚠️ Nenhum produto encontrado ou capturado.")
+                        break
 
-        self.close_browser(browser)
-        print("🤖 Coleta finalizada.\n")
+                    card = locItens.nth(i)
+                    card.click()
+
+                    priceSection = page.locator("span.block.my-12 b")
+                    descriptionSection = page.locator("#description")
+                    techInfoSection = page.locator("#technicalInfoSection")
+                    reviewsSection = page.locator("#reviewsSection")
+                    self.wait_elements(
+                        page,
+                        [
+                            priceSection,
+                            descriptionSection,
+                            techInfoSection,
+                            reviewsSection,
+                        ],
+                    )
+                    print("> Coletando produto da url:", page.url)
+
+                    common_data = self.get_common_data(
+                        page,
+                        priceSection,
+                        descriptionSection,
+                        techInfoSection,
+                        reviewsSection,
+                    )
+                    specific_info = self.get_specific_data(
+                        techInfoSection,
+                        common_data["name"],
+                    )
+
+                    product_data = {
+                        **common_data,
+                        **specific_info,
+                        "store": "Kabum",
+                        "available": True,
+                    }
+
+                    results.append(product_data)
+                    if self.local_results:
+                        print(f"Produto {i + 1} capturado: {product_data['name']}")
+                        print("=" * 50 + "\n")
+
+                    page.go_back()
+                    page.wait_for_load_state("domcontentloaded")
+
+                # --- Fim do loop de itens da página ---
+
+                # Verifica se o limite de produtos foi atingido
+                if len(results) >= self.limit:
+                    break
+
+                ITEMS_PER_PAGE = 100
+                if item_count_on_page < ITEMS_PER_PAGE:
+                    print(
+                        f"\n> Página final detectada (contém {item_count_on_page} itens, menos que {ITEMS_PER_PAGE}). Coleta concluída.",  # noqa: E501
+                    )
+                    break
+
+                # Lógica para ir para a próxima página
+                locProximaPagina = page.locator("#listingPagination li.next")
+                is_disabled = "disabled" in (
+                    locProximaPagina.get_attribute("class") or ""
+                )
+
+                if locProximaPagina.is_visible() and not is_disabled:
+                    print("> Indo para a próxima página...")
+                    locProximaPagina.click()
+                    page.wait_for_load_state("domcontentloaded")
+                    page_num += 1
+                else:
+                    print(
+                        "\n> Botão 'Próxima Página' não encontrado ou desabilitado. Fim da coleta.",  # noqa: E501
+                    )
+                    break
+
+            # --- Fim do loop de paginação ---
+
+            # Seção para salvar os resultados e enviar para a API
+            if results:
+                print(f"\n✅ {len(results)} produtos capturados com sucesso!")
+                self.save_and_send_results(results)
+            else:
+                print("\n⚠️ Nenhum produto encontrado ou capturado.")
+
+        except PlaywrightTimeoutError as e:
+            print(f"❌ Timeout do Playwright durante a execução: {e}")
+            page.screenshot(path="error_screenshot.png")
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Erro de requisição HTTP durante a execução: {e}")
+            page.screenshot(path="error_screenshot.png")
+        finally:
+            self.close_browser(browser)
+            print("🤖 Coleta finalizada.\n")
 
         return results
 
@@ -417,6 +445,39 @@ class KabumScraper(Scraper):
         model = re.search(r"Modelo:\s*(.+)$", model_name, flags=re.IGNORECASE)
         return model.group(1) if model else ""
 
+    def save_and_send_results(self, results: list[dict]):
+        """
+        Salva os resultados localmente e os envia para a API.
+        """
+        results_dir = BASE / "results"
+        results_dir.mkdir(exist_ok=True, parents=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
+        base_name = f"{self.category.name.lower()}_{timestamp}"
+
+        if self.local_results:
+            print(f"🗂️ Salvando resultados em {results_dir}...")
+            results_str = json.dumps(results, ensure_ascii=False, indent=4)
+            json_path = results_dir / f"{base_name}.json"
+            with json_path.open("w", encoding="utf-8") as f:
+                f.write(results_str)
+            print(f"  Resultados salvos em {json_path}")
+
+        # Enviar para a API
+        for result in results:
+            try:
+                response = requests.post(API_URL, json=result, timeout=10)
+                if response.status_code == HTTP_STATUS_CREATED:
+                    print(
+                        f"🚀 Produto '{result['name']}' enviado com sucesso para a API!",
+                    )
+                else:
+                    print(
+                        f"⚠️ Erro ao enviar para a API: {response.status_code} - {response.text}",
+                    )
+            except requests.exceptions.RequestException as e:
+                print(f"⚠️ Erro de conexão ao enviar '{result['name']}': {e}")
+
 
 if __name__ == "__main__":
     # Teste de coleta para todas as categorias
@@ -429,10 +490,11 @@ if __name__ == "__main__":
     #     )
     #     scraper.run(headless=True)
 
-    # Teste específico para GPU
+    # Teste específico para uma categoria
     scraper = KabumScraper(
-        category=Categories.MOUSE,
-        limit=10,
+        category=Categories.CPU,
+        limit=150,
+        page_limit=5,
         local_results=True,
         save_print=True,
     )
