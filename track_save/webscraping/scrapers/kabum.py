@@ -483,22 +483,22 @@ class KabumScraper(Scraper):
 
 if __name__ == "__main__":
     # Teste de coleta para todas as categorias
-    # for category in Categories:
-    #     scraper = KabumScraper(
-    #         category=category,
-    #         limit=500,
-    #         local_results=True,
-    #         page_limit=7,
-    #         save_print=False,
-    #     )
-    #     scraper.run(headless=True)
+    for category in Categories:
+        scraper = KabumScraper(
+            category=category,
+            limit=500,
+            local_results=True,
+            page_limit=7,
+            save_print=False,
+        )
+        scraper.run(headless=True)
 
-    # Teste específico para uma categoria
-    scraper = KabumScraper(
-        category=Categories.RAM,
-        limit=10,
-        page_limit=1,
-        local_results=True,
-        save_print=True,
-    )
-    scraper.run(headless=True)
+    # # Teste específico para uma categoria
+    # scraper = KabumScraper(
+    #     category=Categories.RAM,
+    #     limit=10,
+    #     page_limit=1,
+    #     local_results=True,
+    #     save_print=True,
+    # )
+    # scraper.run(headless=True)
