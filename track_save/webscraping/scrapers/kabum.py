@@ -14,6 +14,7 @@ from track_save.webscraping.enums import Categories
 from .scraper import Scraper
 from .specific_data import cpu as cpu_specific_data
 from .specific_data import gpu as gpu_specific_data
+from .specific_data import keyboard as keyboard_specific_data
 from .specific_data import mouse as mouse_specific_data
 
 BASE = Path(__file__).parent
@@ -264,10 +265,10 @@ class KabumScraper(Scraper):
         if self.category == Categories.KEYBOARD:
             return {
                 "model": self.get_model(section),
-                "key_type": "Mechanical/Membrane",
-                "layout": "ABNT2/ANSI",
-                "connectivity": "Wired/Wireless",
-                "dimension": "Standard/Compact",
+                "key_type": keyboard_specific_data.get_key_type(section, name),
+                "layout": keyboard_specific_data.get_layout(section),
+                "connectivity": keyboard_specific_data.get_connectivity(section),
+                "dimension": keyboard_specific_data.get_dimension(section),
             }
 
         if self.category == Categories.MOUSE:
@@ -484,17 +485,18 @@ if __name__ == "__main__":
     # for category in Categories:
     #     scraper = KabumScraper(
     #         category=category,
-    #         limit=10,
+    #         limit=500,
     #         local_results=True,
+    #         page_limit=7,
     #         save_print=False,
     #     )
     #     scraper.run(headless=True)
 
     # Teste específico para uma categoria
     scraper = KabumScraper(
-        category=Categories.CPU,
-        limit=150,
-        page_limit=5,
+        category=Categories.KEYBOARD,
+        limit=10,
+        page_limit=1,
         local_results=True,
         save_print=True,
     )

@@ -48,7 +48,7 @@ def get_connectivity(section: Locator) -> str:
     # fallback: pega todos os matches no texto e junta com " / "
     all_text = section.inner_text()
     found = re.findall(
-        r"\bUSB(?:-C)?\b|\bWireless\b|\bBluetooth\b|\bCaboado\b",
+        r"\bUSB(?:-C)?\b|\bWireless\b|\bBluetooth\b|\bCabeado\b",
         all_text,
         flags=re.IGNORECASE,
     )
@@ -56,7 +56,7 @@ def get_connectivity(section: Locator) -> str:
     seen = set()
     out = []
     for x in found:
-        norm = x.upper().replace("CABOADO", "Caboado")  # só um exemplo de normalização
+        norm = x.upper().replace("CABEADO", "Cabeado")  # só um exemplo de normalização
         if norm not in seen:
             seen.add(norm)
             out.append(norm)
