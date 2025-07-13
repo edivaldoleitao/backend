@@ -16,6 +16,7 @@ from .specific_data import cpu as cpu_specific_data
 from .specific_data import gpu as gpu_specific_data
 from .specific_data import keyboard as keyboard_specific_data
 from .specific_data import mouse as mouse_specific_data
+from .specific_data import ram as ram_specific_data
 
 BASE = Path(__file__).parent
 API_URL = "http://localhost:8001/api/products/create/"
@@ -294,9 +295,9 @@ class KabumScraper(Scraper):
         if self.category == Categories.RAM:
             return {
                 "model": self.get_model(section),
-                "capacity": "8GB/16GB/32GB",
-                "ddr": "DDR4/DDR5",
-                "speed": "2400MHz/3200MHz",
+                "capacity": ram_specific_data.get_capacity(section),
+                "ddr": ram_specific_data.get_ddr(section),
+                "speed": ram_specific_data.get_speed(section),
             }
 
         if self.category == Categories.COMPUTER:
@@ -494,7 +495,7 @@ if __name__ == "__main__":
 
     # Teste específico para uma categoria
     scraper = KabumScraper(
-        category=Categories.KEYBOARD,
+        category=Categories.RAM,
         limit=10,
         page_limit=1,
         local_results=True,
