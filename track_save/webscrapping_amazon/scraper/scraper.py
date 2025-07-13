@@ -172,7 +172,7 @@ async def search():
         for page_num in range(1, 3):
             url = f"{AMAZON}{montar_url(termo)}&page={page_num}"
             print(f"[+] Buscando: {url}")
-            resultados = await scrape_amazon(url)
+            resultados = await scrape_amazon(url,termo)
             if resultados:
                 todos_amazon.extend(resultados)
             await asyncio.sleep(1)
@@ -189,7 +189,7 @@ async def search():
         await scrape_terabyte(produtos_terabyte[termo])
 
 
-async def scrape_amazon_product(url):
+async def scrape_amazon_product(url, termo):
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
@@ -263,6 +263,7 @@ async def scrape_amazon_product(url):
                 "descricao_detalhada": descricao_detalhada,
                 "detalhes_adicionais": detalhes,
                 "url": url,
+                "tipo_produto":termo,
             }
         if dados:
             return dados

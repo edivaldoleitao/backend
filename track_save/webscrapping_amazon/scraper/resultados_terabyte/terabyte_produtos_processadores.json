@@ -1,8 +1,32 @@
 [
   {
+    "sku": "20782",
+    "nome": "Processador AMD Ryzen 5 5500 3.6GHz (4.2GHz Turbo), 6-Cores 12-Threads, Cooler Wraith Stealth, AM4, Sem V",
+    "preco": "R$ 519,90",
+    "url": "https://www.terabyteshop.com.br/produto/20782/processador-amd-ryzen-5-5500-36ghz-42ghz-turbo-6-cores-12-threads-cooler-wraith-stealth-am4-100-100000457box",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
+    "sku": "27314",
+    "nome": "Processador AMD Ryzen 5 5600GT, 3.6GHz (4.6GHz Turbo), 6-Cores 12-Threads, Cooler Wraith Stealth, AM4, 10",
+    "preco": "R$ 849,90",
+    "url": "https://www.terabyteshop.com.br/produto/27314/processador-amd-ryzen-5-5600gt-36ghz-46ghz-turbo-6-cores-12-threads-cooler-wraith-stealth-am4-100-100001488box",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
+    "sku": "20788",
+    "nome": "Processador AMD Ryzen 5 5600, 3.5GHz (4.4GHz Turbo), 6-Cores 12-Threads, Cooler Wraith Stealth, AM4, 100-",
+    "preco": "R$ 759,90",
+    "url": "https://www.terabyteshop.com.br/produto/20788/processador-amd-ryzen-5-5600-35ghz-44ghz-turbo-6-cores-12-threads-cooler-wraith-stealth-am4-100-100000927box",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
     "sku": "20072",
     "nome": "Processador Intel Core i5 12400F, 2.5GHz (4.4GHz Turbo), 12ª Geração, 6-Cores 12-Threads, LGA 1700, Com C",
-    "preco": "R$ 649,90",
+    "preco": "R$ 739,99",
     "url": "https://www.terabyteshop.com.br/produto/20072/processador-intel-core-i5-12400f-25ghz-44ghz-turbo-12-geracao-6-cores-12-threads-lga-1700-bx8071512400f",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -12,6 +36,14 @@
     "nome": "Processador AMD Ryzen 5 8600G, 4.3GHz (5.0GHz Turbo), 6-Cores 12-Threads, AM5, Com Cooler AMD Wraith Stea",
     "preco": "R$ 1.299,90",
     "url": "https://www.terabyteshop.com.br/produto/27326/processador-amd-ryzen-5-8600g-43ghz-50ghz-turbo-6-cores-12-threads-am5-com-cooler-amd-wraith-stealth-100-100001237box",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
+    "sku": "20813",
+    "nome": "Processador AMD Ryzen 7 5700X 3.4GHz (4.6GHz Turbo), 8-Cores 16-Threads, AM4, Sem Cooler, 100-100000926WO",
+    "preco": "R$ 1.199,90",
+    "url": "https://www.terabyteshop.com.br/produto/20813/processador-amd-ryzen-7-5700x-34ghz-46ghz-turbo-8-cores-16-threads-am4-sem-cooler-100-100000926wof",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
   },
@@ -34,8 +66,16 @@
   {
     "sku": "32518",
     "nome": "Processador AMD Ryzen 7 9800X3D, 4.7GHz (5.2GHz Turbo), 8-Cores 16-Threads, AM5, Sem Cooler, 100-10000108",
-    "preco": "R$ 2.959,90",
+    "preco": "R$ 2.899,90",
     "url": "https://www.terabyteshop.com.br/produto/32518/processador-amd-ryzen-7-9800x3d-47ghz-52ghz-turbo-8-cores-16-threads-am5-sem-cooler-100-1000001084wof",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
+    "sku": "18973",
+    "nome": "Processador AMD Ryzen 7 5700G, 3.8GHz (4.6GHz Turbo), 8-Cores 16-Threads, Cooler Wraith Stealth, AM4, Com",
+    "preco": "R$ 1.199,90",
+    "url": "https://www.terabyteshop.com.br/produto/18973/processador-amd-ryzen-7-5700g-38ghz-46ghz-turbo-8-cores-16-threads-cooler-wraith-stealth-am4-com-video-integrado-100-100000263box",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
   },
@@ -58,8 +98,16 @@
   {
     "sku": "23409",
     "nome": "Processador AMD Ryzen 9 7900 3.7GHz (5.4GHz Turbo), 12-Cores 24-Threads, AM5, Com Cooler Wraith Prism, 10",
-    "preco": "R$ 2.499,90",
+    "preco": "R$ 2.519,90",
     "url": "https://www.terabyteshop.com.br/produto/23409/processador-amd-ryzen-9-7900-37ghz-54ghz-turbo-12-cores-24-threads-am5-com-cooler-wraith-prism-100-100000590box",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
+    "sku": "13676",
+    "nome": "Processador Intel Core i5 10400F, 2.90GHz (4.30GHz Turbo), 10ª Geração, 6-Cores 12-Threads, LGA 1200, BX8",
+    "preco": "R$ 599,90",
+    "url": "https://www.terabyteshop.com.br/produto/13676/processador-intel-core-i5-10400f-290ghz-430ghz-turbo-10-geracao-6-cores-12-threads-lga-1200-bx8070110400f",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
   },
@@ -74,7 +122,7 @@
   {
     "sku": "15692",
     "nome": "Processador AMD Ryzen 5 5600X, 3.7GHz (4.6GHz Turbo), 6-Cores 12-Threads, Cooler Wraith Stealth, AM4, 100",
-    "preco": "R$ 1.349,90",
+    "preco": "R$ 999,99",
     "url": "https://www.terabyteshop.com.br/produto/15692/processador-amd-ryzen-5-5600x-37ghz-46ghz-turbo-6-cores-12-threads-cooler-wraith-stealth-am4",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -104,6 +152,14 @@
     "tipo_produto": "hardware/processadores"
   },
   {
+    "sku": "22264",
+    "nome": "Processador AMD Ryzen 7 7700X 4.5GHz (5.4GHz Turbo), 8-Cores 16-Threads, AM5, Sem Cooler, 100-100000591WO",
+    "preco": "R$ 1.899,90",
+    "url": "https://www.terabyteshop.com.br/produto/22264/processador-amd-ryzen-7-7700x-45ghz-54ghz-turbo-8-cores-16-threads-am5-100-100000591wof",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
     "sku": "36536",
     "nome": "Processador AMD Ryzen 5 5600XT, 3.7GHz (4.7GHz Turbo), 6-Cores 12-Threads, Cooler Wraith Stealth, AM4, 10",
     "preco": "R$ 924,90",
@@ -120,22 +176,6 @@
     "tipo_produto": "hardware/processadores"
   },
   {
-    "sku": "23460",
-    "nome": "Processador Intel Core i5 13400F, 2.5GHz (4.6GHz Turbo), 13ª Geração, 10-Cores 16-Threads, LGA 1700, BX80",
-    "preco": "R$ 1.019,90",
-    "url": "https://www.terabyteshop.com.br/produto/23460/processador-intel-core-i5-13400f-25ghz-46ghz-turbo-13-geracao-10-cores-16-threads-lga-1700-bx8071513400f",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "23461",
-    "nome": "Processador Intel Core i7 13700F 2.1GHz (5.2GHz Turbo), 13ª Geração, 16-Cores 24-Threads, LGA 1700, BX807",
-    "preco": "R$ 2.199,90",
-    "url": "https://www.terabyteshop.com.br/produto/23461/processador-intel-core-i7-13700f-21ghz-52ghz-turbo-13-geracao-16-cores-24-threads-lga-1700-bx8071513700f",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
     "sku": "23462",
     "nome": "Processador Intel Core i5 13400, 2.5GHz (4.6GHz Turbo), 13ª Geração, 10-Cores 16-Threads, LGA 1700, BX807",
     "preco": "R$ 1.299,99",
@@ -144,9 +184,25 @@
     "tipo_produto": "hardware/processadores"
   },
   {
+    "sku": "23461",
+    "nome": "Processador Intel Core i7 13700F 2.1GHz (5.2GHz Turbo), 13ª Geração, 16-Cores 24-Threads, LGA 1700, BX807",
+    "preco": "R$ 2.019,90",
+    "url": "https://www.terabyteshop.com.br/produto/23461/processador-intel-core-i7-13700f-21ghz-52ghz-turbo-13-geracao-16-cores-24-threads-lga-1700-bx8071513700f",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
+    "sku": "23460",
+    "nome": "Processador Intel Core i5 13400F, 2.5GHz (4.6GHz Turbo), 13ª Geração, 10-Cores 16-Threads, LGA 1700, BX80",
+    "preco": "R$ 939,90",
+    "url": "https://www.terabyteshop.com.br/produto/23460/processador-intel-core-i5-13400f-25ghz-46ghz-turbo-13-geracao-10-cores-16-threads-lga-1700-bx8071513400f",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
     "sku": "23459",
     "nome": "Processador Intel Core i3 13100F 3.4GHz (4.5GHz Turbo), 13ª Geração, 4-Cores 8-Threads, LGA 1700, BX80715",
-    "preco": "R$ 499,90",
+    "preco": "R$ 579,99",
     "url": "https://www.terabyteshop.com.br/produto/23459/processador-intel-core-i3-13100f-34ghz-45ghz-turbo-13-geracao-4-cores-8-threads-lga-1700-bx8071513100f",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -176,14 +232,6 @@
     "tipo_produto": "hardware/processadores"
   },
   {
-    "sku": "13448",
-    "nome": "Processador Intel Core i3 10100 3.60GHz (4.30GHz Turbo), 10ª Geração, 4-Cores 8-Threads, LGA 1200, BX8070",
-    "preco": "R$ 599,90",
-    "url": "https://www.terabyteshop.com.br/produto/13448/processador-intel-core-i3-10100-360ghz-430ghz-turbo-10-geracao-4-cores-8-threads-lga-1200-bx8070110100",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
     "sku": "13445",
     "nome": "Processador Intel Core i5 10400, 2.90GHz, (4.30GHz Turbo), 10ª Geração, 6-Cores 12-Threads, LGA 1200, BX8",
     "preco": "R$ 869,90",
@@ -192,9 +240,17 @@
     "tipo_produto": "hardware/processadores"
   },
   {
+    "sku": "13448",
+    "nome": "Processador Intel Core i3 10100 3.60GHz (4.30GHz Turbo), 10ª Geração, 4-Cores 8-Threads, LGA 1200, BX8070",
+    "preco": "R$ 599,90",
+    "url": "https://www.terabyteshop.com.br/produto/13448/processador-intel-core-i3-10100-360ghz-430ghz-turbo-10-geracao-4-cores-8-threads-lga-1200-bx8070110100",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
     "sku": "31154",
     "nome": "Processador AMD Ryzen 3 5300G, 4GHz (4.2GHz Turbo), 4-Cores 8-Threads, AM4, Com vídeo integrado, 100-1000",
-    "preco": "R$ 599,90",
+    "preco": "R$ 579,90",
     "url": "https://www.terabyteshop.com.br/produto/31154/processador-amd-ryzen-3-5300g-4ghz-42ghz-turbo-4-cores-8-threads-am4-com-video-integrado-oem-100-100000253box",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -242,7 +298,7 @@
   {
     "sku": "34633",
     "nome": "Processador Intel Core Ultra 5 225F, 3.3 Ghz (4.9Ghz Turbo), Série 2, 10-Cores 10-Threads, LGA 1851, BX80",
-    "preco": "R$ 1.429,90",
+    "preco": "R$ 1.699,99",
     "url": "https://www.terabyteshop.com.br/produto/34633/processador-intel-core-ultra-5-225f-33-ghz-49ghz-turbo-serie-2-10-cores-10-threads-lga-1851-bx80768225f",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -256,9 +312,17 @@
     "tipo_produto": "hardware/processadores"
   },
   {
+    "sku": "32037",
+    "nome": "Processador Intel Core Ultra 9 285K, 3.7 Ghz (5.7Ghz Turbo), Série 2, 24-Cores 24-Threads, LGA 1851, BX80",
+    "preco": "R$ 3.999,90",
+    "url": "https://www.terabyteshop.com.br/produto/32037/processador-intel-core-ultra-9-285k-37-ghz-57ghz-turbo-serie-2-24-cores-24-threads-lga-1851-bx80768285k",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
     "sku": "32044",
     "nome": "Processador Intel Core Ultra 7 265K, 3.9 Ghz (5.5Ghz Turbo), Série 2, 20-Cores 20-Threads, LGA 1851, BX80",
-    "preco": "R$ 2.199,90",
+    "preco": "R$ 2.499,90",
     "url": "https://www.terabyteshop.com.br/produto/32044/processador-intel-core-ultra-7-265k-39-ghz-55ghz-turbo-serie-2-20-cores-20-threads-lga-1851-bx80768265k",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -322,16 +386,8 @@
   {
     "sku": "30032",
     "nome": "Processador AMD Ryzen 9 9900X, 4.4GHz (5.6GHz Turbo), 12-Cores 24-Threads, AM5, Sem Cooler, 100-100000662",
-    "preco": "R$ 2.479,90",
+    "preco": "R$ 2.999,90",
     "url": "https://www.terabyteshop.com.br/produto/30032/processador-amd-ryzen-9-9900x-44ghz-56ghz-turbo-12-cores-24-threads-am5-sem-cooler-100-100000662wof",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "28769",
-    "nome": "Processador AMD Ryzen 7 8700F, 4.1GHz (5.0GHz Turbo), 8-Cores 16-Threads, AM5, Com Cooler AMD Wraith Stea",
-    "preco": "R$ 1.559,90",
-    "url": "https://www.terabyteshop.com.br/produto/28769/processador-amd-ryzen-7-8700f-41ghz-50ghz-turbo-8-cores-16-threads-am5-com-cooler-amd-wraith-stealth-100-100001590box",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
   },
@@ -344,26 +400,18 @@
     "tipo_produto": "hardware/processadores"
   },
   {
+    "sku": "28769",
+    "nome": "Processador AMD Ryzen 7 8700F, 4.1GHz (5.0GHz Turbo), 8-Cores 16-Threads, AM5, Com Cooler AMD Wraith Stea",
+    "preco": "R$ 1.559,90",
+    "url": "https://www.terabyteshop.com.br/produto/28769/processador-amd-ryzen-7-8700f-41ghz-50ghz-turbo-8-cores-16-threads-am5-com-cooler-amd-wraith-stealth-100-100001590box",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
     "sku": "27611",
     "nome": "Processador Intel Core i5 14400, 3.5 GHz (4.7GHz Turbo), 14ª Geração, 10-Cores 16-Threads, LGA 1700, BX80",
-    "preco": "R$ 999,90",
+    "preco": "R$ 1.199,90",
     "url": "https://www.terabyteshop.com.br/produto/27611/processador-intel-core-i5-14400-35-ghz-47ghz-turbo-14-geracao-10-cores-16-threads-lga-1700-bx8071514400",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "27406",
-    "nome": "Processador Intel Core i3, 14100, 3.5 GHz (4.7GHz Turbo), 14ª Geração, 4-Cores 8-Threads, LGA 1700, BX807",
-    "preco": "R$ 737,90",
-    "url": "https://www.terabyteshop.com.br/produto/27406/processador-intel-core-i3-14100-35-ghz-47ghz-turbo-14-geracao-4-cores-8-threads-lga-1700-bx8071514100",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "27407",
-    "nome": "Processador Intel Core i3 14100F, 3.5 GHz (4.7GHz Turbo), 14ª Geração, 4-Cores 8-Threads, LGA 1700, BX807",
-    "preco": "R$ 499,90",
-    "url": "https://www.terabyteshop.com.br/produto/27407/processador-intel-core-i3-14100f-35-ghz-47ghz-turbo-14-geracao-4-cores-8-threads-lga-1700-bx8071514100f",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
   },
@@ -376,9 +424,25 @@
     "tipo_produto": "hardware/processadores"
   },
   {
+    "sku": "27407",
+    "nome": "Processador Intel Core i3 14100F, 3.5 GHz (4.7GHz Turbo), 14ª Geração, 4-Cores 8-Threads, LGA 1700, BX807",
+    "preco": "R$ 499,90",
+    "url": "https://www.terabyteshop.com.br/produto/27407/processador-intel-core-i3-14100f-35-ghz-47ghz-turbo-14-geracao-4-cores-8-threads-lga-1700-bx8071514100f",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
+    "sku": "27406",
+    "nome": "Processador Intel Core i3, 14100, 3.5 GHz (4.7GHz Turbo), 14ª Geração, 4-Cores 8-Threads, LGA 1700, BX807",
+    "preco": "R$ 849,90",
+    "url": "https://www.terabyteshop.com.br/produto/27406/processador-intel-core-i3-14100-35-ghz-47ghz-turbo-14-geracao-4-cores-8-threads-lga-1700-bx8071514100",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
     "sku": "27110",
     "nome": "Processador Intel Core i7 14700, 3.4 GHz (5.4GHz Turbo), 14ª Geração, 20-Cores 28-Threads, LGA 1700, BX80",
-    "preco": "R$ 2.209,99",
+    "preco": "R$ 2.279,90",
     "url": "https://www.terabyteshop.com.br/produto/27110/processador-intel-core-i7-14700-34-ghz-54ghz-turbo-14-geracao-20-cores-28-threads-lga-1700-bx8071514700",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -410,7 +474,7 @@
   {
     "sku": "26273",
     "nome": "Processador Intel Core i5 14600KF, 3.5 GHz (5.3GHz Turbo), 14ª Geração, 14-Cores 20-Threads, LGA 1700, BX",
-    "preco": "R$ 1.359,90",
+    "preco": "R$ 1.299,90",
     "url": "https://www.terabyteshop.com.br/produto/26273/processador-intel-core-i5-14600kf-35-ghz-53ghz-turbo-14-geracao-14-cores-20-threads-lga-1700-bx8071514600kf",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -442,7 +506,7 @@
   {
     "sku": "26259",
     "nome": "Processador Intel Core i9 14900K, 3.6 GHz (6.0GHz Turbo), 14ª Geração, 24-Cores 32-Threads, LGA 1700, BX8",
-    "preco": "R$ 3.399,90",
+    "preco": "R$ 3.149,90",
     "url": "https://www.terabyteshop.com.br/produto/26259/processador-intel-core-i9-14900k-36-ghz-60ghz-turbo-14-geracao-24-cores-32-threads-lga-1700-bx8071514900k",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -458,7 +522,7 @@
   {
     "sku": "24769",
     "nome": "Processador AMD Ryzen 7 7800X3D, 4.2GHz (5.0GHz Turbo), 8-Cores 16-Threads, AM5, Sem Cooler, 100-10000091",
-    "preco": "R$ 2.599,99",
+    "preco": "R$ 2.399,90",
     "url": "https://www.terabyteshop.com.br/produto/24769/processador-amd-ryzen-7-7800x3d-42ghz-50ghz-turbo-8-cores-16-threads-am5-sem-cooler-100-100000910wof",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -488,14 +552,6 @@
     "tipo_produto": "hardware/processadores"
   },
   {
-    "sku": "22262",
-    "nome": "Processador AMD Ryzen 5 7600X 4.7GHz (5.3GHz Turbo), 6-Cores 12-Threads, AM5, Sem Cooler, 100-100000593WO",
-    "preco": "R$ 1.599,90",
-    "url": "https://www.terabyteshop.com.br/produto/22262/processador-amd-ryzen-5-7600x-47ghz-53ghz-turbo-6-cores-12-threads-am5-100-100000593wof",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
     "sku": "22263",
     "nome": "Processador AMD Ryzen 9 7950X, 4.5GHz (5.7GHz Turbo), 16-Cores 32-Threads, AM5, Sem Cooler, 100-100000514",
     "preco": "R$ 3.899,90",
@@ -504,9 +560,17 @@
     "tipo_produto": "hardware/processadores"
   },
   {
+    "sku": "22262",
+    "nome": "Processador AMD Ryzen 5 7600X 4.7GHz (5.3GHz Turbo), 6-Cores 12-Threads, AM5, Sem Cooler, 100-100000593WO",
+    "preco": "R$ 1.599,90",
+    "url": "https://www.terabyteshop.com.br/produto/22262/processador-amd-ryzen-5-7600x-47ghz-53ghz-turbo-6-cores-12-threads-am5-100-100000593wof",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
     "sku": "20220",
     "nome": "Processador Intel Core i3 12100F 3.3GHz (4.3GHz Turbo), 12ª Geração, 4-Cores 8-Threads, LGA 1700, Com Coo",
-    "preco": "R$ 489,90",
+    "preco": "R$ 529,90",
     "url": "https://www.terabyteshop.com.br/produto/20220/processador-intel-core-i3-12100f-33ghz-43ghz-turbo-12-geracao-4-cores-8-threads-lga-1700-bx8071512100f",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
@@ -520,14 +584,6 @@
     "tipo_produto": "hardware/processadores"
   },
   {
-    "sku": "20212",
-    "nome": "Processador Intel Core i7 12700 2,1GHz (4.9GHz Turbo), 12ª Geração, 12-Cores 20-Threads, LGA 1700, Com Co",
-    "preco": "R$ 1.639,90",
-    "url": "https://www.terabyteshop.com.br/produto/20212/processador-intel-core-i7-12700-21ghz-49ghz-turbo-12-geracao-12-cores-20-threads-lga-1700-bx8071512700",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
     "sku": "20211",
     "nome": "Processador Intel Core i9 12900F 2.4GHz (5.1GHz Turbo), 12ª Geração, 16-Cores 24-Threads, LGA 1700, Com C",
     "preco": "R$ 1.809,99",
@@ -536,10 +592,26 @@
     "tipo_produto": "hardware/processadores"
   },
   {
+    "sku": "20212",
+    "nome": "Processador Intel Core i7 12700 2,1GHz (4.9GHz Turbo), 12ª Geração, 12-Cores 20-Threads, LGA 1700, Com Co",
+    "preco": "R$ 1.869,90",
+    "url": "https://www.terabyteshop.com.br/produto/20212/processador-intel-core-i7-12700-21ghz-49ghz-turbo-12-geracao-12-cores-20-threads-lga-1700-bx8071512700",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
     "sku": "20116",
     "nome": "Processador Intel Core i9 12900, 2.4GHz (5.1GHz Turbo), 12ª Geração, 16-Cores 24-Threads, LGA 1700, BX807",
     "preco": "R$ 2.499,90",
     "url": "https://www.terabyteshop.com.br/produto/20116/processador-intel-core-i9-12900-24ghz-51ghz-turbo-12-geracao-16-cores-24-threads-lga-1700",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/processadores"
+  },
+  {
+    "sku": "19620",
+    "nome": "Processador Intel Core i7 12700KF 3.6GHz (5.0GHz Turbo), 12ª Geração, 12-Cores 20-Threads, LGA 1700, Sem",
+    "preco": "R$ 1.549,90",
+    "url": "https://www.terabyteshop.com.br/produto/19620/processador-intel-core-i7-12700kf-30ghz-50ghz-turbo-12-geracao-12-cores-20-threads-lga-1700-bx8071512700kf",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
   },
@@ -560,14 +632,6 @@
     "tipo_produto": "hardware/processadores"
   },
   {
-    "sku": "19620",
-    "nome": "Processador Intel Core i7 12700KF 3.6GHz (5.0GHz Turbo), 12ª Geração, 12-Cores 20-Threads, LGA 1700, Sem",
-    "preco": "R$ 1.549,90",
-    "url": "https://www.terabyteshop.com.br/produto/19620/processador-intel-core-i7-12700kf-30ghz-50ghz-turbo-12-geracao-12-cores-20-threads-lga-1700-bx8071512700kf",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
     "sku": "19619",
     "nome": "Processador Intel Core i7 12700K 3.6GHz (5.0GHz Turbo), 12ª Geração, 12-Cores 20-Threads, LGA 1700, Sem C",
     "preco": "R$ 1.749,90",
@@ -580,70 +644,6 @@
     "nome": "Processador Intel Core i9 12900K 3.2GHz (5.2GHz Turbo), 12ª Geração, 16-Cores 24-Threads, LGA 1700, Sem C",
     "preco": "R$ 2.379,90",
     "url": "https://www.terabyteshop.com.br/produto/19613/processador-intel-core-i9-12900k-32ghz-52ghz-turbo-12-geracao-16-cores-24-threads-lga-1700-bx8071512900k",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "20782",
-    "nome": "Processador AMD Ryzen 5 5500 3.6GHz (4.2GHz Turbo), 6-Cores 12-Threads, Cooler Wraith Stealth, AM4, Sem V",
-    "preco": "R$ 909,99",
-    "url": "https://www.terabyteshop.com.br/produto/20782/processador-amd-ryzen-5-5500-36ghz-42ghz-turbo-6-cores-12-threads-cooler-wraith-stealth-am4-100-100000457box",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "27314",
-    "nome": "Processador AMD Ryzen 5 5600GT, 3.6GHz (4.6GHz Turbo), 6-Cores 12-Threads, Cooler Wraith Stealth, AM4, 10",
-    "preco": "R$ 1.329,99",
-    "url": "https://www.terabyteshop.com.br/produto/27314/processador-amd-ryzen-5-5600gt-36ghz-46ghz-turbo-6-cores-12-threads-cooler-wraith-stealth-am4-100-100001488box",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "20788",
-    "nome": "Processador AMD Ryzen 5 5600, 3.5GHz (4.4GHz Turbo), 6-Cores 12-Threads, Cooler Wraith Stealth, AM4, 100-",
-    "preco": "R$ 1.399,99",
-    "url": "https://www.terabyteshop.com.br/produto/20788/processador-amd-ryzen-5-5600-35ghz-44ghz-turbo-6-cores-12-threads-cooler-wraith-stealth-am4-100-100000927box",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "20813",
-    "nome": "Processador AMD Ryzen 7 5700X 3.4GHz (4.6GHz Turbo), 8-Cores 16-Threads, AM4, Sem Cooler, 100-100000926WO",
-    "preco": "R$ 1.799,99",
-    "url": "https://www.terabyteshop.com.br/produto/20813/processador-amd-ryzen-7-5700x-34ghz-46ghz-turbo-8-cores-16-threads-am4-sem-cooler-100-100000926wof",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "18973",
-    "nome": "Processador AMD Ryzen 7 5700G, 3.8GHz (4.6GHz Turbo), 8-Cores 16-Threads, Cooler Wraith Stealth, AM4, Com",
-    "preco": "R$ 1.699,99",
-    "url": "https://www.terabyteshop.com.br/produto/18973/processador-amd-ryzen-7-5700g-38ghz-46ghz-turbo-8-cores-16-threads-cooler-wraith-stealth-am4-com-video-integrado-100-100000263box",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "13676",
-    "nome": "Processador Intel Core i5 10400F, 2.90GHz (4.30GHz Turbo), 10ª Geração, 6-Cores 12-Threads, LGA 1200, BX8",
-    "preco": "R$ 999,99",
-    "url": "https://www.terabyteshop.com.br/produto/13676/processador-intel-core-i5-10400f-290ghz-430ghz-turbo-10-geracao-6-cores-12-threads-lga-1200-bx8070110400f",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "22264",
-    "nome": "Processador AMD Ryzen 7 7700X 4.5GHz (5.4GHz Turbo), 8-Cores 16-Threads, AM5, Sem Cooler, 100-100000591WO",
-    "preco": "R$ 2.999,99",
-    "url": "https://www.terabyteshop.com.br/produto/22264/processador-amd-ryzen-7-7700x-45ghz-54ghz-turbo-8-cores-16-threads-am5-100-100000591wof",
-    "promocao": "Sim",
-    "tipo_produto": "hardware/processadores"
-  },
-  {
-    "sku": "32037",
-    "nome": "Processador Intel Core Ultra 9 285K, 3.7 Ghz (5.7Ghz Turbo), Série 2, 24-Cores 24-Threads, LGA 1851, BX80",
-    "preco": "R$ 5.499,99",
-    "url": "https://www.terabyteshop.com.br/produto/32037/processador-intel-core-ultra-9-285k-37-ghz-57ghz-turbo-serie-2-24-cores-24-threads-lga-1851-bx80768285k",
     "promocao": "Sim",
     "tipo_produto": "hardware/processadores"
   }
