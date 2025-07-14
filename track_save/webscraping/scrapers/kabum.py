@@ -486,7 +486,7 @@ if __name__ == "__main__":
     for category in Categories:
         scraper = KabumScraper(
             category=category,
-            limit=500,
+            limit=100,
             local_results=True,
             page_limit=7,
             save_print=False,

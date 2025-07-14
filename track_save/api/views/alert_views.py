@@ -4,7 +4,9 @@ from datetime import datetime
 from api.controllers.alert_controller import create_alert
 from api.controllers.alert_controller import delete_alert
 from api.controllers.alert_controller import get_alert_by_id
+from api.controllers.alert_controller import get_alert_by_only_user_id
 from api.controllers.alert_controller import get_alert_by_user
+from api.controllers.alert_controller import get_alert_stats
 from api.controllers.alert_controller import get_all_alerts
 from api.controllers.alert_controller import update_alert
 from api.entities.alert import Alert
@@ -83,11 +85,30 @@ def list_alerts_view(request):
 
 # GET /api/alerts/user/
 @csrf_exempt
-def get_alert_view_by_user(request):
+def get_alert_view_by_user(request, user_id):
     try:
-        data = json.loads(request.body)
-        response = get_alert_by_user(data.get("user_id"), data.get("product_id"))
-        return JsonResponse(response, status=200)
+        response = get_alert_by_user(user_id)
+        return JsonResponse(response, safe=False, status=200)
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+@csrf_exempt
+def get_alert_view_by_user_id(request, user_id):
+    try:
+        response = get_alert_by_only_user_id(user_id)
+        return JsonResponse(response, safe=False, status=200)
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+@csrf_exempt
+def get_alert_metrics(request, user_id):
+    try:
+        metrics = get_alert_stats(user_id=user_id)
+        return JsonResponse(metrics, status=200)
+    except User.DoesNotExist:
+        return HttpResponseNotFound("Usuário não encontrado")
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")
 

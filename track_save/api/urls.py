@@ -158,6 +158,16 @@ urlpatterns = [
         alert_views.get_alert_view_by_user,
         name="get_alert_view_by_user",
     ),
+    path(
+        "alerts/user/<int:user_id>/",
+        alert_views.get_alert_view_by_user_id,
+        name="get_alert_view_by_user_id",
+    ),
+    path(
+        "alerts/stats/<int:user_id>/",
+        alert_views.get_alert_metrics,
+        name="get_alert_stats",
+    ),
     path("alerts/<int:alert_id>/", alert_views.get_alert_view, name="get_alert"),
     path(
         "alerts/update/<int:alert_id>/",
