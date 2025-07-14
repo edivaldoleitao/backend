@@ -352,22 +352,38 @@ def get_specific_details(product):  # noqa: PLR0911
 def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True):
     """
     Busca produtos por similaridade textual + filtros extraídos implicitamente (categoria, marca, tipo, preço).
-    Se não encontrar nada, tenta novamente ignorando o preço (ou todos os filtros se permitido).
+    Agora com categorias, marcas e tipos extraídos dinamicamente do banco.
     """
-    # Listas de possíveis valores esperados
-    CATEGORIAS = ['teclado', 'mouse', 'monitor', 'notebook', 'gabinete', 'ssd', 'fone', 'placa de vídeo']
-    MARCAS = ['logitech', 'razer', 'dell', 'asus', 'hp', 'corsair', 'redragon']
-    TIPOS = ['mecânico', 'sem fio', 'gamer', 'rgb', 'ultrawide', 'bluetooth', 'compacto']
 
     texto = search_text.lower()
     palavras = re.findall(r'\w+', texto)
     if not palavras:
         return []
 
+    # ====== Dados válidos extraídos dinamicamente ======
+    CATEGORIAS_VALIDAS = set(
+        Product.objects.values_list('category', flat=True).distinct()
+    )
+    MARCAS_VALIDAS = set(
+        Product.objects.values_list('brand', flat=True).distinct()
+    )
+    TIPOS_VALIDOS = set(
+        Product.objects.values_list('description', flat=True)
+        .exclude(description__isnull=True)
+        .exclude(description__exact='')
+        .distinct()
+    )
+
+    # Normaliza para string simples (ex: "teclado mecânico" → ["teclado", "mecânico"])
+    tipos_tokenizados = set()
+    for desc in TIPOS_VALIDOS:
+        tipos_tokenizados.update(re.findall(r'\w+', desc.lower()))
+    TIPOS_VALIDOS = tipos_tokenizados
+
     # ====== Extração de intenção ======
-    categoria = next((c for c in CATEGORIAS if c in texto), None)
-    marca = next((m for m in MARCAS if m in texto), None)
-    tipos = [t for t in TIPOS if t in texto]
+    categoria = next((c for c in CATEGORIAS_VALIDAS if c and c.lower() in texto), None)
+    marca = next((m for m in MARCAS_VALIDAS if m and m.lower() in texto), None)
+    tipos = [t for t in TIPOS_VALIDOS if t in texto]
 
     preco_limite = None
     match_preco = re.search(
@@ -403,11 +419,11 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
 
         if com_categoria and categoria:
             sql += " AND unaccent(lower(p.category)) = unaccent(%s)"
-            values.append(categoria)
+            values.append(categoria.lower())
 
         if com_marca and marca:
             sql += " AND unaccent(lower(p.brand)) ILIKE unaccent(%s)"
-            values.append(f"%{marca}%")
+            values.append(f"%{marca.lower()}%")
 
         if com_tipos and tipos:
             for tipo in tipos:
