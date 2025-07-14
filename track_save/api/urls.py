@@ -64,6 +64,11 @@ urlpatterns = [
     ),
     path("products/", product_views.get_products, name="get_products"),
     path(
+        "products/best_rating/",
+        product_views.list_product_stores_by_best_rating,
+        name="list_product_stores_by_best_rating",
+    ),
+    path(
         "products/name/<str:product_name>/",
         product_views.get_product_name,
         name="get_product",
@@ -106,6 +111,11 @@ urlpatterns = [
         product_views.delete_product_store,
         name="delete_product_store",
     ),
+    path(
+        "product_stores/details/<int:ps_id>/",
+        product_views.get_product_details,
+        name="get_product_details",
+    ),
     path("prices/", price_views.list_prices, name="list_prices"),
     path("prices/create/", price_views.create_price_view, name="create_price"),
     path("prices/<int:price_id>/", price_views.get_price, name="get_price"),
@@ -127,6 +137,11 @@ urlpatterns = [
         "favorites/<int:fav_id>/", favorite_views.get_favorite_view, name="get_favorite"
     ),
     path(
+        "favorites/user/",
+        favorite_views.get_favorite_view_by_user,
+        name="get_favorite_by_user",
+    ),
+    path(
         "favorites/update/<int:fav_id>/",
         favorite_views.update_favorite_view,
         name="update_favorite",
@@ -138,6 +153,11 @@ urlpatterns = [
     ),
     path("alerts/", alert_views.list_alerts_view, name="list_alerts"),
     path("alerts/create/", alert_views.create_alert_view, name="create_alert"),
+    path(
+        "alerts/user/",
+        alert_views.get_alert_view_by_user,
+        name="get_alert_view_by_user",
+    ),
     path("alerts/<int:alert_id>/", alert_views.get_alert_view, name="get_alert"),
     path(
         "alerts/update/<int:alert_id>/",
@@ -154,4 +174,5 @@ urlpatterns = [
         product_views.get_terabyte,
         name="terabyte_save",
     ),
+    path("search/", product_views.search_view, name="generic_search"),
 ]

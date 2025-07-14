@@ -1,12 +1,13 @@
 import os
 
+from api.entities.user import User
+from api.entities.user import UserCategory
+from api.entities.user import UserSpecification
 from django.contrib.auth.hashers import make_password
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
-
-from api.entities.user import User, UserSpecification
-from api.entities.user import UserCategory
 
 
 def get_categories():
@@ -42,7 +43,8 @@ def create_user(name, email, password, categories):
 
     send_mail(
         subject="Confirmação de email - Track&Save",
-        message=f"Obrigado por se cadastrar no Track&Save! Para confirmar o email clique no link abaixo. Link: http://localhost:8001/api/confirm_email/{user.id}/",
+        # ALTERAR O LINK DPS PARA A DA TELA DE CONFIRMAÇÃO DE EMAIL
+        message=f"Obrigado por se cadastrar no Track&Save! Para confirmar o email clique no link abaixo. Link: http://localhost:5173/ConfirmAccount/{user.id}/",
         recipient_list=[email],
         from_email=os.getenv("DEFAULT_FROM_EMAIL"),
     )
@@ -53,8 +55,10 @@ def create_user(name, email, password, categories):
 def get_user_by_id(user_id):
     return User.objects.get(id=user_id)
 
+
 def get_user_by_email(user_email):
     return User.objects.get(email=user_email)
+
 
 def get_all_users():
     return User.objects.all()
@@ -107,7 +111,7 @@ def recover_password(email):
     except User.DoesNotExist:
         raise User.DoesNotExist("Este email não pertence a nenhuma conta!")
 
-    link_redefinicao = f"http://localhost:8001/api/update_password/{user.id}"
+    link_redefinicao = f"http://localhost:5173/ChangePassword/{user.id}"
 
     send_mail(
         subject="Redefinição de senha da conta Track&Save",
@@ -134,13 +138,18 @@ def confirm_email(user_id):
 
 ### USER SPECIFICATION ###
 
-def create_user_specification(user_id, cpu, ram, motherboard, cooler=None, gpu=None, storage=None, psu=None):
+
+def create_user_specification(
+    user_id, cpu, ram, motherboard, cooler=None, gpu=None, storage=None, psu=None
+):
     if not user_id:
         raise ValueError("É necessário o id do usuário.")
 
-    if not all([cpu, ram, motherboard, gpu]):
-        raise ValueError("É necessário informar pelo menos os campos a seguir: " \
-                         "Processador, Ram, Armazenamento e Placa Mãe")
+    if not all([cpu, ram, motherboard]):
+        raise ValueError(
+            "É necessário informar pelo menos os campos a seguir: "
+            "Processador, Ram e Placa Mãe"
+        )
 
     try:
         user = User.objects.get(id=user_id)
@@ -170,6 +179,7 @@ def get_user_specification_by_user_id(user_id):
         return UserSpecification.objects.get(user_id=user)
     except (User.DoesNotExist, UserSpecification.DoesNotExist):
         raise ObjectDoesNotExist("Especificação do usuário não encontrada.")
+
 
 def get_all_specifications():
     return UserSpecification.objects.all()

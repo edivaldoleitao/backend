@@ -58,6 +58,25 @@ def get_favorite_by_id(fav_id: int) -> dict:
     }
 
 
+def check_favorite_by_user(user_id: int, product_id: int) -> dict:
+    """
+    Checa se esse favorito existe, caso positivo ele retorna juntamente o indice
+    """
+    f_check = Favorite.objects.filter(user=user_id, product=product_id).exists()
+
+    if f_check:
+        return {
+            "favorite": True,
+            "id_fav": Favorite.objects.filter(user=user_id, product=product_id)
+            .first()
+            .id,
+        }
+
+    return {
+        "favorite": False,
+    }
+
+
 def update_favorite(fav_id: int, **data) -> Favorite:
     """
     Atualiza um Favorite existente.
