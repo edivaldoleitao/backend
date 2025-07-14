@@ -12,7 +12,11 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from track_save.webscraping.enums import Categories
 
 from .scraper import Scraper
+from .specific_data import cpu as cpu_specific_data
 from .specific_data import gpu as gpu_specific_data
+from .specific_data import keyboard as keyboard_specific_data
+from .specific_data import mouse as mouse_specific_data
+from .specific_data import ram as ram_specific_data
 
 BASE = Path(__file__).parent
 API_URL = "http://localhost:8001/api/products/create/"
@@ -24,118 +28,147 @@ class KabumScraper(Scraper):
         self,
         category: Categories,
         limit: int = 100,
+        page_limit: int = 3,
         local_results: bool = False,
         save_print: bool = True,
     ):
         self.category = category
         self.limit = limit
+        self.page_limit = page_limit
         self.local_results = local_results
         self.save_print = save_print
 
-    def run(self) -> list[dict]:  # noqa: C901, PLR0915
+    def run(self, headless) -> list[dict]:  # noqa: C901, PLR0912, PLR0915
         print("🤖 Iniciando a coleta de dados da Kabum...")
         print(f"> Categoria: {self.category.name}, Limite: {self.limit}")
         results = []
-        browser, page = self.init_browser()
+        browser, page = self.init_browser(headless=headless)
 
-        url = self.parse_category(self.category, get_url=True)
-        page.goto(url)
+        try:
+            url = self.parse_category(self.category, get_url=True)
+            page.goto(url, timeout=60000)
 
-        locBarraFiltro = page.locator("#Filter")
-        locFiltroItens = locBarraFiltro.locator("select.sc-dcf1314f-0")
-        self.wait_element(locFiltroItens)
+            locBarraFiltro = page.locator("#Filter")
+            locFiltroItens = locBarraFiltro.locator("select.sc-dcf1314f-0")
+            self.wait_element(locFiltroItens)
 
-        locFiltroItens.select_option(value="100")
+            locFiltroItens.select_option(value="100")
+            page.wait_for_load_state("domcontentloaded")
 
-        locItens = page.locator("article.productCard")
-        self.wait_element(locItens)
-        print(
-            f"> Encontrados {locItens.count()} produtos na categoria {self.category.name}.",  # noqa: E501
-        )
-        for i in range(min(locItens.count(), self.limit)):
-            card = locItens.nth(i)
+            page_num = 1
+            while len(results) < self.limit and page_num <= self.page_limit:
+                locItens = page.locator("article.productCard")
+                self.wait_element(locItens)
+                item_count_on_page = locItens.count()
 
-            card.click()
+                if item_count_on_page == 0:
+                    print("> Nenhum produto encontrado nesta página. Encerrando.")
+                    break
 
-            priceSection = page.locator("#blocoValores")
-            descriptionSection = page.locator("#description")
-            techInfoSection = page.locator("#technicalInfoSection")
-            reviewsSection = page.locator("#reviewsSection")
-            self.wait_elements(
-                page,
-                [descriptionSection, techInfoSection, reviewsSection],
-            )
+                print(
+                    f"> Encontrados {locItens.count()} produtos na categoria {self.category.name}.",  # noqa: E501
+                )
 
-            common_data = self.get_common_data(
-                page,
-                priceSection,
-                descriptionSection,
-                techInfoSection,
-                reviewsSection,
-            )
-            specific_info = self.get_specific_data(techInfoSection, common_data["name"])
-
-            product_data = {
-                **common_data,
-                **specific_info,
-                "store": "Kabum",
-                "available": True,
-            }
-
-            results.append(product_data)
-            if self.local_results:
-                print(f"Produto {i + 1} capturado: {product_data['name']}")
-                # print("URL:", product_data["url"])
-                # print("> Product Data:", product_data)
-                print("=" * 50 + "\n")
-
-            page.go_back()
-
-        results_dir = BASE / "results"
-        results_dir.mkdir(exist_ok=True, parents=True)
-
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
-        base_name = f"{self.category.name.lower()}_{timestamp}"
-
-        if self.local_results:
-            print(f"🗂️ Salvando resultados em {results_dir}...")
-            if self.save_print:
-                screenshot_path = results_dir / f"{base_name}.png"
-                page.screenshot(path=str(screenshot_path), full_page=True)
-
-            results_str = json.dumps(results, ensure_ascii=False, indent=4)
-
-            json_path = results_dir / f"{base_name}.json"
-            with json_path.open("w", encoding="utf-8") as f:
-                f.write(results_str)
-
-        if results:
-            print(f"✅ {len(results)} produtos capturados com sucesso!")
-
-            for result in results:
-                try:
-                    response = requests.post(API_URL, json=result, timeout=10)
-                    if response.status_code == HTTP_STATUS_CREATED:
+                for i in range(item_count_on_page):
+                    if len(results) >= self.limit:
                         print(
-                            f"✅ Produto {result['name']} enviado com sucesso para a API!",  # noqa: E501
+                            "\n> Limite total de produtos atingido. Encerrando coleta de itens.",  # noqa: E501
                         )
-                    else:
-                        print(
-                            f"⚠️ Erro ao enviar dado para a API: {response.status_code} - {response.text}",  # noqa: E501
-                        )
-                except requests.exceptions.ConnectionError as e:
-                    print(f"⚠️ Erro de conexão ao enviar '{result['name']}': {e}")
-                except requests.exceptions.Timeout as e:
-                    # timeout de 10s expirou
-                    print(f"⚠️ Timeout ao enviar '{result['name']}': {e}")
-                except requests.exceptions.RequestException as e:
-                    # qualquer outro erro de HTTP/Request
-                    print(f"⚠️ Erro inesperado ao enviar '{result['name']}': {e}")
-        else:
-            print("⚠️ Nenhum produto encontrado ou capturado.")
+                        break
 
-        self.close_browser(browser)
-        print("🤖 Coleta finalizada.\n")
+                    card = locItens.nth(i)
+                    card.click()
+
+                    priceSection = page.locator("span.block.my-12 b")
+                    descriptionSection = page.locator("#description")
+                    techInfoSection = page.locator("#technicalInfoSection")
+                    reviewsSection = page.locator("#reviewsSection")
+                    self.wait_elements(
+                        page,
+                        [
+                            priceSection,
+                            descriptionSection,
+                            techInfoSection,
+                            reviewsSection,
+                        ],
+                    )
+                    print("> Coletando produto da url:", page.url)
+
+                    common_data = self.get_common_data(
+                        page,
+                        priceSection,
+                        descriptionSection,
+                        techInfoSection,
+                        reviewsSection,
+                    )
+                    specific_info = self.get_specific_data(
+                        techInfoSection,
+                        common_data["name"],
+                    )
+
+                    product_data = {
+                        **common_data,
+                        **specific_info,
+                        "store": "Kabum",
+                        "available": True,
+                    }
+
+                    results.append(product_data)
+                    if self.local_results:
+                        print(f"Produto {i + 1} capturado: {product_data['name']}")
+                        print("=" * 50 + "\n")
+
+                    page.go_back()
+                    page.wait_for_load_state("domcontentloaded")
+
+                # --- Fim do loop de itens da página ---
+
+                # Verifica se o limite de produtos foi atingido
+                if len(results) >= self.limit:
+                    break
+
+                ITEMS_PER_PAGE = 100
+                if item_count_on_page < ITEMS_PER_PAGE:
+                    print(
+                        f"\n> Página final detectada (contém {item_count_on_page} itens, menos que {ITEMS_PER_PAGE}). Coleta concluída.",  # noqa: E501
+                    )
+                    break
+
+                # Lógica para ir para a próxima página
+                locProximaPagina = page.locator("#listingPagination li.next")
+                is_disabled = "disabled" in (
+                    locProximaPagina.get_attribute("class") or ""
+                )
+
+                if locProximaPagina.is_visible() and not is_disabled:
+                    print("> Indo para a próxima página...")
+                    locProximaPagina.click()
+                    page.wait_for_load_state("domcontentloaded")
+                    page_num += 1
+                else:
+                    print(
+                        "\n> Botão 'Próxima Página' não encontrado ou desabilitado. Fim da coleta.",  # noqa: E501
+                    )
+                    break
+
+            # --- Fim do loop de paginação ---
+
+            # Seção para salvar os resultados e enviar para a API
+            if results:
+                print(f"\n✅ {len(results)} produtos capturados com sucesso!")
+                self.save_and_send_results(results)
+            else:
+                print("\n⚠️ Nenhum produto encontrado ou capturado.")
+
+        except PlaywrightTimeoutError as e:
+            print(f"❌ Timeout do Playwright durante a execução: {e}")
+            page.screenshot(path="error_screenshot.png")
+        except requests.exceptions.RequestException as e:
+            print(f"❌ Erro de requisição HTTP durante a execução: {e}")
+            page.screenshot(path="error_screenshot.png")
+        finally:
+            self.close_browser(browser)
+            print("🤖 Coleta finalizada.\n")
 
         return results
 
@@ -149,7 +182,7 @@ class KabumScraper(Scraper):
     ) -> dict:
         name_loc = descriptionSection.locator("h2").first
         if not self.element_visible(name_loc):
-            name_loc = page.locator("#container-purchase h1")
+            name_loc = page.locator("h1.text-sm").first
 
         rating_loc = reviewsSection.locator("span").first
         self.wait_element(rating_loc, timeout=2000)
@@ -165,8 +198,10 @@ class KabumScraper(Scraper):
         category = self.category.name.lower()
         price = self.get_price(priceSection)
         url = page.url
-        img_url = page.locator("#carouselDetails img").first.get_attribute("src")
-        brand = self.get_brand(techInfoSection)
+        img_url = page.locator(
+            "div.swiper-slide.swiper-slide-active img",
+        ).first.get_attribute("src")
+        brand = self.get_brand(techInfoSection, name)
         description = self.get_description(descriptionSection)
         collection_date = date.today().isoformat()  # noqa: DTZ011
 
@@ -210,29 +245,39 @@ class KabumScraper(Scraper):
         if self.category == Categories.CPU:
             return {
                 "model": self.get_model(section),
-                "integrated_video": "Vega 8/12",
-                "socket": "AM4/AM5/LGA1200",
-                "core_number": "6/8/12",
-                "thread_number": "12/16/24",
-                "frequency": "3.0GHz",
-                "mem_speed": "3200MHz",
+                "integrated_video": cpu_specific_data.get_integrated_video(section),
+                "socket": cpu_specific_data.get_socket(section),
+                "core_number": cpu_specific_data.get_core_number(section),
+                "thread_number": cpu_specific_data.get_threads(section),
+                "frequency": cpu_specific_data.get_frequency(section, name=name),
+                "mem_speed": cpu_specific_data.get_mem_speed(section),
+            }
+
+        if self.category == Categories.STORAGE:
+            return {
+                "capacity_gb": "256/512/1024",
+                "storage_type": "SSD/HDD",
+                "interface": "SATA/PCIe NVMe",
+                "form_factor": '2.5"/M.2',
+                "read_speed": "500MB/s",
+                "write_speed": "450MB/s",
             }
 
         if self.category == Categories.KEYBOARD:
             return {
                 "model": self.get_model(section),
-                "key_type": "Mechanical/Membrane",
-                "layout": "ABNT2/ANSI",
-                "connectivity": "Wired/Wireless",
-                "dimension": "Standard/Compact",
+                "key_type": keyboard_specific_data.get_key_type(section, name),
+                "layout": keyboard_specific_data.get_layout(section),
+                "connectivity": keyboard_specific_data.get_connectivity(section),
+                "dimension": keyboard_specific_data.get_dimension(section),
             }
 
         if self.category == Categories.MOUSE:
             return {
                 "model": self.get_model(section),
-                "dpi": "8000/16000",
-                "connectivity": "Wired/Wireless",
-                "color": "Preto/Branco",
+                "dpi": mouse_specific_data.get_dpi(section),
+                "connectivity": mouse_specific_data.get_connectivity(section),
+                "color": mouse_specific_data.get_color(section),
             }
 
         if self.category == Categories.MONITOR:
@@ -250,9 +295,9 @@ class KabumScraper(Scraper):
         if self.category == Categories.RAM:
             return {
                 "model": self.get_model(section),
-                "capacity": "8GB/16GB/32GB",
-                "ddr": "DDR4/DDR5",
-                "speed": "2400MHz/3200MHz",
+                "capacity": ram_specific_data.get_capacity(section),
+                "ddr": ram_specific_data.get_ddr(section),
+                "speed": ram_specific_data.get_speed(section),
             }
 
         if self.category == Categories.COMPUTER:
@@ -274,15 +319,15 @@ class KabumScraper(Scraper):
         return {}
 
     def get_price(self, section: Locator) -> str:
-        price_locator = section.locator("b.regularPrice")
-        if not self.element_visible(price_locator):
-            price_locator = section.locator("h4.finalPrice")
+        if not self.wait_element(section, timeout=2000):
+            return "0.00"
 
+        price_locator = section
         price_raw = price_locator.first.inner_text()
         price_clean = re.sub(r"[^\d\.,]", "", price_raw)
         return price_clean.replace(".", "").replace(",", ".") if price_clean else "0.00"
 
-    def get_brand(self, section: Locator) -> str:
+    def get_brand(self, section: Locator, name: str) -> str:
         candidates = [
             "span:has-text('Marca')",
             "p:has-text('Marca')",
@@ -300,10 +345,35 @@ class KabumScraper(Scraper):
                     brand_name = ""
 
         if not brand_name:
-            return ""
+            brands = [
+                "Corsair",
+                "ASUS",
+                "Gigabyte",
+                "MSI",
+                "Samsung",
+                "Kingston",
+                "Rise Mode",
+                "Logitech",
+                "Dell",
+                "HP",
+                "Redragon",
+                "HyperX",
+                "Acer",
+                "Lenovo",
+                "Neologic",
+                "3green",
+                "2eletro",
+                "Skill",
+            ]
+            for brand in brands:
+                if brand.lower() in name.lower():
+                    return brand
+
+        if not brand_name:
+            return "Generic"
 
         brand = re.search(r"Marca:\s*(.+)$", brand_name, flags=re.IGNORECASE)
-        return brand.group(1) if brand else ""
+        return brand.group(1) if brand else "Generic"
 
     def get_description(self, section: Locator) -> str:  # noqa: C901
         """
@@ -377,18 +447,58 @@ class KabumScraper(Scraper):
         model = re.search(r"Modelo:\s*(.+)$", model_name, flags=re.IGNORECASE)
         return model.group(1) if model else ""
 
+    def save_and_send_results(self, results: list[dict]):
+        """
+        Salva os resultados localmente e os envia para a API.
+        """
+        results_dir = BASE / "results"
+        results_dir.mkdir(exist_ok=True, parents=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
+        base_name = f"{self.category.name.lower()}_{timestamp}"
+
+        if self.local_results:
+            print(f"🗂️ Salvando resultados em {results_dir}...")
+            results_str = json.dumps(results, ensure_ascii=False, indent=4)
+            json_path = results_dir / f"{base_name}.json"
+            with json_path.open("w", encoding="utf-8") as f:
+                f.write(results_str)
+            print(f"  Resultados salvos em {json_path}")
+
+        # Enviar para a API
+        for result in results:
+            try:
+                response = requests.post(API_URL, json=result, timeout=10)
+                if response.status_code == HTTP_STATUS_CREATED:
+                    print(
+                        f"🚀 Produto '{result['name']}' enviado com sucesso para a API!",
+                    )
+                else:
+                    print(
+                        f"⚠️ Erro ao enviar para a API: {response.status_code} - {response.text}",
+                    )
+            except requests.exceptions.RequestException as e:
+                print(f"⚠️ Erro de conexão ao enviar '{result['name']}': {e}")
+
 
 if __name__ == "__main__":
     # Teste de coleta para todas as categorias
     for category in Categories:
         scraper = KabumScraper(
             category=category,
-            limit=100,
+            limit=500,
             local_results=True,
+            page_limit=7,
             save_print=False,
         )
-        scraper.run()
+        scraper.run(headless=True)
 
-    # # Teste específico para GPU
-    # scraper = KabumScraper(category=Categories.GPU, limit=5, local_results=True, save_print=True)
-    # scraper.run()
+    # # Teste específico para uma categoria
+    # scraper = KabumScraper(
+    #     category=Categories.RAM,
+    #     limit=10,
+    #     page_limit=1,
+    #     local_results=True,
+    #     save_print=True,
+    # )
+    # scraper.run(headless=True)
