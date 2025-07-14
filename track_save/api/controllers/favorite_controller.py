@@ -1,7 +1,9 @@
 from datetime import date
-from api.entities.list import Favorite
-from api.entities.user import User
+
+from api.entities.favorite import Favorite
 from api.entities.product import Product
+from api.entities.user import User
+
 
 def create_favorite(user_id: int, product_id: int, created_at: date) -> Favorite:
     """
@@ -12,7 +14,7 @@ def create_favorite(user_id: int, product_id: int, created_at: date) -> Favorite
     """
     if not all([user_id, product_id, created_at]):
         raise ValueError("Os campos user_id, product_id e created_at são obrigatórios.")
-    
+
     user = User.objects.get(id=user_id)
     product = Product.objects.get(id=product_id)
 
@@ -20,11 +22,7 @@ def create_favorite(user_id: int, product_id: int, created_at: date) -> Favorite
     if Favorite.objects.filter(user=user, product=product).exists():
         raise ValueError("Este produto já está nos favoritos deste usuário.")
 
-    fav = Favorite.objects.create(
-        user=user,
-        product=product,
-        created_at=created_at
-    )
+    fav = Favorite.objects.create(user=user, product=product, created_at=created_at)
     return fav
 
 
@@ -35,12 +33,14 @@ def get_all_favorites() -> list[dict]:
     out = []
     qs = Favorite.objects.select_related("user", "product").all()
     for f in qs:
-        out.append({
-            "id":          f.id,
-            "user":        f.user.id,
-            "product":     f.product.id,
-            "created_at":  f.created_at.isoformat(),
-        })
+        out.append(
+            {
+                "id": f.id,
+                "user": f.user.id,
+                "product": f.product.id,
+                "created_at": f.created_at.isoformat(),
+            }
+        )
     return out
 
 
@@ -49,12 +49,31 @@ def get_favorite_by_id(fav_id: int) -> dict:
     Retorna dict com os dados de um Favorite.
     Raises Favorite.DoesNotExist se não encontrar.
     """
-    f = Favorite.objects.select_related("user","product").get(id=fav_id)
+    f = Favorite.objects.select_related("user", "product").get(id=fav_id)
     return {
-        "id":          f.id,
-        "user":        f.user.id,
-        "product":     f.product.id,
-        "created_at":  f.created_at.isoformat(),
+        "id": f.id,
+        "user": f.user.id,
+        "product": f.product.id,
+        "created_at": f.created_at.isoformat(),
+    }
+
+
+def check_favorite_by_user(user_id: int, product_id: int) -> dict:
+    """
+    Checa se esse favorito existe, caso positivo ele retorna juntamente o indice
+    """
+    f_check = Favorite.objects.filter(user=user_id, product=product_id).exists()
+
+    if f_check:
+        return {
+            "favorite": True,
+            "id_fav": Favorite.objects.filter(user=user_id, product=product_id)
+            .first()
+            .id,
+        }
+
+    return {
+        "favorite": False,
     }
 
 

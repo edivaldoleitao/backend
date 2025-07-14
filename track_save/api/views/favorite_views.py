@@ -1,23 +1,21 @@
 import json
 from datetime import datetime
 
-from django.http import (
-    JsonResponse,
-    HttpResponseBadRequest,
-    HttpResponseNotAllowed,
-    HttpResponseNotFound,
-)
+from api.entities.favorite import Favorite
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotFound
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_POST
 
-from api.controllers.list_controller import (
-    create_favorite,
-    get_all_favorites,
-    get_favorite_by_id,
-    update_favorite,
-    delete_favorite,
-)
-from api.entities.list import Favorite
+from track_save.api.controllers.favorite_controller import check_favorite_by_user
+from track_save.api.controllers.favorite_controller import create_favorite
+from track_save.api.controllers.favorite_controller import delete_favorite
+from track_save.api.controllers.favorite_controller import get_all_favorites
+from track_save.api.controllers.favorite_controller import get_favorite_by_id
+from track_save.api.controllers.favorite_controller import update_favorite
 
 
 # POST /api/favorites/create/
@@ -31,18 +29,21 @@ def create_favorite_view(request):
             dt = datetime.strptime(data.get("created_at"), "%Y-%m-%d").date()
         except (TypeError, ValueError):
             return HttpResponseBadRequest("created_at deve ser YYYY-MM-DD")
-        
+
         fav = create_favorite(
-            user_id     = data.get("user_id"),
-            product_id  = data.get("product_id"),
-            created_at  = dt
+            user_id=data.get("user_id"),
+            product_id=data.get("product_id"),
+            created_at=dt,
         )
-        return JsonResponse({
-            "id":          fav.id,
-            "user":        fav.user.id,
-            "product":     fav.product.id,
-            "created_at":  fav.created_at.isoformat(),
-        }, status=201)
+        return JsonResponse(
+            {
+                "id": fav.id,
+                "user": fav.user.id,
+                "product": fav.product.id,
+                "created_at": fav.created_at.isoformat(),
+            },
+            status=201,
+        )
 
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")
@@ -80,6 +81,16 @@ def get_favorite_view(request, fav_id):
         return HttpResponseBadRequest(f"Erro interno: {e}")
 
 
+@csrf_exempt
+def get_favorite_view_by_user(request):
+    try:
+        data = json.loads(request.body)
+        response = check_favorite_by_user(data.get("user_id"), data.get("product_id"))
+        return JsonResponse(response, status=200)
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
 # PUT /api/favorites/update/<id>/
 @csrf_exempt
 def update_favorite_view(request, fav_id):
@@ -97,12 +108,15 @@ def update_favorite_view(request, fav_id):
                 return HttpResponseBadRequest("created_at deve ser YYYY-MM-DD")
 
         fav = update_favorite(fav_id, **data)
-        return JsonResponse({
-            "id":          fav.id,
-            "user":        fav.user.id,
-            "product":     fav.product.id,
-            "created_at":  fav.created_at.isoformat(),
-        }, status=200)
+        return JsonResponse(
+            {
+                "id": fav.id,
+                "user": fav.user.id,
+                "product": fav.product.id,
+                "created_at": fav.created_at.isoformat(),
+            },
+            status=200,
+        )
 
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")
