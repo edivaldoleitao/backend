@@ -1,4 +1,5 @@
 import hashlib
+import re
 from decimal import Decimal
 
 from api.entities.price import Price
@@ -33,6 +34,7 @@ from django.db.models import When
 from django.contrib.postgres.search import SearchVector
 from django.contrib.postgres.search import SearchQuery
 from django.contrib.postgres.search import SearchRank
+
 
 
 
@@ -347,6 +349,95 @@ def get_specific_details(product):  # noqa: PLR0911
         return {}
 
 
+def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True):
+    """
+    Busca produtos por similaridade textual + filtros extraídos implicitamente (categoria, marca, tipo, preço).
+    Se não encontrar nada, tenta novamente ignorando o preço (ou todos os filtros se permitido).
+    """
+    # Listas de possíveis valores esperados
+    CATEGORIAS = ['teclado', 'mouse', 'monitor', 'notebook', 'gabinete', 'ssd', 'fone', 'placa de vídeo']
+    MARCAS = ['logitech', 'razer', 'dell', 'asus', 'hp', 'corsair', 'redragon']
+    TIPOS = ['mecânico', 'sem fio', 'gamer', 'rgb', 'ultrawide', 'bluetooth', 'compacto']
+
+    texto = search_text.lower()
+    palavras = re.findall(r'\w+', texto)
+    if not palavras:
+        return []
+
+    # ====== Extração de intenção ======
+    categoria = next((c for c in CATEGORIAS if c in texto), None)
+    marca = next((m for m in MARCAS if m in texto), None)
+    tipos = [t for t in TIPOS if t in texto]
+
+    preco_limite = None
+    match_preco = re.search(
+        r'(?:até|por|menos de|abaixo de)?\s*(?:r\$)?\s*(\d{1,3}(?:[.,]?\d{3})*(?:[.,]\d{2})?|\d+)',
+        texto
+    )
+    if match_preco:
+        preco_raw = match_preco.group(1).replace('.', '').replace(',', '.')
+        try:
+            preco_limite = float(preco_raw)
+        except:
+            preco_limite = None
+
+    # ====== Função interna para montar e executar SQL ======
+    def executar_busca(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True):
+        like_clauses = [f"unaccent(p.name || ' ' || p.description) ILIKE unaccent(%s)" for _ in palavras]
+        sql_or = " OR ".join(like_clauses)
+
+        sql = f"""
+            SELECT DISTINCT p.id
+            FROM api_product p
+            JOIN api_productstore ps ON ps.product_id = p.id
+            JOIN (
+                SELECT product_store_id, MAX(collection_date) AS max_date
+                FROM api_price
+                GROUP BY product_store_id
+            ) latest ON latest.product_store_id = ps.id
+            JOIN api_price pr ON pr.product_store_id = ps.id AND pr.collection_date = latest.max_date
+            WHERE ({sql_or})
+        """
+
+        values = [f"%{palavra}%" for palavra in palavras]
+
+        if com_categoria and categoria:
+            sql += " AND unaccent(lower(p.category)) = unaccent(%s)"
+            values.append(categoria)
+
+        if com_marca and marca:
+            sql += " AND unaccent(lower(p.brand)) ILIKE unaccent(%s)"
+            values.append(f"%{marca}%")
+
+        if com_tipos and tipos:
+            for tipo in tipos:
+                sql += " AND unaccent(lower(p.description)) ILIKE unaccent(%s)"
+                values.append(f"%{tipo}%")
+
+        if com_preco and preco_limite:
+            sql += " AND pr.value <= %s"
+            values.append(preco_limite)
+
+        with connection.cursor() as cursor:
+            cursor.execute(sql, values)
+            return [row[0] for row in cursor.fetchall()]
+
+    # ====== Tentativas com relaxamento progressivo ======
+    tentativas = [
+        dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True),
+        dict(com_preco=True, com_categoria=False, com_marca=True, com_tipos=True),
+        dict(com_preco=True, com_categoria=False, com_marca=False, com_tipos=True),
+        dict(com_preco=False, com_categoria=False, com_marca=False, com_tipos=False),
+    ] if permitir_relaxamento else [dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True)]
+
+    for tentativa in tentativas:
+        ids = executar_busca(**tentativa)
+        if ids:
+            return [{"pk": pid, "rank": 0.05} for pid in ids]
+
+    return []
+
+
 """
 exemplo de uso
 http://localhost:8001/api/products/search/?name=nvidia rtx 3080&brand=NVIDIA
@@ -358,12 +449,13 @@ def search_products(filters: dict):
         base_query = Q()
         product_ranks = {}
 
-        # ====== FILTRO POR TEXTO ======
         if "name" in filters:
-            search_query = SearchQuery(filters["name"], config='portuguese')
+            search_text = filters["name"]
+
+            # ====== 1. Busca full-text ======
+            search_query = SearchQuery(search_text, config='portuguese')
             search_vector = SearchVector('name', 'description', config='portuguese')
 
-            # Busca no full-text
             fulltext_match = Product.objects.annotate(
                 search=search_vector,
                 rank=SearchRank(search_vector, search_query),
@@ -371,25 +463,15 @@ def search_products(filters: dict):
 
             combined_products = list(fulltext_match.values('pk', 'rank'))
 
-            # Se full-text não encontrou, faz a busca unaccent manual
+            # ====== 2. Fallback por SQL puro ======
             if not combined_products:
-                like_pattern = f"%{filters['name']}%"
-                sql = """
-                    SELECT id FROM api_product
-                    WHERE unaccent(name || ' ' || description) ILIKE unaccent(%s)
-                """
+                combined_products = fallback_simples_por_sql(search_text)
 
-                with connection.cursor() as cursor:
-                    cursor.execute(sql, [like_pattern])
-                    product_ids = [row[0] for row in cursor.fetchall()]
+            # ====== 3. Se nada for encontrado ======
+            if not combined_products:
+                raise ValueError("Nenhum produto encontrado com os filtros fornecidos.")
 
-                if not product_ids:
-                    raise ValueError("Nenhum produto encontrado com os filtros fornecidos.")
-
-                # Simula rank baixo no fallback
-                combined_products = [{"pk": pid, "rank": 0.1} for pid in product_ids]
-
-            # Gera os ranks e monta query base
+            # Constrói ranks e aplica filtro base
             product_ranks = {item['pk']: item['rank'] for item in combined_products}
             base_query &= Q(pk__in=product_ranks.keys())
 
