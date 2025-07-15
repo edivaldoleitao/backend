@@ -1,6 +1,7 @@
 import hashlib
 from decimal import Decimal
 
+from api.entities.favorite import Favorite
 from api.entities.price import Price
 from api.entities.product import Computer
 from api.entities.product import Cpu
@@ -1495,7 +1496,7 @@ def generic_search(searches):
     return {"results": results}
 
 
-def list_product_stores_by_best_rating(category=None, limit=None):
+def list_product_stores_by_best_rating(category=None, limit=None, user_id=None):
     qs = ProductStore.objects.filter(available=True)
 
     if category:
@@ -1511,17 +1512,22 @@ def list_product_stores_by_best_rating(category=None, limit=None):
         .values("rating")[:1]
     )
 
-    qs = qs.annotate(max_rating=Subquery(max_rating_subquery)).filter(
-        rating=F("max_rating")
+    qs = (
+        qs.annotate(max_rating=Subquery(max_rating_subquery))
+        .filter(rating=F("max_rating"))
+        .order_by("-rating")
     )
-
-    qs = qs.order_by("-rating")
 
     if limit:
         qs = qs[: int(limit)]
 
-    # Inclui joins eficientes
     qs = qs.select_related("product", "store").prefetch_related("price_set")
+
+    favorites_by_product = {}
+
+    if user_id:
+        favorites = Favorite.objects.filter(user_id=user_id).only("id", "product_id")
+        favorites_by_product = {int(fav.product_id): fav.id for fav in favorites}
 
     return [
         {
@@ -1535,6 +1541,7 @@ def list_product_stores_by_best_rating(category=None, limit=None):
             "url_product": ps.url_product,
             "available": ps.available,
             "price": ps.price_set.first().value if ps.price_set.exists() else None,
+            "favorite_id": favorites_by_product.get(int(ps.product.id)),
         }
         for ps in qs
     ]
