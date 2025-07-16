@@ -129,6 +129,11 @@ urlpatterns = [
         price_views.delete_price_view,
         name="delete_price",
     ),
+    path(
+        "prices/search/",
+        price_views.get_all_prices_with_product_data,
+        name="prices_with_product_data",
+    ),
     path("favorites/", favorite_views.list_favorites_view, name="list_favorites"),
     path(
         "favorites/create/", favorite_views.create_favorite_view, name="create_favorite"
@@ -157,6 +162,16 @@ urlpatterns = [
         "alerts/user/",
         alert_views.get_alert_view_by_user,
         name="get_alert_view_by_user",
+    ),
+    path(
+        "alerts/user/<int:user_id>/",
+        alert_views.get_alert_view_by_user_id,
+        name="get_alert_view_by_user_id",
+    ),
+    path(
+        "alerts/stats/<int:user_id>/",
+        alert_views.get_alert_metrics,
+        name="get_alert_stats",
     ),
     path("alerts/<int:alert_id>/", alert_views.get_alert_view, name="get_alert"),
     path(

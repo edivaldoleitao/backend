@@ -1,6 +1,15 @@
 import json
 from datetime import datetime
 
+from api.controllers.price_controller import create_price
+from api.controllers.price_controller import delete_price
+from api.controllers.price_controller import get_all_prices
+from api.controllers.price_controller import get_all_prices_with_product
+from api.controllers.price_controller import get_price_by_id
+from api.controllers.price_controller import get_price_by_ps
+from api.controllers.price_controller import update_price
+from api.entities.price import Price
+from api.entities.product import ProductStore
 from django.http import HttpResponseBadRequest
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseNotFound
@@ -8,15 +17,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
-
-from api.controllers.price_controller import create_price
-from api.controllers.price_controller import delete_price
-from api.controllers.price_controller import get_all_prices
-from api.controllers.price_controller import get_price_by_id
-from api.controllers.price_controller import get_price_by_ps
-from api.controllers.price_controller import update_price
-from api.entities.price import Price
-from api.entities.product import ProductStore
 
 
 # criar Price
@@ -157,5 +157,53 @@ def delete_price_view(request, price_id):
         return JsonResponse({"message": msg}, status=200)
     except Price.DoesNotExist:
         return HttpResponseNotFound("Price não encontrado")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseNotFound
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
+
+
+@csrf_exempt
+@require_GET
+def get_all_prices_with_product_data(request):
+    """
+    Retorna todos os Prices com dados dos produtos, com suporte a filtros e paginação.
+    """
+    try:
+        limit = request.GET.get("limit")
+        offset = request.GET.get("offset", 0)
+        name = request.GET.get("name")
+        category = request.GET.get("category")
+        user_id = request.GET.get("user_id")
+
+        seller = request.GET.get("seller")
+        rating = request.GET.get("rating")
+        price_min = request.GET.get("price_min")
+        price_max = request.GET.get("price_max")
+        brand = request.GET.get("brand")
+
+        lst = get_all_prices_with_product(
+            limit=limit,
+            offset=offset,
+            name=name,
+            category=category,
+            user_id=user_id,
+            seller=seller,
+            rating=rating,
+            price_min=price_min,
+            price_max=price_max,
+            brand=brand,
+        )
+
+        if not lst:
+            return HttpResponseNotFound("Nenhum Price cadastrado")
+
+        return JsonResponse(lst, safe=False, status=200)
+
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")

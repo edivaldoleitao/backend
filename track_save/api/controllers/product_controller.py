@@ -2,6 +2,7 @@ import hashlib
 import re
 from decimal import Decimal
 
+from api.entities.favorite import Favorite
 from api.entities.price import Price
 from api.entities.product import Computer
 from api.entities.product import Cpu
@@ -18,23 +19,22 @@ from api.entities.product import Storage
 from api.entities.product import Store
 from api.enums.category_specs import CATEGORY_SPECS
 from django.apps import apps
+from django.contrib.postgres.search import SearchQuery
+from django.contrib.postgres.search import SearchRank
+from django.contrib.postgres.search import SearchVector
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import transaction
 from django.db import connection
+from django.db import transaction
+from django.db.models import Case
 from django.db.models import Exists
 from django.db.models import F
+from django.db.models import FloatField
 from django.db.models import Max
 from django.db.models import OuterRef
 from django.db.models import Q
 from django.db.models import Subquery
 from django.db.models import Value
-from django.db.models import FloatField
-from django.db.models import Case
 from django.db.models import When
-from django.contrib.postgres.search import SearchVector
-from django.contrib.postgres.search import SearchQuery
-from django.contrib.postgres.search import SearchRank
-
 
 
 
@@ -460,12 +460,15 @@ http://localhost:8001/api/products/search/?name=nvidia rtx 3080&brand=NVIDIA
 http://localhost:8001/api/products/search/?brand=NVIDIA&category=gpu&price_min=2000&price_max=3000&store=Kabum
 """
 
+
 def search_products(filters: dict):
     try:
         base_query = Q()
         product_ranks = {}
 
         if "name" in filters:
+            search_query = SearchQuery(filters["name"], config="portuguese")
+            search_vector = SearchVector("name", "description", config="portuguese")
             search_text = filters["name"]
 
             # ====== 1. Busca full-text ======
@@ -477,7 +480,7 @@ def search_products(filters: dict):
                 rank=SearchRank(search_vector, search_query),
             ).filter(search=search_query)
 
-            combined_products = list(fulltext_match.values('pk', 'rank'))
+            combined_products = list(fulltext_match.values("pk", "rank"))
 
             # ====== 2. Fallback por SQL puro ======
             if not combined_products:
@@ -487,6 +490,16 @@ def search_products(filters: dict):
             if not combined_products:
                 raise ValueError("Nenhum produto encontrado com os filtros fornecidos.")
 
+                if not product_ids:
+                    raise ValueError(
+                        "Nenhum produto encontrado com os filtros fornecidos."
+                    )
+
+                # Simula rank baixo no fallback
+                combined_products = [{"pk": pid, "rank": 0.1} for pid in product_ids]
+
+            # Gera os ranks e monta query base
+            product_ranks = {item["pk"]: item["rank"] for item in combined_products}
             # Constrói ranks e aplica filtro base
             product_ranks = {item['pk']: item['rank'] for item in combined_products}
             base_query &= Q(pk__in=product_ranks.keys())
@@ -535,11 +548,17 @@ def search_products(filters: dict):
         )
 
         if "price_min" in filters:
-            sponsored_products = sponsored_products.filter(latest_price__gte=filters["price_min"])
+            sponsored_products = sponsored_products.filter(
+                latest_price__gte=filters["price_min"]
+            )
         if "price_max" in filters:
-            sponsored_products = sponsored_products.filter(latest_price__lte=filters["price_max"])
+            sponsored_products = sponsored_products.filter(
+                latest_price__lte=filters["price_max"]
+            )
         if "rating_min" in filters:
-            sponsored_products = sponsored_products.filter(rating__gte=filters["rating_min"])
+            sponsored_products = sponsored_products.filter(
+                rating__gte=filters["rating_min"]
+            )
 
         sponsored_products = sponsored_products.order_by("-search_rank", "-rating")[:3]
 
@@ -559,13 +578,21 @@ def search_products(filters: dict):
         )
 
         if "price_min" in filters:
-            non_sponsored_products = non_sponsored_products.filter(latest_price__gte=filters["price_min"])
+            non_sponsored_products = non_sponsored_products.filter(
+                latest_price__gte=filters["price_min"]
+            )
         if "price_max" in filters:
-            non_sponsored_products = non_sponsored_products.filter(latest_price__lte=filters["price_max"])
+            non_sponsored_products = non_sponsored_products.filter(
+                latest_price__lte=filters["price_max"]
+            )
         if "rating_min" in filters:
-            non_sponsored_products = non_sponsored_products.filter(rating__gte=filters["rating_min"])
+            non_sponsored_products = non_sponsored_products.filter(
+                rating__gte=filters["rating_min"]
+            )
 
-        non_sponsored_products = non_sponsored_products.order_by("-search_rank", "-rating")
+        non_sponsored_products = non_sponsored_products.order_by(
+            "-search_rank", "-rating"
+        )
 
         # ====== RESULTADOS ======
         final_products = list(sponsored_products) + list(non_sponsored_products)
@@ -617,7 +644,6 @@ def search_products(filters: dict):
 
     except Exception as e:
         raise ValueError(f"Erro ao buscar produto(s): {e!s}")
-
 
 
 # pra pegar produto pelo id
@@ -1578,15 +1604,12 @@ def generic_search(searches):
     return {"results": results}
 
 
-def list_product_stores_by_best_rating(category=None, limit=None):
-    """
-    Retorna o ProductStore de maior rating para cada produto, com filtro opcional por categoria e limite.
-    """
+def list_product_stores_by_best_rating(category=None, limit=None, user_id=None):
     qs = ProductStore.objects.filter(available=True)
+
     if category:
         qs = qs.filter(product__category=category)
 
-    # Subquery para pegar o maior rating de cada produto
     max_rating_subquery = (
         ProductStore.objects.filter(
             product=OuterRef("product"),
@@ -1597,27 +1620,36 @@ def list_product_stores_by_best_rating(category=None, limit=None):
         .values("rating")[:1]
     )
 
-    # Filtra apenas o ProductStore com maior rating de cada produto
-    qs = qs.annotate(max_rating=Subquery(max_rating_subquery)).filter(
-        rating=F("max_rating")
+    qs = (
+        qs.annotate(max_rating=Subquery(max_rating_subquery))
+        .filter(rating=F("max_rating"))
+        .order_by("-rating")
     )
-
-    # Remove duplicados por produto (caso empate, pega só o primeiro)
-    qs = qs.order_by("product", "-rating").distinct("product")
 
     if limit:
         qs = qs[: int(limit)]
+
+    qs = qs.select_related("product", "store").prefetch_related("price_set")
+
+    favorites_by_product = {}
+
+    if user_id:
+        favorites = Favorite.objects.filter(user_id=user_id).only("id", "product_id")
+        favorites_by_product = {int(fav.product_id): fav.id for fav in favorites}
 
     return [
         {
             "id": ps.id,
             "product": ps.product.id,
             "product_name": ps.product.name,
+            "image_url": ps.product.image_url,
             "store": ps.store.id,
             "store_name": ps.store.name,
             "rating": ps.rating,
             "url_product": ps.url_product,
             "available": ps.available,
+            "price": ps.price_set.first().value if ps.price_set.exists() else None,
+            "favorite_id": favorites_by_product.get(int(ps.product.id)),
         }
-        for ps in qs.select_related("product", "store")
+        for ps in qs
     ]

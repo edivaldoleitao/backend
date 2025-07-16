@@ -137,8 +137,6 @@ def confirm_email(user_id):
 
 
 ### USER SPECIFICATION ###
-
-
 def create_user_specification(
     user_id, cpu, ram, motherboard, cooler=None, gpu=None, storage=None, psu=None
 ):
@@ -156,18 +154,17 @@ def create_user_specification(
     except User.DoesNotExist:
         raise ValueError("Usuário não encontrado.")
 
-    if UserSpecification.objects.filter(user_id=user).exists():
-        raise ValueError("Este usuário já possui especificações cadastradas.")
-
-    spec = UserSpecification.objects.create(
+    spec, created = UserSpecification.objects.update_or_create(
         user_id=user,
-        cpu=cpu,
-        ram=ram,
-        motherboard=motherboard,
-        cooler=cooler,
-        gpu=gpu,
-        storage=storage,
-        psu=psu,
+        defaults={
+            "cpu": cpu,
+            "ram": ram,
+            "motherboard": motherboard,
+            "cooler": cooler,
+            "gpu": gpu,
+            "storage": storage,
+            "psu": psu,
+        },
     )
 
     return spec
