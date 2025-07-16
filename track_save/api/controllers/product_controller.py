@@ -18,24 +18,22 @@ from api.entities.product import Storage
 from api.entities.product import Store
 from api.enums.category_specs import CATEGORY_SPECS
 from django.apps import apps
+from django.contrib.postgres.search import SearchQuery
+from django.contrib.postgres.search import SearchRank
+from django.contrib.postgres.search import SearchVector
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import transaction
 from django.db import connection
+from django.db import transaction
+from django.db.models import Case
 from django.db.models import Exists
 from django.db.models import F
+from django.db.models import FloatField
 from django.db.models import Max
 from django.db.models import OuterRef
 from django.db.models import Q
 from django.db.models import Subquery
 from django.db.models import Value
-from django.db.models import FloatField
-from django.db.models import Case
 from django.db.models import When
-from django.contrib.postgres.search import SearchVector
-from django.contrib.postgres.search import SearchQuery
-from django.contrib.postgres.search import SearchRank
-
-
 
 
 def create_store(name):
@@ -356,28 +354,26 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
     """
 
     texto = search_text.lower()
-    palavras = re.findall(r'\w+', texto)
+    palavras = re.findall(r"\w+", texto)
     if not palavras:
         return []
 
     # ====== Dados válidos extraídos dinamicamente ======
     CATEGORIAS_VALIDAS = set(
-        Product.objects.values_list('category', flat=True).distinct()
+        Product.objects.values_list("category", flat=True).distinct()
     )
-    MARCAS_VALIDAS = set(
-        Product.objects.values_list('brand', flat=True).distinct()
-    )
+    MARCAS_VALIDAS = set(Product.objects.values_list("brand", flat=True).distinct())
     TIPOS_VALIDOS = set(
-        Product.objects.values_list('description', flat=True)
+        Product.objects.values_list("description", flat=True)
         .exclude(description__isnull=True)
-        .exclude(description__exact='')
+        .exclude(description__exact="")
         .distinct()
     )
 
     # Normaliza para string simples (ex: "teclado mecânico" → ["teclado", "mecânico"])
     tipos_tokenizados = set()
     for desc in TIPOS_VALIDOS:
-        tipos_tokenizados.update(re.findall(r'\w+', desc.lower()))
+        tipos_tokenizados.update(re.findall(r"\w+", desc.lower()))
     TIPOS_VALIDOS = tipos_tokenizados
 
     # ====== Extração de intenção ======
@@ -387,19 +383,24 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
 
     preco_limite = None
     match_preco = re.search(
-        r'(?:até|por|menos de|abaixo de)?\s*(?:r\$)?\s*(\d{1,3}(?:[.,]?\d{3})*(?:[.,]\d{2})?|\d+)',
-        texto
+        r"(?:até|por|menos de|abaixo de)?\s*(?:r\$)?\s*(\d{1,3}(?:[.,]?\d{3})*(?:[.,]\d{2})?|\d+)",
+        texto,
     )
     if match_preco:
-        preco_raw = match_preco.group(1).replace('.', '').replace(',', '.')
+        preco_raw = match_preco.group(1).replace(".", "").replace(",", ".")
         try:
             preco_limite = float(preco_raw)
         except:
             preco_limite = None
 
     # ====== Função interna para montar e executar SQL ======
-    def executar_busca(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True):
-        like_clauses = [f"unaccent(p.name || ' ' || p.description) ILIKE unaccent(%s)" for _ in palavras]
+    def executar_busca(
+        com_preco=True, com_categoria=True, com_marca=True, com_tipos=True
+    ):
+        like_clauses = [
+            f"unaccent(p.name || ' ' || p.description) ILIKE unaccent(%s)"
+            for _ in palavras
+        ]
         sql_or = " OR ".join(like_clauses)
 
         sql = f"""
@@ -439,12 +440,18 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
             return [row[0] for row in cursor.fetchall()]
 
     # ====== Tentativas com relaxamento progressivo ======
-    tentativas = [
-        dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True),
-        dict(com_preco=True, com_categoria=False, com_marca=True, com_tipos=True),
-        dict(com_preco=True, com_categoria=False, com_marca=False, com_tipos=True),
-        dict(com_preco=False, com_categoria=False, com_marca=False, com_tipos=False),
-    ] if permitir_relaxamento else [dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True)]
+    tentativas = (
+        [
+            dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True),
+            dict(com_preco=True, com_categoria=False, com_marca=True, com_tipos=True),
+            dict(com_preco=True, com_categoria=False, com_marca=False, com_tipos=True),
+            dict(
+                com_preco=False, com_categoria=False, com_marca=False, com_tipos=False
+            ),
+        ]
+        if permitir_relaxamento
+        else [dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True)]
+    )
 
     for tentativa in tentativas:
         ids = executar_busca(**tentativa)
@@ -460,6 +467,7 @@ http://localhost:8001/api/products/search/?name=nvidia rtx 3080&brand=NVIDIA
 http://localhost:8001/api/products/search/?brand=NVIDIA&category=gpu&price_min=2000&price_max=3000&store=Kabum
 """
 
+
 def search_products(filters: dict):
     try:
         base_query = Q()
@@ -469,15 +477,15 @@ def search_products(filters: dict):
             search_text = filters["name"]
 
             # ====== 1. Busca full-text ======
-            search_query = SearchQuery(search_text, config='portuguese')
-            search_vector = SearchVector('name', 'description', config='portuguese')
+            search_query = SearchQuery(search_text, config="portuguese")
+            search_vector = SearchVector("name", "description", config="portuguese")
 
             fulltext_match = Product.objects.annotate(
                 search=search_vector,
                 rank=SearchRank(search_vector, search_query),
             ).filter(search=search_query)
 
-            combined_products = list(fulltext_match.values('pk', 'rank'))
+            combined_products = list(fulltext_match.values("pk", "rank"))
 
             # ====== 2. Fallback por SQL puro ======
             if not combined_products:
@@ -488,7 +496,7 @@ def search_products(filters: dict):
                 raise ValueError("Nenhum produto encontrado com os filtros fornecidos.")
 
             # Constrói ranks e aplica filtro base
-            product_ranks = {item['pk']: item['rank'] for item in combined_products}
+            product_ranks = {item["pk"]: item["rank"] for item in combined_products}
             base_query &= Q(pk__in=product_ranks.keys())
 
         # ====== FILTROS EXTRAS ======
@@ -535,11 +543,17 @@ def search_products(filters: dict):
         )
 
         if "price_min" in filters:
-            sponsored_products = sponsored_products.filter(latest_price__gte=filters["price_min"])
+            sponsored_products = sponsored_products.filter(
+                latest_price__gte=filters["price_min"]
+            )
         if "price_max" in filters:
-            sponsored_products = sponsored_products.filter(latest_price__lte=filters["price_max"])
+            sponsored_products = sponsored_products.filter(
+                latest_price__lte=filters["price_max"]
+            )
         if "rating_min" in filters:
-            sponsored_products = sponsored_products.filter(rating__gte=filters["rating_min"])
+            sponsored_products = sponsored_products.filter(
+                rating__gte=filters["rating_min"]
+            )
 
         sponsored_products = sponsored_products.order_by("-search_rank", "-rating")[:3]
 
@@ -559,13 +573,21 @@ def search_products(filters: dict):
         )
 
         if "price_min" in filters:
-            non_sponsored_products = non_sponsored_products.filter(latest_price__gte=filters["price_min"])
+            non_sponsored_products = non_sponsored_products.filter(
+                latest_price__gte=filters["price_min"]
+            )
         if "price_max" in filters:
-            non_sponsored_products = non_sponsored_products.filter(latest_price__lte=filters["price_max"])
+            non_sponsored_products = non_sponsored_products.filter(
+                latest_price__lte=filters["price_max"]
+            )
         if "rating_min" in filters:
-            non_sponsored_products = non_sponsored_products.filter(rating__gte=filters["rating_min"])
+            non_sponsored_products = non_sponsored_products.filter(
+                rating__gte=filters["rating_min"]
+            )
 
-        non_sponsored_products = non_sponsored_products.order_by("-search_rank", "-rating")
+        non_sponsored_products = non_sponsored_products.order_by(
+            "-search_rank", "-rating"
+        )
 
         # ====== RESULTADOS ======
         final_products = list(sponsored_products) + list(non_sponsored_products)
@@ -617,7 +639,6 @@ def search_products(filters: dict):
 
     except Exception as e:
         raise ValueError(f"Erro ao buscar produto(s): {e!s}")
-
 
 
 # pra pegar produto pelo id

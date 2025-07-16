@@ -142,6 +142,11 @@ urlpatterns = [
         name="get_favorite_by_user",
     ),
     path(
+        "favorites/userList/<int:user_id>/",
+        favorite_views.list_favorite_by_user,
+        name="get_favorite_list_by_user",
+    ),
+    path(
         "favorites/update/<int:fav_id>/",
         favorite_views.update_favorite_view,
         name="update_favorite",
