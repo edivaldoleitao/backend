@@ -1,3 +1,4 @@
+from api.entities.favorite import Favorite
 from api.entities.price import Price
 from api.entities.product import ProductStore
 
@@ -98,3 +99,109 @@ def delete_price(price_id):
     p = Price.objects.get(id=price_id)
     p.delete()
     return "Price excluído com sucesso."
+
+
+def get_all_prices_with_product(
+    limit=None,
+    offset=None,
+    name=None,
+    category=None,
+    user_id=None,
+    seller=None,
+    rating=None,
+    price_min=None,
+    price_max=None,
+    brand=None,
+):
+    data = []
+
+    prices_query = Price.objects.select_related(
+        "product_store__product", "product_store__store"
+    )
+
+    if name:
+        prices_query = prices_query.filter(product_store__product__name__icontains=name)
+
+    if category:
+        prices_query = prices_query.filter(
+            product_store__product__category__iexact=category
+        )
+
+    if seller:
+        prices_query = prices_query.filter(product_store__store__name__icontains=seller)
+
+    if rating:
+        try:
+            prices_query = prices_query.filter(product_store__rating__gte=float(rating))
+        except ValueError:
+            pass
+
+    if price_min:
+        try:
+            prices_query = prices_query.filter(value__gte=float(price_min))
+        except ValueError:
+            pass
+
+    if price_max:
+        try:
+            prices_query = prices_query.filter(value__lte=float(price_max))
+        except ValueError:
+            pass
+
+    if brand:
+        prices_query = prices_query.filter(
+            product_store__product__brand__icontains=brand
+        )
+    total = prices_query.count()
+
+    if offset:
+        try:
+            prices_query = prices_query[int(offset) :]
+        except ValueError:
+            pass
+
+    if limit:
+        try:
+            prices_query = prices_query[: int(limit)]
+        except ValueError:
+            pass
+
+    favorites = Favorite.objects.filter(user_id=user_id).only("id", "product_id")
+    favorites_by_product = {int(fav.product_id): fav.id for fav in favorites}
+
+    for price in prices_query:
+        product = price.product_store.product
+        store = price.product_store.store
+
+        data.append(
+            {
+                "product_id": product.id,
+                "name": product.name,
+                "category": product.category,
+                "brand": product.brand,
+                "model": getattr(product, "model", None),
+                "image_url": product.image_url,
+                "rating": price.product_store.rating,
+                "reviewCount": getattr(price.product_store, "review_count", 0),
+                "favorite_id": favorites_by_product.get(product.id)
+                if user_id
+                else None,
+                "store": {
+                    "id": store.id,
+                    "name": store.name,
+                    "logo_url": getattr(store, "logo_url", ""),
+                },
+                "price": str(price.value),
+                "collection_date": price.collection_date.isoformat(),
+            }
+        )
+
+    return {"products": data, "total": total}
+
+
+def search_products_with_price_by_name(query: str):
+    """
+    Retorna uma lista de produtos com preço cujo nome contém a `query` (case-insensitive).
+    """
+    all_products = get_all_prices_with_product()
+    return [p for p in all_products if query.lower() in p["name"].lower()]

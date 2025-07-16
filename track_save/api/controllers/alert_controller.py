@@ -1,6 +1,10 @@
 from api.entities.alert import Alert
+from api.entities.price import Price
 from api.entities.product import Product
+from api.entities.product import ProductStore
 from api.entities.user import User
+from django.db.models import F
+from django.db.models import Sum
 
 
 def create_alert(
@@ -64,6 +68,89 @@ def get_alert_by_user(user_id: int, product_id: int) -> dict:
 
     return {
         "isAlert": False,
+    }
+
+
+def get_alert_by_only_user_id(user_id: int) -> dict:
+    alerts = (
+        Alert.objects.select_related("product", "user")
+        .filter(user=user_id)
+        .order_by("-created_at")
+    )
+
+    alert_list = []
+
+    for alert in alerts:
+        try:
+            product_store = ProductStore.objects.filter(product=alert.product).first()
+            latest_price = None
+            url_product = None
+            if product_store:
+                latest_price = (
+                    Price.objects.filter(product_store=product_store)
+                    .order_by("-collection_date")
+                    .first()
+                )
+                url_product = product_store.url_product
+
+            current_price = str(latest_price.value) if latest_price else None
+
+        except Exception as e:
+            print(f"Erro ao buscar preço: {e}")
+            current_price = None
+
+        alert_list.append(
+            {
+                "id": alert.id,
+                "user": alert.user.id,
+                "product": {
+                    "id": alert.product.id,
+                    "name": alert.product.name,
+                    "image": alert.product.image_url,
+                    "current_price": current_price,
+                    "url_product": url_product,
+                },
+                "desired_price": str(alert.desired_price),
+                "is_active": alert.is_active,
+                "expires_at": alert.expires_at.isoformat(),
+                "created_at": alert.created_at.isoformat(),
+            }
+        )
+
+    return {
+        "isAlert": bool(alert_list),
+        "alerts": alert_list,
+    }
+
+
+def get_alert_stats(user_id):
+    alerts = Alert.objects.filter(user_id=user_id)
+
+    active_count = alerts.filter(is_active=True).count()
+    goals_hit = (
+        alerts.filter(
+            is_active=True, product__productstore__price__value__lte=F("desired_price")
+        )
+        .distinct()
+        .count()
+    )
+
+    total_saving = (
+        alerts.filter(
+            product__productstore__price__value__lte=F("desired_price")
+        ).aggregate(
+            total=Sum(F("desired_price") - F("product__productstore__price__value"))
+        )["total"]
+        or 0
+    )
+
+    last_updated = Price.objects.latest("collection_date").collection_date
+
+    return {
+        "active_alerts": active_count,
+        "goals_hit": goals_hit,
+        "total_saving": str(total_saving),
+        "last_updated": last_updated.isoformat(),
     }
 
 

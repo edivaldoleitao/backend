@@ -450,14 +450,19 @@ def list_product_stores_by_best_rating(request):
     try:
         category = request.GET.get("category", None)
         limit = request.GET.get("limit", None)
+        user_id = request.GET.get("user_id", None)
+
         products = product_controller.list_product_stores_by_best_rating(
-            category,
-            limit,
+            category=category,
+            limit=limit,
+            user_id=user_id,
         )
+
         return JsonResponse(products, safe=False, status=200)
+
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
     except TypeError as e:
         return HttpResponseBadRequest(f"Erro interno: {e!s}")
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {e!s}")
