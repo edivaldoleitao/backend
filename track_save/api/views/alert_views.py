@@ -85,9 +85,10 @@ def list_alerts_view(request):
 
 # GET /api/alerts/user/
 @csrf_exempt
-def get_alert_view_by_user(request, user_id):
+def get_alert_view_by_user(request):
     try:
-        response = get_alert_by_user(user_id)
+        data = json.loads(request.body)
+        response = get_alert_by_user(data.get("user_id"), data.get("product_id"))
         return JsonResponse(response, safe=False, status=200)
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")
