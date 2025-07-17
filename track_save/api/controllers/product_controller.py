@@ -37,7 +37,6 @@ from django.db.models import Value
 from django.db.models import When
 
 
-
 def create_store(name):
     if Store.objects.filter(name=name).exists():
         msg = "Esta loja já foi cadastrada."
@@ -356,28 +355,26 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
     """
 
     texto = search_text.lower()
-    palavras = re.findall(r'\w+', texto)
+    palavras = re.findall(r"\w+", texto)
     if not palavras:
         return []
 
     # ====== Dados válidos extraídos dinamicamente ======
     CATEGORIAS_VALIDAS = set(
-        Product.objects.values_list('category', flat=True).distinct()
+        Product.objects.values_list("category", flat=True).distinct()
     )
-    MARCAS_VALIDAS = set(
-        Product.objects.values_list('brand', flat=True).distinct()
-    )
+    MARCAS_VALIDAS = set(Product.objects.values_list("brand", flat=True).distinct())
     TIPOS_VALIDOS = set(
-        Product.objects.values_list('description', flat=True)
+        Product.objects.values_list("description", flat=True)
         .exclude(description__isnull=True)
-        .exclude(description__exact='')
+        .exclude(description__exact="")
         .distinct()
     )
 
     # Normaliza para string simples (ex: "teclado mecânico" → ["teclado", "mecânico"])
     tipos_tokenizados = set()
     for desc in TIPOS_VALIDOS:
-        tipos_tokenizados.update(re.findall(r'\w+', desc.lower()))
+        tipos_tokenizados.update(re.findall(r"\w+", desc.lower()))
     TIPOS_VALIDOS = tipos_tokenizados
 
     # ====== Extração de intenção ======
@@ -387,19 +384,24 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
 
     preco_limite = None
     match_preco = re.search(
-        r'(?:até|por|menos de|abaixo de)?\s*(?:r\$)?\s*(\d{1,3}(?:[.,]?\d{3})*(?:[.,]\d{2})?|\d+)',
-        texto
+        r"(?:até|por|menos de|abaixo de)?\s*(?:r\$)?\s*(\d{1,3}(?:[.,]?\d{3})*(?:[.,]\d{2})?|\d+)",
+        texto,
     )
     if match_preco:
-        preco_raw = match_preco.group(1).replace('.', '').replace(',', '.')
+        preco_raw = match_preco.group(1).replace(".", "").replace(",", ".")
         try:
             preco_limite = float(preco_raw)
         except:
             preco_limite = None
 
     # ====== Função interna para montar e executar SQL ======
-    def executar_busca(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True):
-        like_clauses = [f"unaccent(p.name || ' ' || p.description) ILIKE unaccent(%s)" for _ in palavras]
+    def executar_busca(
+        com_preco=True, com_categoria=True, com_marca=True, com_tipos=True
+    ):
+        like_clauses = [
+            f"unaccent(p.name || ' ' || p.description) ILIKE unaccent(%s)"
+            for _ in palavras
+        ]
         sql_or = " OR ".join(like_clauses)
 
         sql = f"""
@@ -439,12 +441,18 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
             return [row[0] for row in cursor.fetchall()]
 
     # ====== Tentativas com relaxamento progressivo ======
-    tentativas = [
-        dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True),
-        dict(com_preco=True, com_categoria=False, com_marca=True, com_tipos=True),
-        dict(com_preco=True, com_categoria=False, com_marca=False, com_tipos=True),
-        dict(com_preco=False, com_categoria=False, com_marca=False, com_tipos=False),
-    ] if permitir_relaxamento else [dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True)]
+    tentativas = (
+        [
+            dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True),
+            dict(com_preco=True, com_categoria=False, com_marca=True, com_tipos=True),
+            dict(com_preco=True, com_categoria=False, com_marca=False, com_tipos=True),
+            dict(
+                com_preco=False, com_categoria=False, com_marca=False, com_tipos=False
+            ),
+        ]
+        if permitir_relaxamento
+        else [dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True)]
+    )
 
     for tentativa in tentativas:
         ids = executar_busca(**tentativa)
@@ -472,8 +480,8 @@ def search_products(filters: dict):
             search_text = filters["name"]
 
             # ====== 1. Busca full-text ======
-            search_query = SearchQuery(search_text, config='portuguese')
-            search_vector = SearchVector('name', 'description', config='portuguese')
+            search_query = SearchQuery(search_text, config="portuguese")
+            search_vector = SearchVector("name", "description", config="portuguese")
 
             fulltext_match = Product.objects.annotate(
                 search=search_vector,
@@ -501,7 +509,7 @@ def search_products(filters: dict):
             # Gera os ranks e monta query base
             product_ranks = {item["pk"]: item["rank"] for item in combined_products}
             # Constrói ranks e aplica filtro base
-            product_ranks = {item['pk']: item['rank'] for item in combined_products}
+            product_ranks = {item["pk"]: item["rank"] for item in combined_products}
             base_query &= Q(pk__in=product_ranks.keys())
 
         # ====== FILTROS EXTRAS ======

@@ -15,6 +15,7 @@ from track_save.api.controllers.favorite_controller import create_favorite
 from track_save.api.controllers.favorite_controller import delete_favorite
 from track_save.api.controllers.favorite_controller import get_all_favorites
 from track_save.api.controllers.favorite_controller import get_favorite_by_id
+from track_save.api.controllers.favorite_controller import get_favorites_by_user
 from track_save.api.controllers.favorite_controller import update_favorite
 
 
@@ -75,6 +76,18 @@ def get_favorite_view(request, fav_id):
     try:
         data = get_favorite_by_id(fav_id)
         return JsonResponse(data, status=200)
+    except Favorite.DoesNotExist:
+        return HttpResponseNotFound("Favorite não encontrado")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+@csrf_exempt
+@require_GET
+def list_favorite_by_user(request, user_id):
+    try:
+        data = get_favorites_by_user(user_id)
+        return JsonResponse(data, safe=False, status=200)
     except Favorite.DoesNotExist:
         return HttpResponseNotFound("Favorite não encontrado")
     except Exception as e:
