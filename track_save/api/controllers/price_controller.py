@@ -192,6 +192,7 @@ def get_all_prices_with_product(
                     "logo_url": getattr(store, "logo_url", ""),
                 },
                 "price": str(price.value),
+                "price_id": price.id,
                 "collection_date": price.collection_date.isoformat(),
             }
         )

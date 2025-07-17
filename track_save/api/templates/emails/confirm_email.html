@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Confirmação de Conta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      /* Estilo do botão para clientes que suportam <style> */
+      .btn-confirmar:hover {
+        background-color: #009b3e !important;
+      }
+    </style>
+  </head>
+  <body style="margin:0; padding:0; background-color:#f0f2f5;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f0f2f5;">
+      <tr>
+        <td align="center" style="padding: 40px 0;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 420px; background-color: #2563eb; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+            <tr>
+              <td align="center" style="padding: 30px 24px; font-family: Arial, sans-serif; color: #ffffff;">
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td style="text-align: left;">
+                      <h2 style="margin: 0 0 20px 0; font-size: 22px; line-height: 1.4;">
+                        {{ name }}, é hora de<br />
+                        confirmar sua conta!
+                      </h2>
+                    </td>
+                    <td align="right">
+                      <img src="https://i.ibb.co/MDd0xDdx/xxxx-removebg-preview.png" alt="Logo Track&Save" width="70" style="display: block;" />
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin: 20px 0 10px 0; font-size: 14px; line-height: 1.5; text-align: left;">
+                  No Track&amp;Save você pode encontrar aquela peça tão desejada com o melhor preço disponível.
+                </p>
+                <p style="margin: 0 0 25px 0; font-size: 14px; line-height: 1.5; text-align: left;">
+                  Com apenas um clique será possível desfrutar de todas as nossas possibilidades!
+                </p>
+
+                <a href="{{redirect_url}}" target="_blank"
+                  class="btn-confirmar"
+                  style="background-color: #00c851; color: white; text-decoration: none; padding: 14px 0; font-size: 14px; font-weight: bold; border-radius: 5px; display: block; width: 100%; text-align: center;">
+                  CONFIRMAR
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

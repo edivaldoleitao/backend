@@ -58,6 +58,28 @@ def get_favorite_by_id(fav_id: int) -> dict:
     }
 
 
+def get_favorites_by_user(user_id: int) -> dict:
+    """
+    Retorna dict com os dados de um Favorite.
+    Raises Favorite.DoesNotExist se não encontrar.
+    """
+    out = []
+
+    qs = Favorite.objects.filter(user=user_id)
+    for f in qs:
+        p = Product.objects.filter(id=f.product.id).first()
+        print(p)
+        out.append(
+            {
+                "product": p.id,
+                "product_name": p.name,
+                "image_url": p.image_url,
+                "created_at": f.created_at.isoformat(),
+            },
+        )
+    return out
+
+
 def check_favorite_by_user(user_id: int, product_id: int) -> dict:
     """
     Checa se esse favorito existe, caso positivo ele retorna juntamente o indice

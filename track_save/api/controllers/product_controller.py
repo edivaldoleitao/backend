@@ -365,6 +365,7 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
     MARCAS_VALIDAS = set(
         Product.objects.values_list("brand", flat=True).distinct(),
     )
+    MARCAS_VALIDAS = set(Product.objects.values_list("brand", flat=True).distinct())
     TIPOS_VALIDOS = set(
         Product.objects.values_list("description", flat=True)
         .exclude(description__isnull=True)
