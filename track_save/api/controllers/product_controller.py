@@ -29,13 +29,11 @@ from django.db.models import Case
 from django.db.models import Exists
 from django.db.models import F
 from django.db.models import FloatField
-from django.db.models import Max
 from django.db.models import OuterRef
 from django.db.models import Q
 from django.db.models import Subquery
 from django.db.models import Value
 from django.db.models import When
-
 
 
 def create_store(name):
@@ -356,28 +354,28 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
     """
 
     texto = search_text.lower()
-    palavras = re.findall(r'\w+', texto)
+    palavras = re.findall(r"\w+", texto)
     if not palavras:
         return []
 
     # ====== Dados válidos extraídos dinamicamente ======
     CATEGORIAS_VALIDAS = set(
-        Product.objects.values_list('category', flat=True).distinct()
+        Product.objects.values_list("category", flat=True).distinct(),
     )
     MARCAS_VALIDAS = set(
-        Product.objects.values_list('brand', flat=True).distinct()
+        Product.objects.values_list("brand", flat=True).distinct(),
     )
     TIPOS_VALIDOS = set(
-        Product.objects.values_list('description', flat=True)
+        Product.objects.values_list("description", flat=True)
         .exclude(description__isnull=True)
-        .exclude(description__exact='')
-        .distinct()
+        .exclude(description__exact="")
+        .distinct(),
     )
 
     # Normaliza para string simples (ex: "teclado mecânico" → ["teclado", "mecânico"])
     tipos_tokenizados = set()
     for desc in TIPOS_VALIDOS:
-        tipos_tokenizados.update(re.findall(r'\w+', desc.lower()))
+        tipos_tokenizados.update(re.findall(r"\w+", desc.lower()))
     TIPOS_VALIDOS = tipos_tokenizados
 
     # ====== Extração de intenção ======
@@ -387,19 +385,24 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
 
     preco_limite = None
     match_preco = re.search(
-        r'(?:até|por|menos de|abaixo de)?\s*(?:r\$)?\s*(\d{1,3}(?:[.,]?\d{3})*(?:[.,]\d{2})?|\d+)',
-        texto
+        r"(?:até|por|menos de|abaixo de)?\s*(?:r\$)?\s*(\d{1,3}(?:[.,]?\d{3})*(?:[.,]\d{2})?|\d+)",
+        texto,
     )
     if match_preco:
-        preco_raw = match_preco.group(1).replace('.', '').replace(',', '.')
+        preco_raw = match_preco.group(1).replace(".", "").replace(",", ".")
         try:
             preco_limite = float(preco_raw)
         except:
             preco_limite = None
 
     # ====== Função interna para montar e executar SQL ======
-    def executar_busca(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True):
-        like_clauses = [f"unaccent(p.name || ' ' || p.description) ILIKE unaccent(%s)" for _ in palavras]
+    def executar_busca(
+        com_preco=True, com_categoria=True, com_marca=True, com_tipos=True
+    ):
+        like_clauses = [
+            "unaccent(p.name || ' ' || p.description) ILIKE unaccent(%s)"
+            for _ in palavras
+        ]
         sql_or = " OR ".join(like_clauses)
 
         sql = f"""
@@ -439,12 +442,18 @@ def fallback_simples_por_sql(search_text: str, permitir_relaxamento: bool = True
             return [row[0] for row in cursor.fetchall()]
 
     # ====== Tentativas com relaxamento progressivo ======
-    tentativas = [
-        dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True),
-        dict(com_preco=True, com_categoria=False, com_marca=True, com_tipos=True),
-        dict(com_preco=True, com_categoria=False, com_marca=False, com_tipos=True),
-        dict(com_preco=False, com_categoria=False, com_marca=False, com_tipos=False),
-    ] if permitir_relaxamento else [dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True)]
+    tentativas = (
+        [
+            dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True),
+            dict(com_preco=True, com_categoria=False, com_marca=True, com_tipos=True),
+            dict(com_preco=True, com_categoria=False, com_marca=False, com_tipos=True),
+            dict(
+                com_preco=False, com_categoria=False, com_marca=False, com_tipos=False
+            ),
+        ]
+        if permitir_relaxamento
+        else [dict(com_preco=True, com_categoria=True, com_marca=True, com_tipos=True)]
+    )
 
     for tentativa in tentativas:
         ids = executar_busca(**tentativa)
@@ -472,8 +481,8 @@ def search_products(filters: dict):
             search_text = filters["name"]
 
             # ====== 1. Busca full-text ======
-            search_query = SearchQuery(search_text, config='portuguese')
-            search_vector = SearchVector('name', 'description', config='portuguese')
+            search_query = SearchQuery(search_text, config="portuguese")
+            search_vector = SearchVector("name", "description", config="portuguese")
 
             fulltext_match = Product.objects.annotate(
                 search=search_vector,
@@ -492,7 +501,7 @@ def search_products(filters: dict):
 
                 if not product_ids:
                     raise ValueError(
-                        "Nenhum produto encontrado com os filtros fornecidos."
+                        "Nenhum produto encontrado com os filtros fornecidos.",
                     )
 
                 # Simula rank baixo no fallback
@@ -501,7 +510,7 @@ def search_products(filters: dict):
             # Gera os ranks e monta query base
             product_ranks = {item["pk"]: item["rank"] for item in combined_products}
             # Constrói ranks e aplica filtro base
-            product_ranks = {item['pk']: item['rank'] for item in combined_products}
+            product_ranks = {item["pk"]: item["rank"] for item in combined_products}
             base_query &= Q(pk__in=product_ranks.keys())
 
         # ====== FILTROS EXTRAS ======
@@ -544,20 +553,20 @@ def search_products(filters: dict):
                 *[When(pk=pk, then=Value(rank)) for pk, rank in product_ranks.items()],
                 default=Value(0.0),
                 output_field=FloatField(),
-            )
+            ),
         )
 
         if "price_min" in filters:
             sponsored_products = sponsored_products.filter(
-                latest_price__gte=filters["price_min"]
+                latest_price__gte=filters["price_min"],
             )
         if "price_max" in filters:
             sponsored_products = sponsored_products.filter(
-                latest_price__lte=filters["price_max"]
+                latest_price__lte=filters["price_max"],
             )
         if "rating_min" in filters:
             sponsored_products = sponsored_products.filter(
-                rating__gte=filters["rating_min"]
+                rating__gte=filters["rating_min"],
             )
 
         sponsored_products = sponsored_products.order_by("-search_rank", "-rating")[:3]
@@ -574,24 +583,25 @@ def search_products(filters: dict):
                 *[When(pk=pk, then=Value(rank)) for pk, rank in product_ranks.items()],
                 default=Value(0.0),
                 output_field=FloatField(),
-            )
+            ),
         )
 
         if "price_min" in filters:
             non_sponsored_products = non_sponsored_products.filter(
-                latest_price__gte=filters["price_min"]
+                latest_price__gte=filters["price_min"],
             )
         if "price_max" in filters:
             non_sponsored_products = non_sponsored_products.filter(
-                latest_price__lte=filters["price_max"]
+                latest_price__lte=filters["price_max"],
             )
         if "rating_min" in filters:
             non_sponsored_products = non_sponsored_products.filter(
-                rating__gte=filters["rating_min"]
+                rating__gte=filters["rating_min"],
             )
 
         non_sponsored_products = non_sponsored_products.order_by(
-            "-search_rank", "-rating"
+            "-search_rank",
+            "-rating",
         )
 
         # ====== RESULTADOS ======
@@ -1349,28 +1359,36 @@ def update_product(  # noqa: C901, PLR0912, PLR0913, PLR0915
                     motherboard.model = spec_fields.get("model", motherboard.model)
                     motherboard.socket = spec_fields.get("socket", motherboard.socket)
                     motherboard.chipset = spec_fields.get(
-                        "chipset", motherboard.chipset
+                        "chipset",
+                        motherboard.chipset,
                     )
                     motherboard.form_type = spec_fields.get(
-                        "form_type", motherboard.form_type
+                        "form_type",
+                        motherboard.form_type,
                     )
                     motherboard.max_ram_capacity = spec_fields.get(
-                        "max_ram_capacity", motherboard.max_ram_capacity
+                        "max_ram_capacity",
+                        motherboard.max_ram_capacity,
                     )
                     motherboard.ram_type = spec_fields.get(
-                        "ram_type", motherboard.ram_type
+                        "ram_type",
+                        motherboard.ram_type,
                     )
                     motherboard.ram_slots = spec_fields.get(
-                        "ram_slots", motherboard.ram_slots
+                        "ram_slots",
+                        motherboard.ram_slots,
                     )
                     motherboard.pcie_slots = spec_fields.get(
-                        "pcie_slots", motherboard.pcie_slots
+                        "pcie_slots",
+                        motherboard.pcie_slots,
                     )
                     motherboard.sata_ports = spec_fields.get(
-                        "sata_ports", motherboard.sata_ports
+                        "sata_ports",
+                        motherboard.sata_ports,
                     )
                     motherboard.m2_slot = spec_fields.get(
-                        "m2_slot", motherboard.m2_slot
+                        "m2_slot",
+                        motherboard.m2_slot,
                     )
                     motherboard.save()
                 case _:
@@ -1444,7 +1462,7 @@ def get_all_product_stores():
                 "url_product": ps.url_product,
                 "rating": ps.rating,
                 "available": ps.available,
-            }
+            },
         )
     return lst
 
@@ -1516,47 +1534,67 @@ def generic_search(searches):
         if len(columns) != len(search_values):
             raise ValueError("A quantidade de colunas e valores deve ser igual.")
 
-        Model = apps.get_model("api", model_name)
-        if not Model:
-            raise ValueError(f"Model {model_name} não encontrado no app 'api'.")
+        # Extrai filtro de brand (aplica sempre no Product)
+        brand_filter = None
+        if model_name == "Product" and "brand" in columns:
+            idx = columns.index("brand")
+            brand_filter = search_values[idx]
+            columns.pop(idx)
+            search_values.pop(idx)
+
+        # Tenta obter o modelo; se não existir, ignora
+        try:
+            Model = apps.get_model("api", model_name)
+        except LookupError:
+            print(f"⚠️ Ignorando busca: model '{model_name}' não encontrado no app 'api'.")
+            continue
 
         model_fields = [f.name for f in Model._meta.get_fields()]
         field_types = {f.name: f.get_internal_type() for f in Model._meta.get_fields()}
 
         query = Q()
-        price_limit = None  # ✅ Aqui vamos guardar o valor do filtro de price
+        price_limit = None
 
-        for column, value in zip(columns, search_values, strict=False):
+        for column, value in zip(columns, search_values):
             if column == "price":
-                price_limit = float(value)  # ✅ Salva o valor e não filtra no Model
+                try:
+                    price_limit = float(value)
+                except (TypeError, ValueError):
+                    print(f"⚠️ Valor inválido para price: {value}")
                 continue
 
             if column not in model_fields:
-                print(
-                    f"⚠️ Ignorando filtro: coluna '{column}' não existe no model '{model_name}'"
-                )
+                print(f"⚠️ Ignorando filtro: coluna '{column}' não existe no model '{model_name}'")
                 continue
 
             field_type = field_types.get(column)
 
             if field_type in ["CharField", "TextField"]:
-                query &= Q(**{f"{column}__iexact": value})
+                # usar contains para corresponder substrings
+                query &= Q(**{f"{column}__icontains": value.strip()})
             elif field_type in ["IntegerField", "FloatField", "DecimalField"]:
-                query &= Q(**{f"{column}": value})
+                # converter possíveis strings numéricas
+                try:
+                    numeric = float(value)
+                except ValueError:
+                    print(f"⚠️ Ignorando valor não numérico para {column}: {value}")
+                    continue
+                query &= Q(**{f"{column}": numeric})
             else:
-                print(
-                    f"⚠️ Ignorando filtro: tipo '{field_type}' da coluna '{column}' não tratado."
-                )
+                print(f"⚠️ Ignorando filtro: tipo '{field_type}' não tratado.")
                 continue
 
         technical_results = Model.objects.filter(query)
-        product_ids = technical_results.values_list("prod_id", flat=True)
+        product_ids = list(technical_results.values_list("prod_id", flat=True))
 
-        # Busca produtos
-        products = Product.objects.filter(id__in=product_ids)
+        # Busca produtos aplicando filtro de brand se existir
+        products_qs = Product.objects.filter(id__in=product_ids)
+        if brand_filter:
+            products_qs = products_qs.filter(brand__iexact=brand_filter)
+        products = list(products_qs)
 
         # Busca stores disponíveis
-        stores = ProductStore.objects.filter(product_id__in=product_ids, available=True)
+        stores = ProductStore.objects.filter(product_id__in=[p.id for p in products], available=True)
         store_data = stores.values("id", "product_id", "url_product", "store_id")
 
         store_ids = [s["store_id"] for s in store_data]
@@ -1564,42 +1602,43 @@ def generic_search(searches):
         store_name_map = {s["id"]: s["name"] for s in store_names}
 
         price_data = (
-            Price.objects.filter(product_store_id__in=[s["id"] for s in store_data])
+            Price.objects
+            .filter(product_store_id__in=[s["id"] for s in store_data])
             .order_by("product_store_id", "-collection_date")
-            .values("product_store_id", "value", "collection_date")
+            .values("product_store_id", "value")
         )
-
         price_map = {}
         for price in price_data:
             ps_id = price["product_store_id"]
             if ps_id not in price_map:
-                price_map[ps_id] = float(price["value"])
+                try:
+                    price_map[ps_id] = float(price["value"])
+                except (TypeError, ValueError):
+                    continue
 
+        # Monta resultados finais aplicando filtro de preço e limitando a 3 por modelo
+        sub_results = []
         for product in products:
             product_stores = [s for s in store_data if s["product_id"] == product.id]
             for store in product_stores:
-                store_name = store_name_map.get(store["store_id"], "Unknown Store")
-                price = price_map.get(store["id"])
-
-                if price is None:
+                price_val = price_map.get(store["id"])
+                if price_val is None:
+                    continue
+                if price_limit is not None and price_val > price_limit:
                     continue
 
-                # ✅ Aqui filtra pelo preço máximo, se tiver
-                if price_limit is not None and price > price_limit:
-                    continue
+                sub_results.append({
+                    "name": product.name,
+                    "description": product.description,
+                    "image_url": product.image_url,
+                    "category": product.category,
+                    "brand": product.brand,
+                    "price": f"{price_val:.2f}",
+                    "store_name": store_name_map.get(store["store_id"], "Unknown Store"),
+                    "url_product": store["url_product"],
+                })
 
-                results.append(
-                    {
-                        "name": product.name,
-                        "description": product.description,
-                        "image_url": product.image_url,
-                        "category": product.category,
-                        "brand": product.brand,
-                        "price": str(price),
-                        "store_name": store_name,
-                        "url_product": store["url_product"],
-                    },
-                )
+        results.extend(sub_results[:3])
 
     return {"results": results}
 
