@@ -44,7 +44,7 @@ def create_user(name, email, password, categories):
 
     context = {
         "name": name,
-        "redirect_url": f"http://localhost:8001/api/users/confirm_email/{user.id}/",
+        "redirect_url": f"http://localhost:5173/ConfirmAccount/{user.id}/",
     }
 
     html_message = render_to_string("emails/confirm_email.html", context)
