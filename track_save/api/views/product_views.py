@@ -15,6 +15,19 @@ from api.entities.product import ProductCategory
 from api.entities.product import ProductStore
 from api.entities.product import Store
 
+from api.controllers import price_controller
+from api.controllers import product_controller
+from api.entities.product import Product
+from api.entities.product import ProductStore
+from api.entities.product import Store
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotFound
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_POST
+
 
 @csrf_exempt
 @require_POST
@@ -33,8 +46,8 @@ def create_store(request):
 
     except ValueError as e:
         return HttpResponseNotFound(str(e))
-    except Exception as e:
-        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+    except TypeError as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
 
 
 @csrf_exempt
@@ -45,12 +58,18 @@ def get_stores(request):
         return JsonResponse(data, status=200, safe=False)
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+    except product_controller.Product.DoesNotExist:
+        return HttpResponseNotFound("Produto não encontrado")
+    except TypeError as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
 
 
 @csrf_exempt
 def update_store(request, name):
-    if request.method not in ["POST", "PUT"]:
-        return HttpResponseNotAllowed(["POST", "PUT"])
+    if request.method not in ["PATCH", "PUT"]:
+        return HttpResponseNotAllowed(["PATCH", "PUT"])
 
     try:
         data = json.loads(request.body)
@@ -67,8 +86,10 @@ def update_store(request, name):
         )
     except Store.DoesNotExist:
         return HttpResponseNotFound("Loja não encontrada")
-    except Exception as e:
+    except TypeError as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
 
 
 @csrf_exempt
@@ -83,16 +104,16 @@ def delete_store(request, name):
         return HttpResponseNotFound("Store não encontrada")
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+    else:
+        return msg
 
 
-# criar produto
 @csrf_exempt
 @require_POST
 def create_product(request):
     try:
         data = json.loads(request.body)
 
-        # separa os atributos específicos
         spec_fields = {
             key: value
             for key, value in data.items()
@@ -110,7 +131,7 @@ def create_product(request):
 
         return JsonResponse(
             {
-                "id": product.id,
+                "id": product.pk,
                 "name": product.name,
                 "category": product.category,
                 "description": product.description,
@@ -156,79 +177,93 @@ def search_products(request):
         return JsonResponse(result, safe=not isinstance(result, list), status=200)
     except ValueError as e:
         return HttpResponseNotFound(str(e))
+    except TypeError as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
+
+
+@require_GET
+def get_product_details(request, ps_id):
+    try:
+        product_store = product_controller.get_product_store_by_id(ps_id)
+        price_history = price_controller.get_price_by_ps(ps_id)
+        price = price_history[-1]
+        product = product_controller.get_product_by_id(product_store["product"])
+        other_stores = product_controller.get_recent_price_stores(product["id"])
+
+        return JsonResponse(
+            {
+                "price": price,
+                "product_store": product_store,
+                "product": product,
+                "price_history": price_history,
+                "other_stores": other_stores,
+            },
+            safe=False,
+            status=200,
+        )
+
+    except price_controller.Price.DoesNotExist:
+        return HttpResponseNotFound("Produto não encontrado")
+    except product_controller.Product.DoesNotExist:
+        return HttpResponseNotFound("Produto não encontrado")
+    except product_controller.ProductStore.DoesNotExist:
+        return HttpResponseNotFound("ProductStore não encontrado")
     except Exception as e:
-        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+        return HttpResponseBadRequest(f"Erro interno: {e}")
 
 
-# buscar produto pelo id
 @require_GET
 def get_product_id(request, product_id):
     try:
         product = product_controller.get_product_by_id(product_id)
-
         return JsonResponse(product, status=200)
-
     except product_controller.Product.DoesNotExist:
         return HttpResponseNotFound("Produto não encontrado")
 
 
-# buscar produto pelo nome
 @require_GET
 def get_product_name(request, product_name):
     try:
         products = product_controller.get_product_by_name(product_name)
-
         return JsonResponse({"products": products}, safe=False, status=200)
-
     except product_controller.Product.DoesNotExist:
         return HttpResponseNotFound("Produto não encontrado")
 
 
-# retorna todos os produtos daquela categoria
 @require_GET
 def get_product_category(request, product_category):
     try:
         products = product_controller.get_product_by_category(product_category)
-
         if not products:
             return HttpResponseNotFound("Nenhum produto encontrado nesta categoria")
-
         return JsonResponse({"products": products}, safe=False, status=200)
-
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
     except Exception as e:
-        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
 
 
-# retorna todos os produtos do banco
 @require_GET
 def get_products(request):
     try:
         products = product_controller.get_all_products()
-
         if not products:
-            return HttpResponseNotFound("Nenhum pproduto cadastrado")
-
+            return HttpResponseNotFound("Nenhum produto cadastrado")
         return JsonResponse({"products": products}, safe=False, status=200)
-
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
-    except Exception as e:
-        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+    except TypeError as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
 
 
-# update pelo id
 @csrf_exempt
 def update_product(request, product_id):
-    if request.method not in ["POST", "PUT"]:
-        return HttpResponseNotAllowed(["POST", "PUT"])
+    if request.method not in ["PATCH", "PUT"]:
+        return HttpResponseNotAllowed(["PATCH", "PUT"])
 
     try:
         data = json.loads(request.body)
-
         product = product_controller.update_product(product_id, **data)
-
         return JsonResponse(
             {
                 "id": product.id,
@@ -240,29 +275,27 @@ def update_product(request, product_id):
             },
             status=200,
         )
-
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
     except Product.DoesNotExist:
         return HttpResponseNotFound("Produto não encontrado.")
-    except Exception as e:
-        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+    except TypeError as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
 
 
-# exclusão pelo id
 @csrf_exempt
 def delete_product(request, product_id):
     try:
         message = product_controller.delete_product(product_id)
-
         return JsonResponse({"message": message}, status=200)
-
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
     except Product.DoesNotExist:
         return HttpResponseNotFound("Produto não encontrado.")
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+    except TypeError as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
 
 
 @csrf_exempt
@@ -275,7 +308,6 @@ def create_product_store(request):
         url_product = data.get("url_product")
         available = data.get("available")
 
-        # chama o controller
         ps = product_controller.create_product_store(
             product_id=product_id,
             store_id=store_id,
@@ -293,18 +325,16 @@ def create_product_store(request):
             },
             status=201,
         )
-
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
     except ProductStore.DoesNotExist:
         return HttpResponseNotFound("ProductStore não encontrado")
-    except Exception as e:
+    except TypeError as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")
 
 
-# listar todos os ProductStores
 @require_GET
 def list_product_stores(request):
     try:
@@ -312,29 +342,29 @@ def list_product_stores(request):
         if not lst:
             return HttpResponseNotFound("Nenhum ProductStore cadastrado")
         return JsonResponse({"product_stores": lst}, safe=False, status=200)
-
-    except Exception as e:
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
+    except TypeError as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")
 
 
-# buscar ProductStore por ID
 @require_GET
 def get_product_store_by_id(request, product_store_id):
     try:
         data = product_controller.get_product_store_by_id(product_store_id)
         return JsonResponse(data, status=200)
-
     except product_controller.ProductStore.DoesNotExist:
         return HttpResponseNotFound("ProductStore não encontrado")
-    except Exception as e:
+    except TypeError as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
 
 
-# update pelo ID
 @csrf_exempt
 def update_product_store(request, product_store_id):
-    if request.method not in ["POST", "PUT"]:
-        return HttpResponseNotAllowed(["POST", "PUT"])
+    if request.method not in ["PATCH", "PUT"]:
+        return HttpResponseNotAllowed(["PATCH", "PUT"])
 
     try:
         data = json.loads(request.body)
@@ -346,21 +376,18 @@ def update_product_store(request, product_store_id):
                 "store": ps.store.id,
                 "url_product": ps.url_product,
                 "available": ps.available,
+                "rating": ps.rating,
             },
             status=200,
         )
-
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
     except ProductStore.DoesNotExist:
         return HttpResponseNotFound("ProductStore não encontrado")
-    except Exception as e:
-        return HttpResponseBadRequest(f"Erro interno: {e}")
 
 
-# exclusão pelo ID
 @csrf_exempt
 def delete_product_store(request, product_store_id):
     if request.method != "DELETE":
@@ -369,13 +396,26 @@ def delete_product_store(request, product_store_id):
     try:
         msg = product_controller.delete_product_store(product_store_id)
         return JsonResponse({"message": msg}, status=200)
-
     except ProductStore.DoesNotExist:
         return HttpResponseNotFound("ProductStore não encontrado")
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
+
+
+@csrf_exempt
+@require_POST
+def search_view(request):
+    try:
+        data = json.loads(request.body)
+        searches = data.get("searches")
+        if not searches:
+            return HttpResponseBadRequest("Campo 'searches' é obrigatório.")
+        results = product_controller.generic_search(searches)
+        return JsonResponse(results, safe=False)
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 @csrf_exempt
@@ -400,19 +440,24 @@ def get_terabyte(request):
                         image_url=produto.get("imagem"), 
                         brand=produto.get("tecnica", {}).get("Marca"),
                         **spec_fields
+
+                            name=produto.get("nome"),
+                            category=category,
+                            description=produto.get("descricao"),
+                            image_url=produto.get("imagem"),
+                            brand=produto.get("tecnica", {}).get("Marca"),
+                            **spec_fields
+
                         )
-                       
                     else:
                         product = product_controller.create_product(
-                        name=produto.get("nome"),
-                        category=category,
-                        description=produto.get("descricao"),
-                        image_url=produto.get("imagem"), 
-                        brand=produto.get("tecnica", {}).get("Marca"),
-                        **spec_fields
+                            name=produto.get("nome"),
+                            category=category,
+                            description=produto.get("descricao"),
+                            image_url=produto.get("imagem"),
+                            brand=produto.get("tecnica", {}).get("Marca"),
+                            **spec_fields
                         )
-
-                    # Armazena info resumida do produto criado
                     produtos_criados.append({
                         "id": product.id,
                         "name": product.name,
@@ -425,11 +470,10 @@ def get_terabyte(request):
                 spec_fields.clear()
                 category == ""
             except Exception as e:
-               
                 erros.append({
                     "index": i,
                     "produto": produto.get("nome"),
-                    "brand": produto.get("tecnica", {}).get("Marca"), 
+                    "brand": produto.get("tecnica", {}).get("Marca"),
                     "erro": str(e)
                 })
                 spec_fields.clear()
@@ -447,3 +491,22 @@ def get_terabyte(request):
 
     except Exception as e:
         return HttpResponseBadRequest(f"Erro geral: {str(e)}")
+
+
+@csrf_exempt
+@require_GET
+def list_product_stores_by_best_rating(request):
+    try:
+        category = request.GET.get("category", None)
+        limit = request.GET.get("limit", None)
+        products = product_controller.list_product_stores_by_best_rating(
+            category,
+            limit,
+        )
+        return JsonResponse(products, safe=False, status=200)
+    except ValueError as e:
+        return HttpResponseBadRequest(str(e))
+    except TypeError as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")

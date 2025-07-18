@@ -1,153 +1,128 @@
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    SystemMessagePromptTemplate,
-    HumanMessagePromptTemplate,
-)
-from langchain.chains import LLMChain
-from langchain.chat_models import ChatOpenAI
-import pandas as pd
 import json
-from dotenv import load_dotenv
-import os
+import re
 from pathlib import Path
 
-env_path = Path(__file__).resolve().parent.parent / '.envs' / '.local' / '.api_key_gpt'
+import requests
+from dotenv import load_dotenv
+from langchain.chains import LLMChain
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts.chat import ChatPromptTemplate
+from langchain.prompts.chat import HumanMessagePromptTemplate
+from langchain.prompts.chat import SystemMessagePromptTemplate
+
+env_path = Path(__file__).resolve().parent.parent / ".envs" / ".local" / ".api_key_gpt"
 load_dotenv(dotenv_path=env_path)
+API_SEARCH_URL = "http://localhost:8000/api/search/"
 
-upgrade_prompt = ChatPromptTemplate.from_messages([
-    SystemMessagePromptTemplate.from_template(
-        "Você é um especialista em hardware de computadores. Seu papel é, dado o setup atual do usuário e sua descrição de problema, "
-        "gerar upgrades compatíveis e superiores, no formato de JSON, com base nas tabelas do meu banco.\n\n"
-        " **Tabelas e campos disponíveis:**\n"
-        "- **Cpu:** model, socket, core_number, frequency\n"
-        "- **Ram:** capacity, ddr, speed\n"
-        "- **Graphics:** model, vram, chipset\n"
-        "- **Monitor:** inches, resolution, refresh_rate\n"
-        "- **Mouse:** dpi\n"
-        "- **Keyboard:** layout, key_type\n\n"
-        "Se não precisar sugerir upgrade para algum componente, não inclua ele no JSON.\n"
-        "Inclua 'preco_max' se o usuário mencionar limite de orçamento.\n"
-        "Nunca invente campos além desses.\n\n"
-        "Exemplo de saída:\n"
-        '{{"cpu": {{"model": "i5 12400", "socket": "LGA 1700", "core_number": "6", "frequency": "4.4GHz"}}, '
-        '"graphics": {{"model": "RTX 4060", "vram": "8GB", "chipset": "NVIDIA"}}, '
-        '"ram": {{"capacity": "32GB", "ddr": "DDR4", "speed": "3200MHz"}}, '
-        '"preco_max": 4000}}'
-        "\n\nResponda **apenas com o JSON**, sem texto adicional."
-    ),
-    HumanMessagePromptTemplate.from_template("{setup_json}\n{descricao_dor}")
-])
+from django.apps import apps
 
-recommendation_prompt = ChatPromptTemplate.from_messages([
-    SystemMessagePromptTemplate.from_template(
-        "Você é TrackBot, um consultor especializado em tecnologia. Seu papel é analisar as especificações atuais do usuário, "
-        "os upgrades sugeridos e os produtos disponíveis no banco de dados.\n\n"
-        "**Atenção:**\n"
-        "- Só pode recomendar produtos que estão listados no banco de dados abaixo.\n"
-        "- Se o banco estiver vazio, **não invente produtos.**\n"
-        "- Informe educadamente que não foram encontrados produtos disponíveis.\n\n"
-        "Especificações atuais do usuário:\n{setup_json}\n\n"
-        "Upgrades sugeridos:\n{upgrade_specs}\n\n"
-        "Produtos encontrados no banco:\n{products_json}\n\n"
-        "Gere uma resposta explicando por que os produtos resolvem o problema, citando nome, preço e link.\n"
-        "Se não houver produtos, informe que não há produtos disponíveis."
-    ),
-    HumanMessagePromptTemplate.from_template("{setup_json}\n{upgrade_specs}\n{products_json}")
-])
 
-def filtrar_produtos_por_categoria(specs: dict, dfs: dict):
-    resultados = {}
+def generate_schema_string(app_label: str):
+    schema_lines = []
+    models = apps.get_app_config(app_label).get_models()
 
-    if "cpu" in specs:
-        df = dfs["cpu"]
-        cpu = specs["cpu"]
-        for key in ["model", "socket", "frequency"]:
-            if key in cpu:
-                df = df[df[key].str.contains(cpu[key], na=False, case=False)]
-        if "core_number" in cpu:
-            df = df[df["core_number"].astype(str) >= str(cpu["core_number"])]
-        resultados["cpu"] = df.reset_index(drop=True)
+    for model in models:
+        schema_lines.append(f"Tabela {model.__name__}:")
+        for field in model._meta.fields:
+            if (
+                field.name == "id"
+            ):  # Se quiser omitir o id, pode remover esta verificação
+                continue
+            schema_lines.append(f" - {field.name}: {field.get_internal_type()}")
+        schema_lines.append("")  # Linha em branco entre models
 
-    if "ram" in specs:
-        df = dfs["ram"]
-        ram = specs["ram"]
-        for key in ["capacity", "ddr"]:
-            if key in ram:
-                df = df[df[key].str.contains(ram[key], na=False, case=False)]
-        if "speed" in ram:
-            df["speed_num"] = df["speed"].str.extract(r'(\d+)').astype(float)
-            ram_speed = float(ram["speed"].replace("MHz", "").strip())
-            df = df[df["speed_num"] >= ram_speed].drop(columns=["speed_num"])
-        resultados["ram"] = df.reset_index(drop=True)
+    return "\n".join(schema_lines)
 
-    if "graphics" in specs:
-        df = dfs["graphics"]
-        gpu = specs["graphics"]
-        for key in ["model", "vram", "chipset"]:
-            if key in gpu:
-                df = df[df[key].str.contains(gpu[key], na=False, case=False)]
-        resultados["graphics"] = df.reset_index(drop=True)
 
-    if "monitor" in specs:
-        df = dfs["monitor"]
-        monitor = specs["monitor"]
-        for key in ["inches", "resolution", "refresh_rate"]:
-            if key in monitor:
-                df = df[df[key].astype(str).str.contains(str(monitor[key]), na=False, case=False)]
-        resultados["monitor"] = df.reset_index(drop=True)
+schema_str = generate_schema_string("api")
 
-    if "mouse" in specs:
-        df = dfs["mouse"]
-        mouse = specs["mouse"]
-        if "dpi" in mouse:
-            df = df[df["dpi"].str.contains(mouse["dpi"], na=False, case=False)]
-        resultados["mouse"] = df.reset_index(drop=True)
+upgrade_prompt = ChatPromptTemplate.from_messages(
+    [
+        SystemMessagePromptTemplate.from_template(
+            "Você é um especialista em hardware de computadores. Seu papel é, dado o setup atual do usuário, sua descrição de problema "
+            "e o schema do banco de dados, gerar upgrades compatíveis e superiores no formato JSON.\n\n"
+            "Aqui está o schema do banco:\n{schema}\n\n"
+            "Agora, considere o setup atual do usuário e a descrição do problema:\n"
+            "{setup_json}\n{descricao_dor}\n\n"
+            "Gere um JSON no seguinte formato EXATO:\n\n"
+            "{{\n"
+            '  "searches": [\n'
+            "    {{\n"
+            '      "model_name": "NomeDoModel",\n'
+            '      "columns": ["coluna1", "coluna2"],\n'
+            '      "search_values": ["valor1", "valor2"]\n'
+            "    }}\n"
+            "  ]\n"
+            "}}\n\n"
+            "Inclua apenas colunas e valores relevantes. Retorne **apenas o JSON**, sem explicações adicionais."
+            "Nunca use operadores como '>=', apenas indique valores mínimos reais. Exemplo correto: 'vram': '8GB'. ",
+        ),
+        HumanMessagePromptTemplate.from_template("{setup_json}\n{descricao_dor}"),
+    ]
+)
 
-    if "keyboard" in specs:
-        df = dfs["keyboard"]
-        keyboard = specs["keyboard"]
-        for key in ["layout", "key_type"]:
-            if key in keyboard:
-                df = df[df[key].str.contains(keyboard[key], na=False, case=False)]
-        resultados["keyboard"] = df.reset_index(drop=True)
 
-    return resultados
+recommendation_prompt = ChatPromptTemplate.from_messages(
+    [
+        SystemMessagePromptTemplate.from_template(
+            "Você é TrackBot, um consultor especializado em tecnologia. Seu papel é analisar as especificações atuais do usuário, "
+            "os upgrades sugeridos e os produtos disponíveis no banco de dados.\n\n"
+            "**Atenção:**\n"
+            "- Só pode recomendar produtos que estão listados no banco de dados abaixo.\n"
+            "- Se o banco estiver vazio, **não invente produtos.**\n"
+            "- Informe educadamente que não foram encontrados produtos disponíveis.\n\n"
+            "Especificações atuais do usuário:\n{setup_json}\n\n"
+            "Upgrades sugeridos:\n{upgrade_specs}\n\n"
+            "Produtos encontrados no banco:\n{products_json}\n\n"
+            "Gere uma resposta explicando por que os produtos resolvem o problema, citando nome, preço e link.\n"
+            "Se não houver produtos, informe que não há produtos disponíveis.",
+        ),
+        HumanMessagePromptTemplate.from_template(
+            "{setup_json}\n{upgrade_specs}\n{products_json}"
+        ),
+    ]
+)
+
 
 def processar_upgrade(setup_json: dict, descricao_dor: str, dfs: dict):
-    llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
-    # Gerar especificações de upgrade
     upgrade_chain = LLMChain(llm=llm, prompt=upgrade_prompt)
-    upgrade_specs_json = upgrade_chain.run({
-        "setup_json": setup_json,
-        "descricao_dor": descricao_dor
-    })
+    upgrade_specs_json = upgrade_chain.run(
+        {
+            "schema": schema_str,
+            "setup_json": json.dumps(setup_json),
+            "descricao_dor": descricao_dor,
+        }
+    )
+
+    match = re.search(r"({.*})", upgrade_specs_json, re.DOTALL)
+    if match:
+        upgrade_specs_json = match.group(1)
 
     try:
         upgrade_specs = json.loads(upgrade_specs_json)
     except json.JSONDecodeError:
         return {"error": "Erro ao interpretar o JSON gerado pelo LLM."}
 
-    produtos_filtrados = filtrar_produtos_por_categoria(upgrade_specs, dfs)
-
-    if all(df.empty for df in produtos_filtrados.values()):
-        return {
-            "upgrade_specs": upgrade_specs,
-            "produtos_encontrados": {},
-            "resposta": "No momento, não encontramos produtos disponíveis nas lojas que atendam às suas necessidades para este upgrade."
-        }
-
-    products_list = {k: df.to_dict(orient="records") for k, df in produtos_filtrados.items()}
+    try:
+        response = requests.post(API_SEARCH_URL, json=upgrade_specs)
+        response.raise_for_status()
+        search_results = response.json().get("results", [])
+    except Exception as e:
+        return {"error": f"Erro ao consultar API: {e!s} {upgrade_specs}"}
 
     rec_chain = LLMChain(llm=llm, prompt=recommendation_prompt)
-    recommendation = rec_chain.run({
-        "setup_json": json.dumps(setup_json, indent=2),
-        "upgrade_specs": json.dumps(upgrade_specs, indent=2),
-        "products_json": json.dumps(products_list, indent=2)
-    })
+    recommendation = rec_chain.run(
+        {
+            "setup_json": json.dumps(setup_json, indent=2),
+            "upgrade_specs": json.dumps(upgrade_specs, indent=2),
+            "products_json": json.dumps(search_results, indent=2),
+        }
+    )
 
     return {
         "upgrade_specs": upgrade_specs,
-        "produtos_encontrados": products_list,
-        "resposta": recommendation
+        "produtos_encontrados": search_results,
+        "resposta": recommendation,
     }

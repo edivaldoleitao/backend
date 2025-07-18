@@ -1,12 +1,22 @@
 import json
 from datetime import datetime
-from django.http import HttpResponseBadRequest, HttpResponseNotAllowed, HttpResponseNotFound, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
+
 from api.entities.favorite import Favorite
-from track_save.api.controllers.favorite_controller import (create_favorite, delete_favorite,
-                                                            get_all_favorites, get_favorite_by_id,
-                                                            update_favorite)
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotFound
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_POST
+
+from track_save.api.controllers.favorite_controller import check_favorite_by_user
+from track_save.api.controllers.favorite_controller import create_favorite
+from track_save.api.controllers.favorite_controller import delete_favorite
+from track_save.api.controllers.favorite_controller import get_all_favorites
+from track_save.api.controllers.favorite_controller import get_favorite_by_id
+from track_save.api.controllers.favorite_controller import update_favorite
+
 
 # POST /api/favorites/create/
 @csrf_exempt
@@ -67,6 +77,16 @@ def get_favorite_view(request, fav_id):
         return JsonResponse(data, status=200)
     except Favorite.DoesNotExist:
         return HttpResponseNotFound("Favorite não encontrado")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+@csrf_exempt
+def get_favorite_view_by_user(request):
+    try:
+        data = json.loads(request.body)
+        response = check_favorite_by_user(data.get("user_id"), data.get("product_id"))
+        return JsonResponse(response, status=200)
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")
 

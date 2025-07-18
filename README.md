@@ -6,7 +6,7 @@ O uso de Dev Containers garante que todos os desenvolvedores trabalhem em um amb
 
 ---
 
-### ✅ Pré-requisitos
+## ✅ Pré-requisitos
 
 Antes de começar, garanta que você tenha instalado:
 
@@ -53,6 +53,23 @@ Rodar os comandos abaixo quando a aplicação não estiver rodando
 python manage.py makemigrations (demonstra modificações a serem aplicadas no banco)
 
 python manage.py migrate (aplica as modificações)
+```
+
+#### Webscraping
+
+Para salvar os produtos no seu banco local, primeiramente rode o Django:
+
+```bash
+python manage.py runserver 0.0.0.0:8001
+```
+
+Abra outro terminal.
+Em sequência, execute o comando de teste para cada scraper:
+
+- Kabum:
+
+```bash
+python -m track_save.webscraping.scrapers.kabum
 ```
 
 - Terabyte:

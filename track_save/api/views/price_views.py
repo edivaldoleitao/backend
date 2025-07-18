@@ -1,24 +1,22 @@
 import json
+from datetime import datetime
 
-from django.http import (
-    JsonResponse,
-    HttpResponseBadRequest,
-    HttpResponseNotAllowed,
-    HttpResponseNotFound,
-)
+from django.http import HttpResponseBadRequest
+from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotFound
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_POST
 
-from api.controllers.price_controller import (
-    create_price,
-    get_all_prices,
-    get_price_by_id,
-    update_price,
-    delete_price,
-)
+from api.controllers.price_controller import create_price
+from api.controllers.price_controller import delete_price
+from api.controllers.price_controller import get_all_prices
+from api.controllers.price_controller import get_price_by_id
+from api.controllers.price_controller import get_price_by_ps
+from api.controllers.price_controller import update_price
 from api.entities.price import Price
 from api.entities.product import ProductStore
-from datetime import datetime
 
 
 # criar Price
@@ -27,27 +25,32 @@ from datetime import datetime
 def create_price_view(request):
     try:
         data = json.loads(request.body)
-        
+
         # converte a string em date
         date_str = data.get("collection_date")
         try:
             date_obj = datetime.strptime(date_str, "%Y-%m-%d").date()
         except (ValueError, TypeError):
-            return HttpResponseBadRequest("collection_date deve estar no formato YYYY-MM-DD")
-        
+            return HttpResponseBadRequest(
+                "collection_date deve estar no formato YYYY-MM-DD"
+            )
+
         p = create_price(
-            product_store_id = data.get("product_store_id"),
-            value            = data.get("value"),
-            collection_date  = date_obj,
+            product_store_id=data.get("product_store_id"),
+            value=data.get("value"),
+            collection_date=date_obj,
         )
-        
-        return JsonResponse({
-            "id":              p.id,
-            "product_store":   p.product_store.id,
-            "value":           str(p.value),
-            "collection_date": p.collection_date.isoformat(),
-        }, status=201)
-    
+
+        return JsonResponse(
+            {
+                "id": p.id,
+                "product_store": p.product_store.id,
+                "value": str(p.value),
+                "collection_date": p.collection_date.isoformat(),
+            },
+            status=201,
+        )
+
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")
     except ProductStore.DoesNotExist:
@@ -84,6 +87,20 @@ def get_price(request, price_id):
         return HttpResponseBadRequest(f"Erro interno: {e}")
 
 
+@csrf_exempt
+@require_GET
+def get_price_by_product_store(request, ps_id):
+    try:
+        data = get_price_by_ps(ps_id)
+        if not data:
+            return HttpResponseNotFound("Nenhum Price cadastrado")
+        return JsonResponse({"prices": data}, safe=False, status=200)
+    except Price.DoesNotExist:
+        return HttpResponseNotFound("Price não encontrado")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
 # atualizar Price
 @csrf_exempt
 def update_price_view(request, price_id):
@@ -106,13 +123,16 @@ def update_price_view(request, price_id):
 
         p = update_price(price_id, **data)
 
-        return JsonResponse({
-            "id":              p.id,
-            "product_store":   p.product_store.id,
-            "value":           str(p.value),
-            # agora p.collection_date é um date de verdade
-            "collection_date": p.collection_date.isoformat(),
-        }, status=200)
+        return JsonResponse(
+            {
+                "id": p.id,
+                "product_store": p.product_store.id,
+                "value": str(p.value),
+                # agora p.collection_date é um date de verdade
+                "collection_date": p.collection_date.isoformat(),
+            },
+            status=200,
+        )
 
     except json.JSONDecodeError:
         return HttpResponseBadRequest("JSON inválido")
