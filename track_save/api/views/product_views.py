@@ -398,7 +398,7 @@ def get_terabyte(request):
                         category=category,
                         description=produto.get("descricao"),
                         image_url=produto.get("imagem"), 
-                    #    brand=produto.get("tecnica", {}).get("Marca"),
+                        brand=produto.get("tecnica", {}).get("Marca"),
                         **spec_fields
                         )
                        

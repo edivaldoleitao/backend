@@ -1,0 +1,802 @@
+[
+  {
+    "sku": "34406",
+    "nome": "Teclado Mecânico Gamer Ninja Leap Pudim, Switch Blue, Rainbow, ABNT2, Full Size, White, GN-KB-LPFSWPRUAB",
+    "preco": "R$ 117,90",
+    "url": "https://www.terabyteshop.com.br/produto/34406/teclado-mecanico-gamer-ninja-leap-pudim-switch-blue-rainbow-abnt2-full-size-white-gn-kb-lpfswpruab",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "23652",
+    "nome": "Teclado Mecânico Gamer Ninja Leap Pudim, Switch Blue, Rainbow, ABNT2, White",
+    "preco": "R$ 119,90",
+    "url": "https://www.terabyteshop.com.br/produto/23652/teclado-mecanico-gamer-ninja-leap-pudim-switch-blue-rgb-rainbow-abnt2-white",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "29694",
+    "nome": "Teclado Mecânico Gamer Ninja Black Thorne, Switch Red Low Profile, ABNT2, 60%, Black, GN-KB-BTRD60BRUAB",
+    "preco": "R$ 99,90",
+    "url": "https://www.terabyteshop.com.br/produto/29694/teclado-mecanico-gamer-ninja-black-thorne-switch-red-low-profile-abnt2-60-black-gn-kb-btrd60bruab",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24113",
+    "nome": "Teclado Mecânico Óptico Gamer Redragon Brahma Pro RGB, Switch Blue, ABNT, White, K586W-RGB-PRO (PT-BLUE)",
+    "preco": "R$ 389,90",
+    "url": "https://www.terabyteshop.com.br/produto/24113/teclado-mecanico-optico-gamer-redragon-brahma-pro-rgb-switch-blue-abnt-white-k586w-rgb-pro-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "22434",
+    "nome": "Teclado Mecânico Gamer Redragon Dragonborn, RGB, Switch Brown, Black ABNT 2, K630RGB-1 (PT-BROWN)",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/22434/teclado-mecanico-gamer-redragon-dragonborn-rgb-switch-brown-black-abnt-2-k630rgb-1-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "18610",
+    "nome": "Teclado Mecânico Gamer Redragon Daksa Rainbow, Switch Red Removíveis, ABNT, Black, K576R-1 PT-RED",
+    "preco": "R$ 219,90",
+    "url": "https://www.terabyteshop.com.br/produto/18610/teclado-mecanico-gamer-redragon-daksa-rainbow-switch-red-removiveis-abnt-black-k576r-1-pt-red",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "21852",
+    "nome": "Teclado Mecânico Gamer Redragon Draconic Lunar, RGB, 60%, Switch Blue. ABNT, Bluetooth, White, K530W-RGB-",
+    "preco": "R$ 379,90",
+    "url": "https://www.terabyteshop.com.br/produto/21852/teclado-mecanico-gamer-redragon-draconic-lunar-rgb-60-switch-blue-abnt-bluetooth-white-k530w-rgb-pro-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36171",
+    "nome": "Teclado Mecânico Gamer Marvo KG933G, RGB, Switch Red, 60%, Preto",
+    "preco": "R$ 119,90",
+    "url": "https://www.terabyteshop.com.br/produto/36171/teclado-mecanico-gamer-marvo-kg933g-rgb-switch-red-60-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "31582",
+    "nome": "Teclado Multimídia Fortrek OLK101, Membrana, USB, Full Size, ABNT2, Preto",
+    "preco": "R$ 39,90",
+    "url": "https://www.terabyteshop.com.br/produto/31582/teclado-multimidia-fortrek-olk101-membrana-usb-full-size-abnt2-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "29048",
+    "nome": "Teclado Gamer Redragon Horus, RGB, Switch Brown, ABNT2, White, K619W-RGB PT-BROWN",
+    "preco": "R$ 379,90",
+    "url": "https://www.terabyteshop.com.br/produto/29048/teclado-gamer-redragon-horus-rgb-switch-brown-abnt2-white-k619w-rgb-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "18357",
+    "nome": "Teclado Óptico Gamer Razer Huntsman Mini, Chroma, Razer Switch Red, US, RZ03-03390200-R3M1",
+    "preco": "R$ 1.489,90",
+    "url": "https://www.terabyteshop.com.br/produto/18357/teclado-optico-gamer-razer-huntsman-mini-chroma-razer-switch-red-us-rz03-03390200-r3m1",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "34596",
+    "nome": "Teclado Mecânico Ópitco Redragon Broadsword PRO, RGB, Switch Brown, ABNT2, C/Apoio de Pulso, Branco, K588",
+    "preco": "R$ 329,90",
+    "url": "https://www.terabyteshop.com.br/produto/34596/teclado-mecanico-opitco-redragon-broadsword-pro-rgb-switch-brown-abnt2-capoio-de-pulso-branco-k588w-rgb-pro-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "27426",
+    "nome": "Teclado Gamer Mecânico Akko MOD 007PC Blue On White, USB, ANSI, Switch Akko Piano V3 Pro",
+    "preco": "R$ 849,90",
+    "url": "https://www.terabyteshop.com.br/produto/27426/teclado-gamer-mecanico-akko-mod-007pc-blue-on-white-usb-ansi-switch-akko-piano-v3-pro",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "29420",
+    "nome": "Teclado Gamer Mecânico Redragon Lakshmi, Rainbow, Switch Preto, ABNT2, 60%, Black, K606R PT-BLACK",
+    "preco": "R$ 189,90",
+    "url": "https://www.terabyteshop.com.br/produto/29420/teclado-gamer-mecanico-redragon-lakshmi-rainbow-switch-preto-abnt2-60-black-k606r-pt-black",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "32682",
+    "nome": "Teclado Mecânico Numérico e Calculadora 8BitDo Retro Fami Edition, Bluetooth/2.4G/USB-C, Switch Kailh Box",
+    "preco": "R$ 369,90",
+    "url": "https://www.terabyteshop.com.br/produto/32682/teclado-mecanico-numerico-e-calculadora-8bitdo-retro-fami-edition-bluetooth24gusb-c-switch-kailh-box-white-85hb01",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "35497",
+    "nome": "Teclado Mecânico Gamer Havit, Rainbow, Switch Jixian Red, USB, White/Green, HV-KB899L",
+    "preco": "R$ 339,90",
+    "url": "https://www.terabyteshop.com.br/produto/35497/teclado-mecanico-gamer-havit-rainbow-switch-jixian-red-usb-whitegreen-hv-kb899l",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "29111",
+    "nome": "Combo Office Redragon BS-8772, Wireless 2.4G, Teclado e Mouse, Cinza e Branco",
+    "preco": "R$ 289,90",
+    "url": "https://www.terabyteshop.com.br/produto/29111/combo-office-redragon-bs-8772-wireless-24g-teclado-e-mouse-cinza-e-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24001",
+    "nome": "Teclado Mecânico Gamer Redragon Kumara, Switch Brown, RGB, ABNT2, Pink/White, K552PW-RGB PT-BROWN",
+    "preco": "R$ 189,90",
+    "url": "https://www.terabyteshop.com.br/produto/24001/teclado-mecanico-gamer-redragon-kumara-switch-brown-rgb-abnt2-pinkwhite-k552pw-rgb-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36343",
+    "nome": "Teclado Gamer Marvo K603, Rainbow, Switch Membrana, USB",
+    "preco": "R$ 59,90",
+    "url": "https://www.terabyteshop.com.br/produto/36343/teclado-gamer-marvo-k603-rainbow-switch-membrana-usb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "19971",
+    "nome": "Teclado Gamer Mecânico Redragon Draconic, Wireless, RGB, Switch Brown, ABN2, Black, K530RGB (PT-BROWN)",
+    "preco": "R$ 389,90",
+    "url": "https://www.terabyteshop.com.br/produto/19971/teclado-gamer-mecanico-redragon-draconic-wireless-rgb-switch-brown-abn2-black-k530rgb-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "35956",
+    "nome": "Teclado Gamer Mecânico Akko 3068S White, RGB, Switch Akko Orange, ABNT2",
+    "preco": "R$ 319,90",
+    "url": "https://www.terabyteshop.com.br/produto/35956/teclado-gamer-mecanico-akko-3068s-white-rgb-switch-akko-orange-abnt2",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "23998",
+    "nome": "Teclado Mecânico Gamer Redragon Kumara, Switch Brown, LED Red, ABNT2, White/Pink, K552WP PT-Brown",
+    "preco": "R$ 169,90",
+    "url": "https://www.terabyteshop.com.br/produto/23998/teclado-mecanico-gamer-redragon-kumara-switch-brown-led-red-abnt2-whitepink-k552wp-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "27134",
+    "nome": "Teclado Mecânico Gamer Akko Dragon Ball Super Goku 5075B Plus, RGB, USB/Bluetooth, ANSI, Switch Akko Crys",
+    "preco": "R$ 849,90",
+    "url": "https://www.terabyteshop.com.br/produto/27134/teclado-mecanico-gamer-akko-dragon-ball-super-goku-5075b-plus-rgb-usbbluetooth-ansi-switch-akko-crystal",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "23910",
+    "nome": "Teclado Mecânico Gamer Akko One Piece Edition Ano do Tigre 5108S, RGB, Switch Akko Jelly Pink, ANSI",
+    "preco": "R$ 849,90",
+    "url": "https://www.terabyteshop.com.br/produto/23910/teclado-mecanico-gamer-akko-one-piece-edition-rgb-switch-akko-jelly-pink-ano-do-tigre-5108s-ansi",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24051",
+    "nome": "Teclado Mecânico Gamer Redragon Mitra, Switch Brown, LED Red, ABNT2, Pink/White, K551PW (PT-Brown)",
+    "preco": "R$ 189,90",
+    "url": "https://www.terabyteshop.com.br/produto/24051/teclado-mecanico-gamer-redragon-mitra-switch-brown-led-red-abnt2-pinkwhite-k551pw-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36284",
+    "nome": "Teclado Vinik Dynamic Smart, Bluetooth, ABNT, Preto, DT200",
+    "preco": "R$ 119,90",
+    "url": "https://www.terabyteshop.com.br/produto/36284/teclado-vinik-dynamic-smart-bluetooth-abnt-preto-dt200",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "33633",
+    "nome": "Teclado Mecânico Gamer Redragon World of Warcraft, LED Azul, Switch Blizzard, ABNT2, TKL, Preto/Azul",
+    "preco": "R$ 309,90",
+    "url": "https://www.terabyteshop.com.br/produto/33633/teclado-mecanico-gamer-redragon-world-of-warcraft-led-azul-switch-blizzard-abnt2-tkl-pretoazul",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "21955",
+    "nome": "Teclado Gamer Vinik VX Gaming Hydra, LED Blue, ABNT2, Black, 35570",
+    "preco": "R$ 44,90",
+    "url": "https://www.terabyteshop.com.br/produto/21955/teclado-gamer-vinik-vx-gaming-hydra-led-blue-abnt2-black-35570",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24086",
+    "nome": "Teclado Mecânico Gamer Redragon Dark Avenger, RGB, Switch Blue, ABNT2, TKL, Pink/White, K568PW-RGB (PT-BL",
+    "preco": "R$ 249,90",
+    "url": "https://www.terabyteshop.com.br/produto/24086/teclado-mecanico-gamer-redragon-dark-avenger-rgb-switch-blue-abnt2-tkl-pinkwhite-k568pw-rgb-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36202",
+    "nome": "Teclado Mecânico Gamer Ajazz AKC087, RGB, Wireless/Bluetooth/USB, TKL, ANSI, Switch Ajazz AS101 Yellow, C",
+    "preco": "R$ 799,90",
+    "url": "https://www.terabyteshop.com.br/produto/36202/teclado-mecanico-gamer-ajazz-akc087-rgb-wirelessbluetoothusb-tkl-ansi-switch-ajazz-as101-yellow-creme-e-amarelo",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "26995",
+    "nome": "Teclado Mecânico Gamer Redragon Daksa RGB, Switch Brown Removíveis, ABNT2, Black/Gray, K576GG-RGB (PT-BRO",
+    "preco": "R$ 329,90",
+    "url": "https://www.terabyteshop.com.br/produto/26995/teclado-mecanico-gamer-redragon-daksa-rgb-switch-brown-removiveis-abnt2-blackgray-k576gg-rgb-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "15575",
+    "nome": "Teclado Mecânico Gamer Redragon Kumara Lunar K552, RGB, Switch Brown, ABNT, TKL, White, K552W-RGB (PT-BRO",
+    "preco": "R$ 269,90",
+    "url": "https://www.terabyteshop.com.br/produto/15575/teclado-mecanico-gamer-redragon-kumara-lunar-k552-rgb-switch-brown-abnt2-white-k552w-rgb-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "37081",
+    "nome": "Teclado Mecânico Gamer 8BitDo Retro 108 N Edition, Wireless, Bluetooth, USB, ANSI, Switch Kailh Box White",
+    "preco": "R$ 999,99",
+    "url": "https://www.terabyteshop.com.br/produto/37081/teclado-mecanico-gamer-8bitdo-retro-108-n-edition-wireless-bluetooth-usb-ansi-switch-kailh-box-white-v2-85hc02",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "27947",
+    "nome": "Teclado Fortrek Standard SKL-106, ABNT2, Preto",
+    "preco": "R$ 29,90",
+    "url": "https://www.terabyteshop.com.br/produto/27947/teclado-fortrek-standard-skl-106-abnt2-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "12124",
+    "nome": "Teclado Mecânico Havit Gamenote KB902L RGB, Switch Red, Branco/Preto e Vermelho, KB902L",
+    "preco": "R$ 379,90",
+    "url": "https://www.terabyteshop.com.br/produto/12124/teclado-mecanico-havit-gamenote-kb902l-rgb-switch-red-brancopreto-e-vermelho-kb902l",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "13621",
+    "nome": "Teclado Mecânico Gamer Redragon Kumara Lunar K552, Switch Blue, Com Led, ABNT2, White",
+    "preco": "R$ 167,90",
+    "url": "https://www.terabyteshop.com.br/produto/13621/teclado-mecanico-gamer-redragon-kumara-lunar-k552-switch-blue-com-led-abnt2-white",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "21927",
+    "nome": "Teclado Fortrek MKL-101, ABNT2, Black, 75859",
+    "preco": "R$ 39,90",
+    "url": "https://www.terabyteshop.com.br/produto/21927/teclado-fortrek-mkl-101-abnt2-black-75859",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "26781",
+    "nome": "Teclado Gamer Mecânico Akko ACR Pro 75 Sylph Potion DSA, ANSI, Switch Akko Cream Yellow Pro, Pink",
+    "preco": "R$ 919,90",
+    "url": "https://www.terabyteshop.com.br/produto/26781/teclado-gamer-mecanico-akko-acr-pro-75-sylph-potion-dsa-ansi-switch-akko-cream-yellow-pro-pink",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "35941",
+    "nome": "Teclado Mecânico Gamer T-Dagger Arena, Rainbow, Switch Brown, 60%, ABNT2, Preto, T-TGK321-BR ABNT-2",
+    "preco": "R$ 139,90",
+    "url": "https://www.terabyteshop.com.br/produto/35941/teclado-mecanico-gamer-t-dagger-arena-rainbow-switch-brown-60-abnt2-preto-t-tgk321-br-abnt-2",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "26539",
+    "nome": "Teclado Gamer Gamdias Ares P2A, Membrana, RGB, ABNT2, USB, Black",
+    "preco": "R$ 104,90",
+    "url": "https://www.terabyteshop.com.br/produto/26539/teclado-gamer-gamdias-ares-p2a-membrana-rgb-abnt2-usb-black",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "28068",
+    "nome": "Teclado Mecânico Gamer Redragon Castor, RGB, Switch Brown, ABNT2, Pink and White, K631PW-RGB (PT-BROWN)",
+    "preco": "R$ 279,90",
+    "url": "https://www.terabyteshop.com.br/produto/28068/teclado-mecanico-gamer-redragon-castor-rgb-switch-brown-abnt2-pink-and-white-k631pw-rgb-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "31387",
+    "nome": "Teclado Mecânico Gamer Redragon Castor Pro, RGB, Wireless, Bluetooth, Switch Brown, ABNT2, Preto, Vermelh",
+    "preco": "R$ 299,90",
+    "url": "https://www.terabyteshop.com.br/produto/31387/teclado-mecanico-gamer-redragon-castor-pro-rgb-wireless-bluetooth-switch-brown-abnt2-preto-vermelho-e-branco-k631rgb-pro-brw-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "28645",
+    "nome": "Teclado Mecânico Gamer 8BitDo N Edition, Wireless, Bluetooth, USB-C, ANSI, Switch Kailh Box White V2, Whi",
+    "preco": "R$ 759,99",
+    "url": "https://www.terabyteshop.com.br/produto/28645/teclado-mecanico-gamer-8bitdo-n-edition-wireless-bluetooth-usb-c-ansi-switch-kailh-box-white-v2-white-85ha02",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36335",
+    "nome": "Teclado Mecânico Gamer MSI Forge GK600 SKY, RGB, Wireless/Bluetooth, ANSI, TKL, Switch Linear, Branco e C",
+    "preco": "R$ 529,90",
+    "url": "https://www.terabyteshop.com.br/produto/36335/teclado-mecanico-gamer-msi-forge-gk600-sky-rgb-wirelessbluetooth-ansi-tkl-switch-linear-branco-e-cinza",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "29392",
+    "nome": "Teclado Mecânico Gamer Marvo KG962GWH, Rainbow, Switch Red, ANSI, 60%, White, KG962G WH EN-R",
+    "preco": "R$ 179,90",
+    "url": "https://www.terabyteshop.com.br/produto/29392/teclado-mecanico-gamer-marvo-kg962wh-rainbow-switch-red-ansi-60-white-kg962-wh-en-r",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "28476",
+    "nome": "Teclado Gamer Mecânico Akko 3108 V2 World Tour Tokyo, ANSI, Switch Akko Blue",
+    "preco": "R$ 569,90",
+    "url": "https://www.terabyteshop.com.br/produto/28476/teclado-gamer-mecanico-akko-3108-v2-world-tour-tokyo-ansi-switch-akko-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24146",
+    "nome": "Teclado Mecânico Logitech Pop Keys, Sem Fio, Tátil, ANSI, Bluetooth, Switch Brown, Rosa, 920-010712",
+    "preco": "R$ 699,90",
+    "url": "https://www.terabyteshop.com.br/produto/24146/teclado-mecanico-logitech-pop-keys-sem-fio-tatil-ansi-bluetooth-switch-brown-rosa-920-010712",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "27737",
+    "nome": "Teclado Office BRX, ABNT2, Black, 51049232",
+    "preco": "R$ 27,90",
+    "url": "https://www.terabyteshop.com.br/produto/27737/teclado-office-brx-abnt2-black-51049232",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "26305",
+    "nome": "Teclado Mecânico Gamer Redragon Kumara Pro, Wireless, RGB, Switch Blue, ABNT2, White, K552RGB-BRS-W PT-BL",
+    "preco": "R$ 319,90",
+    "url": "https://www.terabyteshop.com.br/produto/26305/teclado-mecanico-gamer-redragon-kumara-pro-wireless-rgb-switch-blue-abnt2-white-k552rgb-brs-w-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "8563",
+    "nome": "Teclado Mecânico Gamer Redragon Mitra K551 RGB, Switch Red, ABNT2, Black, K551RGB-1-PT RED",
+    "preco": "R$ 279,90",
+    "url": "https://www.terabyteshop.com.br/produto/8563/teclado-mecanico-gamer-redragon-mitra-k551-rgb-switch-red-abnt-2-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "23994",
+    "nome": "Teclado Mecânico Gamer Redragon Kumara, Switch Blue, RGB, ABNT2, White/Pink, K552WP-RGB PT-BLUE",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/23994/teclado-mecanico-gamer-redragon-kumara-switch-blue-rgb-abnt2-whitepink-k552wp-rgb-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36140",
+    "nome": "Teclado Mecânico Gamer Fortrek Gravity 100, Rainbow, Switch Outemu Red, ABNT2, Branco",
+    "preco": "R$ 179,90",
+    "url": "https://www.terabyteshop.com.br/produto/36140/teclado-mecanico-gamer-fortrek-gravity-100-rainbow-switch-outemu-red-abnt2-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "27027",
+    "nome": "Teclado Mecânico Gamer BRX M403, RGB, Switch Blue, Black",
+    "preco": "R$ 119,90",
+    "url": "https://www.terabyteshop.com.br/produto/27027/teclado-mecanico-gamer-brx-m403-rgb-switch-blue-black",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36198",
+    "nome": "Teclado Mecânico Gamer Ajazz AKL680, Wireless/Bluetooth, 65%, ANSI, Switch Low-Profile, Azul e Branco",
+    "preco": "R$ 499,90",
+    "url": "https://www.terabyteshop.com.br/produto/36198/teclado-mecanico-gamer-ajazz-akl680-wirelessbluetooth-65-ansi-switch-low-profile-azul-e-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "31769",
+    "nome": "Teclado Gamer Marvo KG955W, RGB, Wireless, Bluetooth, Switch Marvo, Black",
+    "preco": "R$ 269,90",
+    "url": "https://www.terabyteshop.com.br/produto/31769/teclado-gamer-marvo-kg955w-rgb-wireless-bluetooth-switch-marvo-black",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "32217",
+    "nome": "Teclado Gamer Mecânico Redragon ELF Pro, RGB, Wireless, Bluetooth, Switch Crystal, ABNT2, 75%, Transparen",
+    "preco": "R$ 439,90",
+    "url": "https://www.terabyteshop.com.br/produto/32217/teclado-gamer-mecanico-redragon-elf-pro-rgb-wireless-bluetooth-switch-crystal-abnt2-75-transparente-k649ct-rgb-pro-pt",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "26561",
+    "nome": "Teclado Gamer Mecânico Redragon Pollux, RGB, Switch Blue, ABNT2, Black, K628-RGB-B (PT-BLUE)",
+    "preco": "R$ 259,90",
+    "url": "https://www.terabyteshop.com.br/produto/26561/teclado-gamer-mecanico-redragon-pollux-rgb-switch-blue-abnt2-black-k628-rgb-b-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "29052",
+    "nome": "Teclado Gamer Mecânico SuperFrame Fusion Pro, RGB, Wireless/Bluetooth, Switch Kailh Box Ice Cream, Branco",
+    "preco": "R$ 449,90",
+    "url": "https://www.terabyteshop.com.br/produto/29052/teclado-gamer-mecanico-superframe-fusion-pro-rgb-wirelessbluetooth-switch-kailh-box-ice-cream-brancoazul-e-rosa",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "32318",
+    "nome": "Teclado Gamer Mecânico Redragon Gloria Pro, RGB, Wireless, Bluetooth, Switch Bumblebee, ABNT2, 98%, Branc",
+    "preco": "R$ 499,90",
+    "url": "https://www.terabyteshop.com.br/produto/32318/teclado-gamer-mecanico-redragon-gloria-pro-rgb-wireless-bluetooth-switch-bumblebee-abnt2-98-branco-e-azul-k664wbp-rgb-pro-pt-bumblebee",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36194",
+    "nome": "Teclado Mecânico Gamer Ajazz AKP815, Com Display LCD, RGB, USB, ANSI, 75%, Switch Huannuo Short Tea, Azul",
+    "preco": "R$ 1.079,90",
+    "url": "https://www.terabyteshop.com.br/produto/36194/teclado-mecanico-gamer-ajazz-akp815-com-display-lcd-rgb-usb-ansi-75-switch-huannuo-short-tea-azul-branco-e-laranja",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24397",
+    "nome": "Teclado Mecânico Gamer Redragon APS, RGB, Switch Blue, TKL, White, K607W-RGB (PT-BLUE)",
+    "preco": "R$ 269,90",
+    "url": "https://www.terabyteshop.com.br/produto/24397/teclado-mecanico-gamer-redragon-aps-rgb-switch-blue-tkl-white-k607w-rgb-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "32915",
+    "nome": "Teclado Mecânico Gamer Fortrek Gravity, Rainbow, Switch Outemu Red, ABNT2, Preto",
+    "preco": "R$ 169,90",
+    "url": "https://www.terabyteshop.com.br/produto/32915/teclado-mecanico-gamer-fortrek-gravity-rainbow-switch-outemu-red-abnt2-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "21126",
+    "nome": "Teclado Mecânico Gamer Redragon K587 Magic-Wand Pro RGB, Switch Blue, White, ABNT, TKL, K587W-RGB-PRO (PT",
+    "preco": "R$ 334,90",
+    "url": "https://www.terabyteshop.com.br/produto/21126/teclado-mecanico-gamer-redragon-k587-magic-wand-pro-rgb-switch-blue-white-abnt-k587w-rgb-pro-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "29741",
+    "nome": "Teclado Gamer SuperFrame Origins, RGB, Switch Brown, ABNT2, USB, Preto, SF-KB-ORBRFSBRUAB",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/29741/teclado-gamer-superframe-origins-rgb-switch-brown-abnt2-usb-preto-sf-kb-orbrfsbruab",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "13322",
+    "nome": "Teclado Mecânico Gamer Redragon Mitra Lunar K551W, Switch Red, ABNT2, White",
+    "preco": "R$ 159,90",
+    "url": "https://www.terabyteshop.com.br/produto/13322/teclado-mecanico-gamer-redragon-mitra-lunar-k551w-switch-red-abnt2-white",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "35564",
+    "nome": "Teclado Mecânico Gamer Redragon Dark Avenger, Rainbow, Switch Brown, ABNT2, TKL, Branco e Rosa, K568PW-R",
+    "preco": "R$ 239,90",
+    "url": "https://www.terabyteshop.com.br/produto/35564/teclado-mecanico-gamer-redragon-dark-avenger-rainbow-switch-brown-abnt2-tkl-branco-e-rosa-k568pw-r-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24103",
+    "nome": "Teclado Mecânico Gamer Redragon Daksa Rainbow, Switch Brown Removíveis, ABNT2, White/Pink, K576WP-R (PT-B",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/24103/teclado-mecanico-gamer-redragon-daksa-rainbow-switch-brown-removiveis-abnt2-whitepink-k576wp-r-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24036",
+    "nome": "Teclado Mecânico Gamer Redragon Mitra, Switch Blue, ABNT2, RGB, White/Pink, K551WP-RGB (PT-Blue)",
+    "preco": "R$ 229,90",
+    "url": "https://www.terabyteshop.com.br/produto/24036/teclado-mecanico-gamer-redragon-mitra-switch-blue-abnt2-rgb-whitepink-k551wp-rgb-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "21845",
+    "nome": "Teclado Mecânico Gamer Redragon Fizz, RAINBOW, Switch Brown, ABNT2, Black, K617-R-B (PT-BROWN)",
+    "preco": "R$ 169,90",
+    "url": "https://www.terabyteshop.com.br/produto/21845/teclado-mecanico-gamer-redragon-fizz-rainbow-switch-brown-abnt2-black-k617-r-b-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "34143",
+    "nome": "Teclado Mecânico Gamer PCYes Kirin White Ghost, Rainbow, Switch Blue, 75%, ABNT2, Branco, Cinza e Laranja",
+    "preco": "R$ 169,90",
+    "url": "https://www.terabyteshop.com.br/produto/34143/teclado-mecanico-gamer-pcyes-kirin-white-ghost-rainbow-switch-blue-75-abnt2-branco-cinza-e-laranja-ptkrwg75bl",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "31392",
+    "nome": "Teclado Mecânico Gamer Redragon Trundle, RGB, Switch Brown, ABNT2, Branco, Azul e Rosa, K668WBO-RGB (PT-B",
+    "preco": "R$ 339,90",
+    "url": "https://www.terabyteshop.com.br/produto/31392/teclado-mecanico-gamer-redragon-trundle-rgb-switch-brown-abnt2-branco-azul-e-rosa-k668wbo-rgb-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "23967",
+    "nome": "Teclado Mecânico Gamer Akko Hello Kitty Peking Opera 5108S (A), RGB, Switch Akko Sakura, ANSI",
+    "preco": "R$ 569,90",
+    "url": "https://www.terabyteshop.com.br/produto/23967/teclado-mecanico-gamer-akko-hello-kitty-peking-opera-5108s-rgb-switch-akko-sakura-ansi",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "34594",
+    "nome": "Teclado Mecânico Gamer Redragon DitiX, One Hand, RGB, Switch Blue, Branco, K601W-RGB",
+    "preco": "R$ 219,90",
+    "url": "https://www.terabyteshop.com.br/produto/34594/teclado-mecanico-gamer-redragon-ditix-one-hand-rgb-switch-blue-branco-k601w-rgb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "32529",
+    "nome": "Teclado Mecânico Gamer Montech MKey PRO 75 FB Freedom, RGB, Wireless, Bluetooth, Switch Gateron Brown, AN",
+    "preco": "R$ 659,90",
+    "url": "https://www.terabyteshop.com.br/produto/32529/teclado-mecanico-gamer-montech-mkey-pro-75-fb-rgb-wireless-bluetooth-switch-gateron-brown-ansi-65-azul-e-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "22433",
+    "nome": "Teclado Mecânico Gamer Redragon Dragonborn, RGB, Switch Blue, Black ABNT 2, K630RGB-1 (PT-BLUE)",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/22433/teclado-mecanico-gamer-redragon-dragonborn-rgb-switch-blue-black-abnt-2-k630rgb-1-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "35946",
+    "nome": "Teclado Mecânico Gamer T-Dagger Bora, Rainbow, Switch Brown, TKL, ABNT2, Branco, T-TGK313W-BR",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/35946/teclado-mecanico-gamer-t-dagger-bora-rainbow-switch-brown-tkl-abnt2-branco-t-tgk313w-br",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "15579",
+    "nome": "Teclado Mecânico Gamer Redragon Mitra Lunar K551W, RGB, Switch Red, ABNT2, White, K551W-RGB (PT-RED)",
+    "preco": "R$ 219,90",
+    "url": "https://www.terabyteshop.com.br/produto/15579/teclado-mecanico-gamer-redragon-mitra-lunar-k551w-rgb-switch-red-abnt2-white-k551w-rgb-pt-red",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "35831",
+    "nome": "Teclado Óptico Gamer Razer Huntsman Mini, Chroma RGB, Razer Switch Red, US, RZ0303390200",
+    "preco": "R$ 1.479,90",
+    "url": "https://www.terabyteshop.com.br/produto/35831/teclado-optico-gamer-razer-huntsman-mini-chroma-rgb-razer-switch-red-us-rz0303390200",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "33638",
+    "nome": "Teclado Gamer Mecânico Redragon Akali, RGB, USB, Switch Brown, ABNT2, 60%, Branco, Cinza e Laranja, K642W",
+    "preco": "R$ 269,90",
+    "url": "https://www.terabyteshop.com.br/produto/33638/teclado-gamer-mecanico-redragon-akali-rgb-usb-switch-brown-abnt2-60-branco-cinza-e-laranja-k642wgo-rgb-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36139",
+    "nome": "Teclado Gamer Mecânico Fortrek Gravity 65, Rainbow, Switch Outemu Red, ABNT2, Compact, Branco",
+    "preco": "R$ 159,90",
+    "url": "https://www.terabyteshop.com.br/produto/36139/teclado-gamer-mecanico-fortrek-gravity-65-rainbow-switch-outemu-red-abnt2-compact-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "28396",
+    "nome": "Teclado Mecânico Gamer Cooler Master MK770 Macaron, Wireless/Bluetooth, RGB, ANSI, Switch Kailh Box V2 Re",
+    "preco": "R$ 629,90",
+    "url": "https://www.terabyteshop.com.br/produto/28396/teclado-mecanico-gamer-cooler-master-mk770-macaron-wirelessbluetooth-rgb-ansi-switch-kailh-box-v2-red-mk-770-mckr1-us",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "23003",
+    "nome": "Teclado Mecânico Gamer Redragon Kala RGB, Pink e Branco, Switch Brown, ABNT2, Full-Size K557PW-RGB",
+    "preco": "R$ 259,90",
+    "url": "https://www.terabyteshop.com.br/produto/23003/teclado-mecanico-gamer-redragon-kala-rgb-rosa-e-branco-switch-brown-abnt2-k557pw-rgb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36941",
+    "nome": "Teclado Gamer Redragon Shiva Pro 98, RGB, Wireless/Bluetooth, Membrana, ABNT2, Preto, K515RGB-PRO PT",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/36941/teclado-gamer-redragon-shiva-pro-98-rgb-wirelessbluetooth-membrana-abnt2-preto-k515rgb-pro-pt",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "35977",
+    "nome": "Teclado Mecânico Gamer HyperX Alloy Rise GKBD, RGB, Switch HyperX Linear, Preto, 7G7A3AA",
+    "preco": "R$ 1.399,90",
+    "url": "https://www.terabyteshop.com.br/produto/35977/teclado-mecanico-gamer-hyperx-alloy-rise-gkbd-rgb-switch-hyperx-linear-preto-7g7a3aa",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "35952",
+    "nome": "Teclado Mecânico Gamer T-Dagger Rebel, Rainbow, Switch Brown, Full Size, ABNT2, Branco, T-TGK328W-BR",
+    "preco": "R$ 209,90",
+    "url": "https://www.terabyteshop.com.br/produto/35952/teclado-mecanico-gamer-t-dagger-rebel-rainbow-switch-brown-full-size-abnt2-branco-t-tgk328w-br",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "21129",
+    "nome": "Teclado Óptico Redragon Surara Pro RGB, Switch Blue, White, ABNT, K582W-RGB-PRO (PT-BLUE)",
+    "preco": "R$ 249,90",
+    "url": "https://www.terabyteshop.com.br/produto/21129/teclado-optico-redragon-surara-pro-rgb-switch-blue-white-abnt-k582w-rgb-pro-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "8562",
+    "nome": "Teclado Mecânico Gamer Redragon Mitra K551 RGB, Switch Brown, ABNT2, Full-Size, Black",
+    "preco": "R$ 269,90",
+    "url": "https://www.terabyteshop.com.br/produto/8562/teclado-mecanico-gamer-redragon-mitra-k551-rgb-switch-brown-abnt-2-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "29426",
+    "nome": "Teclado Mecânico Gamer Redragon Fizz, RGB, Switch Brown, ABNT 2, Amarelo/Cinza/Branco, K617RGB-YL GY WT (",
+    "preco": "R$ 229,90",
+    "url": "https://www.terabyteshop.com.br/produto/29426/teclado-mecanico-gamer-redragon-fizz-rgb-switch-brown-abnt-2-amarelocinzabranco-k617rgb-yl-gy-wt-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36950",
+    "nome": "Teclado Office Redragon BK-7092, Wireless, Membrana, Full Size, ABNT2, Low Profile, Preto, BK-7094 PT",
+    "preco": "R$ 79,90",
+    "url": "https://www.terabyteshop.com.br/produto/36950/teclado-office-redragon-bk-7092-wireless-membrana-full-size-abnt2-low-profile-preto-bk-7094-pt",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24638",
+    "nome": "Teclado Gamer Mecânico Redragon Lakshmi, Rainbow, Switch Red, ABNT2, 60%, Black, K606R PT-RED",
+    "preco": "R$ 189,90",
+    "url": "https://www.terabyteshop.com.br/produto/24638/teclado-gamer-mecanico-redragon-lakshmi-rainbow-switch-red-abnt2-60-black-k606r-pt-red",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "27251",
+    "nome": "Teclado Mecânico Gamer Akko 5108B-Plus Kamado Nezuko, RGB, USB/Bluetooth, Switch Cream Yellow V3 Pro, ANS",
+    "preco": "R$ 769,90",
+    "url": "https://www.terabyteshop.com.br/produto/27251/teclado-mecanico-gamer-akko-5108b-plus-kamado-nezuko-rgb-usbbluetooth-switch-cream-yellow-v3-pro-ansi",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "28065",
+    "nome": "Teclado Mecânico Gamer Redragon Castor, RGB, Switch Blue, ABNT2, Pink and White, K631PW-RGB (PT-BLUE)",
+    "preco": "R$ 279,90",
+    "url": "https://www.terabyteshop.com.br/produto/28065/teclado-mecanico-gamer-redragon-castor-rgb-switch-blue-abnt2-pink-and-white-k631pw-rgb-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "21960",
+    "nome": "Teclado Gamer Vinik VX Gaming Hydra, LED Red, ABNT2, White, 65422",
+    "preco": "R$ 59,90",
+    "url": "https://www.terabyteshop.com.br/produto/21960/teclado-gamer-vinik-vx-gaming-hydra-led-red-abnt2-white-65422",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "32196",
+    "nome": "Teclado Gamer Mecânico Redragon Phantom Pro, RGB, Wireless, Bluetooth, Switch Brown, ABNT2, 75%, Cinza E",
+    "preco": "R$ 399,90",
+    "url": "https://www.terabyteshop.com.br/produto/32196/teclado-gamer-mecanico-redragon-phantom-pro-rgb-wireless-bluetooth-switch-brown-abnt2-75-cinza-e-creme-k629cgo-pro-m-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "24005",
+    "nome": "Teclado Mecânico Gamer Redragon Mitra, Switch Blue, ABNT2, LED Red, White/Pink, K551WP (PT-Blue)",
+    "preco": "R$ 169,99",
+    "url": "https://www.terabyteshop.com.br/produto/24005/teclado-mecanico-gamer-redragon-mitra-switch-blue-abnt2-led-red-whitepink-k551wp-pt-blue",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "28071",
+    "nome": "Teclado Mecânico Gamer Redragon Castor, RGB, Switch Brown, ABNT2, White and Pink, K631WP-RGB (PT-BROWN)",
+    "preco": "R$ 269,90",
+    "url": "https://www.terabyteshop.com.br/produto/28071/teclado-mecanico-gamer-redragon-castor-rgb-switch-brown-abnt2-white-and-pink-k631wp-rgb-pt-brown",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36179",
+    "nome": "Teclado Mecânico Gamer Ajazz AK870, RGB, Wireless/Bluetooth/USB, TKL, ANSI, KTT Hyacinth Switch, Roxo, Br",
+    "preco": "R$ 899,90",
+    "url": "https://www.terabyteshop.com.br/produto/36179/teclado-mecanico-gamer-ajazz-ak870-rgb-wirelessbluetoothusb-tkl-ansi-ktt-hyacinth-switch-roxo-branco-e-azul",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "36196",
+    "nome": "Teclado Mecânico Gamer Ajazz AKL680, Wireless/Bluetooth, 65%, ANSI, Switch Low-Profile, Branco e Azul",
+    "preco": "R$ 499,90",
+    "url": "https://www.terabyteshop.com.br/produto/36196/teclado-mecanico-gamer-ajazz-akl680-wirelessbluetooth-65-ansi-switch-low-profile-branco-e-azul",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "35958",
+    "nome": "Teclado Gamer Mecânico Akko 3061s, RGB, 60%, ABNT2, Switch Akko Pink",
+    "preco": "R$ 299,90",
+    "url": "https://www.terabyteshop.com.br/produto/35958/teclado-gamer-mecanico-akko-3061s-rgb-60-abnt2-switch-akko-pink",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  },
+  {
+    "sku": "8475",
+    "nome": "Teclado Mecânico Gamer Thermaltake TT Sports Poseidon Z RGB, Switch Brown, Black, KB-PZR-KBBRUS-01",
+    "preco": "R$ 579,90",
+    "url": "https://www.terabyteshop.com.br/produto/8475/teclado-thermaltake-tt-sports-poseidon-z-rgb-kb-pzr-kbbrus-01",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/teclado"
+  }
+]

@@ -120,7 +120,7 @@ async def scrape_terabyte(termo_pesquisa):
             await browser.close()
 
 
-async def scrape_amazon(url: str):
+async def scrape_amazon(url: str, termo):
     produtos = []
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
@@ -139,13 +139,14 @@ async def scrape_amazon(url: str):
 
             nota_element = await item.query_selector("span.a-icon-alt")
             nota = await nota_element.inner_text() if nota_element else ""
-            if "cooler" not in nome_texto.lower():
+            if "cooler" not in nome_texto.lower() and "captura" not in nome_texto.lower() and "suporte" not in nome_texto.lower():
                 produtos.append(
                     {
                         "url": "https://www.amazon.com.br" + href if href else "",
                         "name": nome_texto,
                         "price": preco,
                         "rating": nota[:3] if nota else "",
+                        "tipo_produto": termo,
                     }
                 )
 
@@ -195,85 +196,120 @@ async def scrape_amazon_product(url, termo):
         page = await browser.new_page()
         await page.goto(url)
 
-        # Verifica se existe o botão "Continuar comprando" e clica
+        # 1) Botão "Continuar comprando"
         try:
-            continuar_btn = page.locator(
-                "button.a-button-text", has_text="Continuar comprando"
-            )
+            continuar_btn = page.locator("button.a-button-text", has_text="Continuar comprando")
             if await continuar_btn.is_visible():
                 await continuar_btn.click()
-                await page.wait_for_timeout(
-                    1000
-                )  # pequena espera para a página atualizar
-        except:
-            pass  # se não aparecer, segue normal
+                await page.wait_for_timeout(1000)
+        except Exception:
+            pass
 
-        # Aguarda o título do produto
+        # 2) Expande todas as seções colapsáveis (Características, Especificações etc.)
+        try:
+            expanders = page.locator("a.a-expander-header")
+            count = await expanders.count()
+            for i in range(count):
+                expander = expanders.nth(i)
+                if await expander.is_visible():
+                    aria = await expander.get_attribute("aria-expanded")
+                    if aria in (None, "false"):
+                        await expander.click()
+                        await page.wait_for_timeout(500)
+        except Exception:
+            pass
+
+        # 3) Título
         try:
             await page.wait_for_selector("#productTitle", timeout=15000)
             nome = (await page.locator("#productTitle").inner_text()).strip()
-        except Exception as e:
-            print(e)
+        except Exception:
             nome = ""
 
-        # Preço
+        # 4) Preço
         try:
             preco = await page.locator(".a-price .a-offscreen").first.inner_text()
-        except:
+        except Exception:
             preco = "Preço não encontrado"
 
-        # Nota
+        # 5) Nota
         try:
             nota = await page.locator("span.a-icon-alt").first.inner_text()
-        except:
+        except Exception:
             nota = "Sem nota"
 
-        # Descrição curta
+        # 6) Descrição curta
         try:
             descricao_curta = await page.locator("#feature-bullets").inner_text()
-        except:
+        except Exception:
             descricao_curta = "Descrição curta não encontrada"
 
-        # Descrição detalhada
+        # 7) Descrição detalhada
         try:
             descricao_detalhada = await page.locator("#productDescription").inner_text()
-        except:
+        except Exception:
             descricao_detalhada = "Descrição detalhada não encontrada"
 
-        # Tabela de detalhes adicionais
+        # 8) Descrição técnica (Especificações Técnicas)
+        try:
+            descricao_tecnica = {}
+            tech_rows = page.locator("table#productDetails_techSpec_section_1 tr")
+            tech_count = await tech_rows.count()
+            for i in range(tech_count):
+                key = (await tech_rows.nth(i).locator("th").inner_text()).strip()
+                val = (await tech_rows.nth(i).locator("td").inner_text()).strip()
+                descricao_tecnica[key] = val
+        except Exception:
+            # fallback para outro layout de specs
+            try:
+                texto = await page.locator("div#productDetails_detailBullets_sections1").inner_text()
+                descricao_tecnica = {"técnica_unificada": texto.strip()}
+            except Exception:
+                descricao_tecnica = {}
+
+        # 9) Detalhes adicionais (tabela a-keyvalue prodDetTable)
         detalhes = {}
         try:
             linhas = page.locator("table.a-keyvalue.prodDetTable tbody tr")
             count = await linhas.count()
             for i in range(count):
-                chave = await linhas.nth(i).locator("th").inner_text()
-                valor = await linhas.nth(i).locator("td").inner_text()
-                detalhes[chave.strip()] = valor.strip()
-        except:
+                th = linhas.nth(i).locator("th")
+                td = linhas.nth(i).locator("td")
+                chave = (await th.inner_text()).strip()
+                valor = (await td.inner_text()).strip()
+                detalhes[chave] = valor
+        except Exception:
             detalhes = {}
 
+        # 10) Imagem principal
+        try:
+            imagem = await page.locator("img#landingImage").get_attribute("src")
+        except Exception:
+            imagem = ""
+
         await browser.close()
-        dados = None
+
+        # Monta e retorna o dicionário final
         if nome:
-            dados = {
+            return {
                 "nome": nome,
                 "preco": preco,
                 "nota": nota,
                 "descricao_curta": descricao_curta,
                 "descricao_detalhada": descricao_detalhada,
+                "descricao_tecnica": descricao_tecnica,
                 "detalhes_adicionais": detalhes,
                 "url": url,
-                "tipo_produto":termo,
+                "tipo_produto": termo,
+                "imagem": imagem
             }
-        if dados:
-            return dados
-        return dados
+        return None
 
 
 async def search_details_amazon():
     output = []
     for produto in banco_produtos_amazon:
-        results = await scrape_amazon_product(produto["url"])
+        results = await scrape_amazon_product(produto["url"], produto["tipo_produto"])
         output.append(results)
 
     filename = "amazon_perfeito.json"

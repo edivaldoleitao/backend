@@ -54,3 +54,11 @@ python manage.py makemigrations (demonstra modificações a serem aplicadas no b
 
 python manage.py migrate (aplica as modificações)
 ```
+
+- Terabyte:
+
+```bash
+python -m track_save.webscrapping_amazon.scraper.scraper
+```
+
+Depois acesse o endpoint em api/save_terabyte para salvar os dados no banco

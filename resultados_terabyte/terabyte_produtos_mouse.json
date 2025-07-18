@@ -1,0 +1,802 @@
+[
+  {
+    "sku": "33781",
+    "nome": "Mouse Gamer Digital Alliance Luna XS RM-177, RGB, DPI 7200, 8 Botões, Branco",
+    "preco": "R$ 37,90",
+    "url": "https://www.terabyteshop.com.br/produto/33781/mouse-gamer-digital-alliance-luna-xs-rm-177-rgb-dpi-7200-8-botoes-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "8567",
+    "nome": "Mouse Gamer Redragon Cobra V2 RGB, 12400 DPI, 8 Botões Programáveis, Black, M711 V2",
+    "preco": "R$ 114,90",
+    "url": "https://www.terabyteshop.com.br/produto/8567/mouse-gamer-redragon-cobra-v2-rgb-12400-dpi-8-botoes-programaveis-black-m711-v2",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "23657",
+    "nome": "Mouse Dr. Office Sem Fio, 1200 DPI, USB 2.0, Black, MDR-0103-B",
+    "preco": "R$ 19,90",
+    "url": "https://www.terabyteshop.com.br/produto/23657/mouse-dr-office-sem-fio-1200-dpi-usb-20-black-mdr-0103-b",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "33778",
+    "nome": "Mouse Gamer Digital Alliance Luna XS RM-177, RGB, DPI 7200, 8 Botões, Preto",
+    "preco": "R$ 37,90",
+    "url": "https://www.terabyteshop.com.br/produto/33778/mouse-gamer-digital-alliance-luna-xs-rm-177-rgb-dpi-7200-8-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27761",
+    "nome": "Mouse Gamer Redragon Cobra Pro RGB, Wireless, Sem Fio, 16000 DPI, 8 Botões Programáveis, Black, M711-PRO",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/27761/mouse-gamer-redragon-cobra-pro-rgb-wireless-16000-dpi-8-botoes-programaveis-black-m711-pro",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "12853",
+    "nome": "Mouse Gamer T-Dagger Bettle RGB, 8000 DPI, 10 Botões, Black, T-TGM305",
+    "preco": "R$ 79,90",
+    "url": "https://www.terabyteshop.com.br/produto/12853/mouse-gamer-t-dagger-bettle-rgb-8000-dpi-10-botoes-black-t-tgm305",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "25354",
+    "nome": "Mouse Gamer Redragon Reaping Elite, RGB, 6 Botões Programáveis, 32000 DPI, White/Pink, M987WP-P",
+    "preco": "R$ 169,90",
+    "url": "https://www.terabyteshop.com.br/produto/25354/mouse-gamer-redragon-reaping-elite-rgb-6-botoes-programaveis-32000-dpi-whitepink-m987wp-p",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27186",
+    "nome": "Mouse Gamer Akko One Piece Smart 1 Wireless, 1200 DPI, 3 Botões",
+    "preco": "R$ 119,90",
+    "url": "https://www.terabyteshop.com.br/produto/27186/mouse-gamer-akko-one-piece-smart-1-wireless-1200-dpi-3-botoes",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36900",
+    "nome": "Mouse Gamer Redragon Nix, RGB, Wireless, 10000 DPI, 9 Botões, Sensor PixArt PMW3325, Preto, M914-RGB",
+    "preco": "R$ 187,90",
+    "url": "https://www.terabyteshop.com.br/produto/36900/mouse-gamer-redragon-nix-rgb-wireless-10000-dpi-9-botoes-sensor-pixart-pmw3325-preto-m914-rgb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "25859",
+    "nome": "Mouse Gamer Redragon Centrophorus 2, 7200 DPI, 6 Botões Programáveis, RGB, Pink/White, M601PW-RGB",
+    "preco": "R$ 74,90",
+    "url": "https://www.terabyteshop.com.br/produto/25859/mouse-gamer-redragon-centrophorus-2-7200-dpi-6-botoes-programaveis-rgb-pinkwhite-m601pw-rgb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36268",
+    "nome": "Mouse Gamer PCYes Hydrus Black Vulcan, 12400 DPI, PWM 3327, 6 Botões, Preto, PMGHBV",
+    "preco": "R$ 99,90",
+    "url": "https://www.terabyteshop.com.br/produto/36268/mouse-gamer-pcyes-hydrus-black-vulcan-12400-dpi-pwm-3327-6-botoes-preto-pmghbv",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "33641",
+    "nome": "Mouse Gamer Redragon King Pro World of Warcraft Horda, Wireless, Bluetooth, 26000 DPI, PMW3395, 5 Botões",
+    "preco": "R$ 324,90",
+    "url": "https://www.terabyteshop.com.br/produto/33641/mouse-gamer-redragon-king-pro-world-of-warcraft-horda-wireless-bluetooth-26000-dpi-pmw3395-5-botoes-programaveis-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "31277",
+    "nome": "Mouse Gamer Logitech G502 X Plus, RGB, Sem Fio, 25600 DPI, 13 Botões, Switch Híbrido, Preto, 910-006161",
+    "preco": "R$ 959,90",
+    "url": "https://www.terabyteshop.com.br/produto/31277/mouse-gamer-logitech-g502-x-plus-rgb-sem-fio-25600-dpi-13-botoes-switch-hibrido-preto-910-006161",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36911",
+    "nome": "Mouse Gamer Redragon King Pro Eisa, Wireless/Bluetooth, 26000 DPI, 5 Botões, Sensor PAW3395, Branco, M916",
+    "preco": "R$ 289,90",
+    "url": "https://www.terabyteshop.com.br/produto/36911/mouse-gamer-redragon-king-pro-eisa-wirelessbluetooth-26000-dpi-5-botoes-sensor-paw3395-branco-m916ak-pro",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36336",
+    "nome": "Mouse Gamer Marvo Z FIT PRO G1W GY, Wireless/Bluetooth, RGB, 19000 DPI, 7 Botões Programáveis, Cinza",
+    "preco": "R$ 179,90",
+    "url": "https://www.terabyteshop.com.br/produto/36336/mouse-gamer-marvo-z-fit-pro-g1w-gy-wirelessbluetooth-rgb-19000-dpi-7-botoes-programaveis-cinza",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "13762",
+    "nome": "Mouse Logitech M185 Sem fio, 1000 DPI, Wireless, Azul, 910-003636",
+    "preco": "R$ 78,90",
+    "url": "https://www.terabyteshop.com.br/produto/13762/mouse-logitech-m185-sem-fio-1000-dpi-wireless-azul-910-003636",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "33303",
+    "nome": "Mouse Gamer Logitech G502 X Plus, RGB, Sem Fio, 25600 DPI, 13 Botões, Switch Híbrido, Branco, 910-006170",
+    "preco": "R$ 899,90",
+    "url": "https://www.terabyteshop.com.br/produto/33303/mouse-gamer-logitech-g502-x-plus-rgb-sem-fio-25600-dpi-13-botoes-switch-hibrido-branco-910-006170",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34907",
+    "nome": "Mouse Gamer HyperX Pulsefire Haste 2, RGB, 26000 DPI, 6 Botões, USB, Preto, 6N0A7AA",
+    "preco": "R$ 349,90",
+    "url": "https://www.terabyteshop.com.br/produto/34907/mouse-gamer-hyperx-pulsefire-haste-2-rgb-26000-dpi-6-botoes-usb-preto-6n0a7aa",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "29367",
+    "nome": "Mouse Gamer Marvo G950, RGB, 12000DPI, USB, 6 Botões, Preto, G950-BK",
+    "preco": "R$ 89,90",
+    "url": "https://www.terabyteshop.com.br/produto/29367/mouse-gamer-marvo-g950-rgb-12000dpi-usb-6-botoes-preto-g950-bk",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27378",
+    "nome": "Mouse Gamer Fortrek Crusader, RGB Rainbow, 7200 DPI, 5 Botões Programaveis, Black, 70526",
+    "preco": "R$ 69,90",
+    "url": "https://www.terabyteshop.com.br/produto/27378/mouse-gamer-fortrek-crusader-rgb-rainbow-7200-dpi-5-botoes-programaveis-black-70526",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34909",
+    "nome": "Mouse Gamer HyperX Pulsefire Haste 2, RGB, 26000 DPI, 6 Botões, USB, Branco, 6N0A8AA",
+    "preco": "R$ 359,90",
+    "url": "https://www.terabyteshop.com.br/produto/34909/mouse-gamer-hyperx-pulsefire-haste-2-rgb-26000-dpi-6-botoes-usb-branco-6n0a8aa",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36437",
+    "nome": "Mouse Gamer Razer Basilisk V3, RGB, USB, 26.000 DPI, 11 Botões, Preto, RZ0104000100",
+    "preco": "R$ 499,90",
+    "url": "https://www.terabyteshop.com.br/produto/36437/mouse-gamer-razer-basilisk-v3-rgb-usb-26000-dpi-11-botoes-preto-rz0104000100",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36063",
+    "nome": "Mouse Gamer Redragon K1NG M724, USB, 12400 DPI, Sensor Pixart 3327, 5 Botões, Preto",
+    "preco": "R$ 107,90",
+    "url": "https://www.terabyteshop.com.br/produto/36063/mouse-gamer-redragon-k1ng-m724-usb-12400-dpi-sensor-pixart-3327-5-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34339",
+    "nome": "Mouse Gamer PCYes Basaran Black Vulcan, RGB, 12400 DPI, PWM 3327, 6 Botões, Preto, PMGBRBV",
+    "preco": "R$ 99,90",
+    "url": "https://www.terabyteshop.com.br/produto/34339/mouse-gamer-pcyes-basaran-black-vulcan-rgb-12400-dpi-pwm-3327-6-botoes-preto-pmgbrbv",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "35937",
+    "nome": "Mouse Gamer T-Dagger Sergeant, RGB, 4800 DPI, 8 Botões, Sensor Pixart 3212, Preto, T-TGM202RGB V1",
+    "preco": "R$ 79,90",
+    "url": "https://www.terabyteshop.com.br/produto/35937/mouse-gamer-t-dagger-sergeant-rgb-4800-dpi-8-botoes-sensor-pixart-3212-preto-t-tgm202rgb-v1",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27185",
+    "nome": "Mouse Gamer Akko One Piece, Wireless, 1200 DPI, 3 Botões",
+    "preco": "R$ 119,90",
+    "url": "https://www.terabyteshop.com.br/produto/27185/mouse-gamer-akko-one-piece-wireless-1200-dpi-3-botoes",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "10886",
+    "nome": "Mouse Gamer Redragon Invader M719 RGB, 10.000DPI, 8 Botões, Black",
+    "preco": "R$ 119,90",
+    "url": "https://www.terabyteshop.com.br/produto/10886/mouse-redragon-gamer-invader-m719-8-botoes-10.000dpi-rgb-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34155",
+    "nome": "Mouse Dash Lite Gray PCYes, Wireless, 1600 DPI, 3 Botões, Cinza, PMDV2GY",
+    "preco": "R$ 54,90",
+    "url": "https://www.terabyteshop.com.br/produto/34155/mouse-dash-lite-gray-pcyes-wireless-1600-dpi-3-botoes-cinza-pmdv2gy",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36138",
+    "nome": "Mouse Gamer Marvo G964W BK Niro 60 Black, 2.4G/Bluetooth, 12000 DPI, 6 Botões, Preto",
+    "preco": "R$ 129,90",
+    "url": "https://www.terabyteshop.com.br/produto/36138/mouse-gamer-marvo-g964w-bk-niro-60-black-24gbluetooth-12000-dpi-6-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36276",
+    "nome": "Mouse Vinik Feather VF110, Wireless, 1200 DPI, 3 Botões, Branco",
+    "preco": "R$ 24,90",
+    "url": "https://www.terabyteshop.com.br/produto/36276/mouse-vinik-feather-vf110-wireless-1200-dpi-3-botoes-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36903",
+    "nome": "Mouse Gamer Redragon Axe Pro, RGB, Wireless/Bluetooth, 8000 DPI, 8 Botões, Sensor PAW3104, Preto, M814RGB",
+    "preco": "R$ 187,90",
+    "url": "https://www.terabyteshop.com.br/produto/36903/mouse-gamer-redragon-axe-pro-rgb-wirelessbluetooth-8000-dpi-8-botoes-sensor-paw3104-preto-m814rgb-pro",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36920",
+    "nome": "Mouse Gamer Redragon Trident Lite, RGB, 8000 DPI, 7 Botões, Sensor PAW3104, Preto, M613-RGB",
+    "preco": "R$ 109,90",
+    "url": "https://www.terabyteshop.com.br/produto/36920/mouse-gamer-redragon-trident-lite-rgb-8000-dpi-7-botoes-sensor-paw3104-preto-m613-rgb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36330",
+    "nome": "Mouse Gamer Marvo G867W, Wireless/Bluetooth, 8000DPI, 6 Botões, Preto, G867W",
+    "preco": "R$ 89,90",
+    "url": "https://www.terabyteshop.com.br/produto/36330/mouse-gamer-marvo-g867w-wirelessbluetooth-8000dpi-6-botoes-preto-g867w",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "35344",
+    "nome": "Mouse Logitech M220 Silent, Sem Fio, 1000 DPI, 3 Botões, Preto, 910-007482",
+    "preco": "R$ 79,90",
+    "url": "https://www.terabyteshop.com.br/produto/35344/mouse-logitech-m220-silent-sem-fio-1000-dpi-3-botoes-preto-910-007482",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "32731",
+    "nome": "Mouse Gamer Cougar AirBlander Tournament Black, USB, 20000 DPI, Sensor PAW 3399, 6 Botões, Preto, 3M487WO",
+    "preco": "R$ 289,90",
+    "url": "https://www.terabyteshop.com.br/produto/32731/mouse-gamer-cougar-airblander-tournament-black-usb-20000-dpi-sensor-paw-3399-6-botoes-preto-3m487wonb0001",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "30178",
+    "nome": "Mouse Gamer Genius Scorpion M300, RGB, 2400 DPI, 4 Botões, Preto",
+    "preco": "R$ 49,90",
+    "url": "https://www.terabyteshop.com.br/produto/30178/mouse-gamer-genius-scorpion-m300-rgb-2400-dpi-4-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34911",
+    "nome": "Mouse Gamer HyperX Pulsefire Haste 2, Wireless, RGB, 26000 DPI, 6 Botões, Branco, 6N0A9AA",
+    "preco": "R$ 479,90",
+    "url": "https://www.terabyteshop.com.br/produto/34911/mouse-gamer-hyperx-pulsefire-haste-2-wireless-rgb-26000-dpi-6-botoes-branco-6n0a9aa",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36279",
+    "nome": "Mouse Vinik Feather VF110, Wireless, 1200 DPI, 3 Botões, Preto",
+    "preco": "R$ 24,90",
+    "url": "https://www.terabyteshop.com.br/produto/36279/mouse-vinik-feather-vf110-wireless-1200-dpi-3-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "35515",
+    "nome": "Mouse Keytime TechGear, USB, 2400 DPI, Preto, KYT00004",
+    "preco": "R$ 11,90",
+    "url": "https://www.terabyteshop.com.br/produto/35515/mouse-keytime-techgear-usb-2400-dpi-preto-kyt0004",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34764",
+    "nome": "Mouse Redragon Office BM-2463, Wireless, 4000 DPI, USB, Preto",
+    "preco": "R$ 34,90",
+    "url": "https://www.terabyteshop.com.br/produto/34764/mouse-redragon-office-bm-2463-wireless-4000-dpi-usb-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "31256",
+    "nome": "Mouse Logitech M720 Triathlon, 1000 DPI, Wireless, Bluetooth, 8 Botões, Preto, 910-004790",
+    "preco": "R$ 269,90",
+    "url": "https://www.terabyteshop.com.br/produto/31256/mouse-logitech-m720-triathlon-1000-dpi-wireless-bluetooth-8-botoes-preto-910-004790",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "33782",
+    "nome": "Mouse Gamer Digital Alliance Carbon Z1 RM-X58, Wireless, Bluetooth, DPI 26000, Sensor PAW 3395, 5 Botões,",
+    "preco": "R$ 209,90",
+    "url": "https://www.terabyteshop.com.br/produto/33782/mouse-gamer-digital-alliance-carbon-z1-rm-x58-wireless-bluetooth-dpi-26000-sensor-paw-3395-5-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "29428",
+    "nome": "Mouse Gamer Redragon FYZU Pro Wireless, Bluetooth, 26000 DPI, 6 Botões Programáveis, Black, M995-PRO",
+    "preco": "R$ 219,90",
+    "url": "https://www.terabyteshop.com.br/produto/29428/mouse-gamer-redragon-fyzu-pro-wireless-bluetooth-26000-dpi-6-botoes-programaveis-black-m955-pro",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "31198",
+    "nome": "Mouse Gamer Logitech G502 X LightSpeed, Wireless, 25600 DPI, 13 Botões, Sensor HERO 25K, Switch Híbrido,",
+    "preco": "R$ 749,90",
+    "url": "https://www.terabyteshop.com.br/produto/31198/mouse-gamer-logitech-g502-x-lightspeed-wireless-25600-dpi-13-botoes-sensor-hero-25k-switch-hibrido-branco-910-00618",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "16334",
+    "nome": "Mouse Gamer Redragon Predator RGB, 8000 DPI, 9 Botões, Black, M612-RGB",
+    "preco": "R$ 89,90",
+    "url": "https://www.terabyteshop.com.br/produto/16334/mouse-gamer-redragon-predator-rgb-m612-rgb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27010",
+    "nome": "Mouse Logitech Pebble 2 M350s, Sem Fio, Bluetooth, Preto, 910-007049",
+    "preco": "R$ 109,90",
+    "url": "https://www.terabyteshop.com.br/produto/27010/mouse-logitech-pebble-2-m350s-sem-fio-bluetooth-preto-910-007049",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27005",
+    "nome": "Mouse Logitech Pebble 2 M350s, Sem Fio, Bluetooth, Branco, 910-007047",
+    "preco": "R$ 99,90",
+    "url": "https://www.terabyteshop.com.br/produto/27005/mouse-logitech-pebble-2-m350s-sem-fio-bluetooth-branco-910-007047",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "10459",
+    "nome": "Mouse Logitech M90, 1000 DPI, Black",
+    "preco": "R$ 35,90",
+    "url": "https://www.terabyteshop.com.br/produto/10459/mouse-logitech-m90-1000-dpi-usb-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "33843",
+    "nome": "Mouse Gamer Havit MS979WB, Wireless/Bluetooth, 26000 DPI, 6 Botões, PMW3395, Com Dock de Carregamento RGB",
+    "preco": "R$ 309,90",
+    "url": "https://www.terabyteshop.com.br/produto/33843/mouse-gamer-havit-ms979wb-wirelessbluetooth-26000-dpi-6-botoes-pmw3395-com-dock-de-carregamento-rgb-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27948",
+    "nome": "Mouse Fortrek OML-101, 800 DPI, 3 Botões, Preto",
+    "preco": "R$ 9,99",
+    "url": "https://www.terabyteshop.com.br/produto/27948/mouse-fortrek-oml-101-800-dpi-3-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36065",
+    "nome": "Mouse Gamer Redragon K1NG 8K M996, USB, 26000 DPI, Sensor PAW 3395, 5 Botões, Preto",
+    "preco": "R$ 239,90",
+    "url": "https://www.terabyteshop.com.br/produto/36065/mouse-gamer-redragon-k1ng-8k-m996-usb-26000-dpi-sensor-paw-3395-5-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "26622",
+    "nome": "Mouse Logitech M240 Sem fio, 1000 DPI, Bluetooth, Rosa, 910-007117",
+    "preco": "R$ 79,90",
+    "url": "https://www.terabyteshop.com.br/produto/26622/mouse-logitech-m240-sem-fio-1000-dpi-bluetooth-rosa-910-007117",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "26621",
+    "nome": "Mouse Logitech M240 Sem fio, 1000 DPI, Bluetooth, Branco, 910-007116",
+    "preco": "R$ 79,90",
+    "url": "https://www.terabyteshop.com.br/produto/26621/mouse-logitech-m240-sem-fio-1000-dpi-bluetooth-branco-910-007116",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "28136",
+    "nome": "Mouse Logitech Anywhere MX 3s, Sem Fio/Bluetooth, 4000 DPI, 6 Botões, Grafite, 910-006932",
+    "preco": "R$ 549,90",
+    "url": "https://www.terabyteshop.com.br/produto/28136/mouse-logitech-anywhere-mx-3s-sem-fiobluetooth-4000-dpi-6-botoes-grafite-910-006932",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "23885",
+    "nome": "Mouse Gamer Akko, Dragon Ball Super, Super Saiyan Blue, 12400 DPI, 5 Botões Pragramáveis, Akko AG325",
+    "preco": "R$ 129,90",
+    "url": "https://www.terabyteshop.com.br/produto/23885/mouse-gamer-akko-dragon-ball-super-edition-5000-dpi-6-botoes-pragramaveis-blue-akko-ag325",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "11736",
+    "nome": "Mouse Gamer T-Dagger Lieutenant RGB 8000 DPI, 7 Botões Programáveis, Black",
+    "preco": "R$ 64,90",
+    "url": "https://www.terabyteshop.com.br/produto/11736/mouse-gamer-t-dagger-lieutenant-rgb-8000-dpi-7-botoes-programaveis-black",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34157",
+    "nome": "Mouse PCYes Move Gray, Wireless, 1600 DPI, 3 Botões, Cinza, PMMWSCGY",
+    "preco": "R$ 29,90",
+    "url": "https://www.terabyteshop.com.br/produto/34157/mouse-pcyes-move-gray-wireless-1600-dpi-3-botoes-cinza-pmmwscgy",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36068",
+    "nome": "Mouse Gamer Redragon Hana M694 RGB, Wireless, Bluetooth, 7200 DPI, Sensor PAW 3104, 7 Botões, Preto",
+    "preco": "R$ 119,90",
+    "url": "https://www.terabyteshop.com.br/produto/36068/mouse-gamer-redragon-hana-m694-rgb-wireless-bluetooth-7200-dpi-sensor-paw-3104-7-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34908",
+    "nome": "Mouse Gamer HyperX Pulsefire Haste 2 Mini, Wireless, RGB, 26000 DPI, 6 Botões, Preto, 7D388AA",
+    "preco": "R$ 449,90",
+    "url": "https://www.terabyteshop.com.br/produto/34908/mouse-gamer-hyperx-pulsefire-haste-2-mini-wireless-rgb-26000-dpi-6-botoes-preto-7d388aa",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36332",
+    "nome": "Mouse Gamer Marvo M810W WH, Wireless, 1600 DPI, Branco",
+    "preco": "R$ 59,90",
+    "url": "https://www.terabyteshop.com.br/produto/36332/mouse-gamer-marvo-m810w-wh-wireless-1600-dpi-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34198",
+    "nome": "Mouse PCYes Mover White, Wireless, 1600 DPI, 3 Botões, Branco, PMMWSCW",
+    "preco": "R$ 29,90",
+    "url": "https://www.terabyteshop.com.br/produto/34198/mouse-pcyes-mover-white-wireless-1600-dpi-3-botoes-branco-pmmwscw",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34195",
+    "nome": "Mouse PCYes Mover Pink, Wireless, 1600 DPI, 3 Botões, Pink, PMMWSCPK",
+    "preco": "R$ 29,90",
+    "url": "https://www.terabyteshop.com.br/produto/34195/mouse-pcyes-mover-pink-wireless-1600-dpi-3-botoes-pink-pmmwscpk",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "31092",
+    "nome": "Mouse Gamer Havit MS963WB, Wireless/Bluetooth, 8000DPI, RGB, 6 Botões, PMW3325, Preto",
+    "preco": "R$ 187,90",
+    "url": "https://www.terabyteshop.com.br/produto/31092/mouse-gamer-havit-ms963wb-wirelessbluetooth-8000dpi-rgb-6-botoes-pmw3325-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34209",
+    "nome": "Mouse Vinik Feather VF120, Wireless, 1200 DPI, 3 Botões, Cinza",
+    "preco": "R$ 14,90",
+    "url": "https://www.terabyteshop.com.br/produto/34209/mouse-vinik-feather-vf120-wireless-1200-dpi-3-botoes-cinza",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27564",
+    "nome": "Mouse Gamer Force One One Lynx, RGB, Wireless/USB-C, Sensor Pixart 3370, 19000 DPI, 7 Botões, White, FR.M",
+    "preco": "R$ 279,90",
+    "url": "https://www.terabyteshop.com.br/produto/27564/mouse-gamer-force-one-one-lynx-rgb-wirelessusb-c-sensor-pixart-3370-19000-dpi-7-botoes-white-frmolx01",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "30225",
+    "nome": "Mouse Gamer Force One Phantom White, USB, Sensor Paw 3395, 26000 DPI, 5 Botões, FR.MO.PH.01",
+    "preco": "R$ 309,90",
+    "url": "https://www.terabyteshop.com.br/produto/30225/mouse-gamer-force-one-phantom-white-usb-sensor-paw-3395-26000-dpi-5-botoes-frmoph01",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "32455",
+    "nome": "Mouse Gamer Havit MS1034, RGB, 4800DPI, USB, 7 Botões, Branco",
+    "preco": "R$ 69,90",
+    "url": "https://www.terabyteshop.com.br/produto/32455/mouse-gamer-havit-ms1034-rgb-4800dpi-usb-7-botoes-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "29636",
+    "nome": "Mouse Gamer Redragon Swain, Wireless, 16.000 DPI, RGB, 9 Botões Programáveis, Preto, M915RGB-WL",
+    "preco": "R$ 219,90",
+    "url": "https://www.terabyteshop.com.br/produto/29636/mouse-gamer-redragon-swain-wireless-bluetooth-16000-dpi-rgb-9-botoes-programaveis-preto-m915rgb-wl",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "26882",
+    "nome": "Mouse Logitech M110 Silent, USB, Preto, 910-006756",
+    "preco": "R$ 54,90",
+    "url": "https://www.terabyteshop.com.br/produto/26882/mouse-logitech-m110-silent-usb-preto-910-006756",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36338",
+    "nome": "Mouse Gamer Marvo Z FIT PRO G1W WH, Wireless/Bluetooth, RGB, 19000 DPI, 7 Botões Programáveis, Branco",
+    "preco": "R$ 179,90",
+    "url": "https://www.terabyteshop.com.br/produto/36338/mouse-gamer-marvo-z-fit-pro-g1w-wh-wirelessbluetooth-rgb-19000-dpi-7-botoes-programaveis-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "35867",
+    "nome": "Mouse Acer M117, USB, 3 Botões, Preto",
+    "preco": "R$ 29,90",
+    "url": "https://www.terabyteshop.com.br/produto/35867/mouse-acer-m117-usb-3-botoes-preto",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "28183",
+    "nome": "Mouse Logitech Signature M650, Sem Fio/Bluetooth, 2000 DPI, 5 Botões, SilentTouch, Branco, 910-006252",
+    "preco": "R$ 184,99",
+    "url": "https://www.terabyteshop.com.br/produto/28183/mouse-logitech-signature-m650-sem-fiobluetooth-2000-dpi-5-botoes-silenttouch-branco-910-006252",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "35868",
+    "nome": "Mouse Gamer Acer, RGB, 7200 DPI, USB, 7 Botões, Preto, EMW130",
+    "preco": "R$ 89,90",
+    "url": "https://www.terabyteshop.com.br/produto/35868/mouse-gamer-acer-rgb-7200-dpi-usb-7-botoes-preto-emw130",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "16312",
+    "nome": "Mouse Gamer Redragon Storm Elite, 16000 DPI, 8 Botões Programáveis, Black, M988-RGB",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/16312/mouse-gamer-redragon-storm-elite-16000-dpi-8-botoes-programaveis-black-m988-rgb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "23896",
+    "nome": "Mouse Gamer Akko, Dragon Ball Super, Super Saiyan 2, 12400 DPI, 5 Botões Pragramáveis, Akko AG325 Super S",
+    "preco": "R$ 129,90",
+    "url": "https://www.terabyteshop.com.br/produto/23896/mouse-gamer-akko-dragon-ball-edition-5000-dpi-5-botoes-pragramaveis-akko-ag325-super-saiyajin",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34550",
+    "nome": "Mouse Logitech M190, Sem Fio, 1000 DPI, 3 Botões, Preto e Vemelho",
+    "preco": "R$ 69,90",
+    "url": "https://www.terabyteshop.com.br/produto/34550/mouse-logitech-m190-sem-fio-1000-dpi-3-botoes-preto-e-vemelho",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36270",
+    "nome": "Mouse Gamer PCYes Malus Black Vulcan, RGB, 12400 DPI, PWM 3327, 6 Botões, Preto, PMGMBV",
+    "preco": "R$ 89,90",
+    "url": "https://www.terabyteshop.com.br/produto/36270/mouse-gamer-pcyes-malus-black-vulcan-rgb-12400-dpi-pwm-3327-6-botoes-preto-pmgmbv",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "26879",
+    "nome": "Mouse Logitech M170, Sem Fio, Branco, 910-006864",
+    "preco": "R$ 64,90",
+    "url": "https://www.terabyteshop.com.br/produto/26879/mouse-logitech-m170-sem-fio-branco-910-006864",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "13760",
+    "nome": "Mouse Logitech M185 Sem fio, 1000 DPI, Wireless, Preto/Cinza, 910-002225",
+    "preco": "R$ 69,90",
+    "url": "https://www.terabyteshop.com.br/produto/13760/mouse-logitech-m185-sem-fio-1000-dpi-wireless-cinza-910-002225",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "29518",
+    "nome": "Mouse Gamer Redragon Reaping Plus, RGB, 6 Botões, 52000 DPI, Black, M987P-K V2",
+    "preco": "R$ 199,90",
+    "url": "https://www.terabyteshop.com.br/produto/29518/mouse-gamer-redragon-reaping-plus-rgb-6-botoes-52000-dpi-black-m987p-k-v2",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "25356",
+    "nome": "Mouse Gamer Redragon Storm, RGB, 12400 DPI, 8 Botões Programáveis, White/Pink, M808WP-RGB",
+    "preco": "R$ 129,90",
+    "url": "https://www.terabyteshop.com.br/produto/25356/mouse-gamer-redragon-storm-rgb-12400-dpi-8-botoes-programaveis-whitepink-m808wp-rgb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "35471",
+    "nome": "Mouse Gamer Logitech G Pro X Superlight, Sem Fio, 25.400 DPI, Sensor Hero, 5 Botões, Vermelho, 910-006783",
+    "preco": "R$ 849,90",
+    "url": "https://www.terabyteshop.com.br/produto/35471/mouse-gamer-logitech-g-pro-x-superlight-sem-fio-25400-dpi-sensor-hero-5-botoes-vermelho-910-006783",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36141",
+    "nome": "Mouse Gamer Marvo G964W WH Niro 60 White, 2.4G/Bluetooth, 12000 DPI, 6 Botões, Branco",
+    "preco": "R$ 129,90",
+    "url": "https://www.terabyteshop.com.br/produto/36141/mouse-gamer-marvo-g964w-wh-niro-60-white-24gbluetooth-12000-dpi-6-botoes-branco",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "15973",
+    "nome": "Mouse Logitech, M170 Wireless, Black, 910-004940",
+    "preco": "R$ 64,90",
+    "url": "https://www.terabyteshop.com.br/produto/15973/mouse-logitech-m170-wireless-black-910-004940",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "23659",
+    "nome": "Mouse Dr. Office Sem Fio, 1600 DPI, USB 2.0, Black, MDR-0104-B",
+    "preco": "R$ 24,90",
+    "url": "https://www.terabyteshop.com.br/produto/23659/mouse-dr-office-sem-fio-1600-dpi-usb-20-black-mdr-0104-b",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "34183",
+    "nome": "Mouse PCYes REC100, Wireless/Bluetooth, 1800 DPI, 6 Botões, Preto, PMRWMDSCB",
+    "preco": "R$ 79,90",
+    "url": "https://www.terabyteshop.com.br/produto/34183/mouse-pcyes-rec100-wirelessbluetooth-1800-dpi-6-botoes-preto-pmrwmdscb",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27246",
+    "nome": "Mouse Akko MonsGeek D1, Sem Fio, Pink, 1000 DPI, Com Pilha",
+    "preco": "R$ 39,90",
+    "url": "https://www.terabyteshop.com.br/produto/27246/mouse-akko-monsgeek-d1-sem-fio-pink-1000-dpi-com-pilha",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "30058",
+    "nome": "Mouse Gamer Redragon FYZU Pro, Wireless, Bluetooth, 26000 DPI, 6 Botões Programáveis, Rosa, M995P-PRO",
+    "preco": "R$ 249,90",
+    "url": "https://www.terabyteshop.com.br/produto/30058/mouse-gamer-redragon-fyzu-pro-wireless-bluetooth-26000-dpi-6-botoes-programaveis-rosa-m995p-pro",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "27567",
+    "nome": "Mouse Gamer Force One Supernova, RGB, USB, Sensor Sunplus 6662, 20000 DPI, 6 Botões, White, FR.MO.SP.01",
+    "preco": "R$ 109,90",
+    "url": "https://www.terabyteshop.com.br/produto/27567/mouse-gamer-force-one-one-supernova-rgb-usb-sensor-sunplus-6662-20000-dpi-6-botoes-white-frmosp01",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "29286",
+    "nome": "Mouse Gamer Redragon King Pro, Wireless, Bluetooth, 26000 DPI, 7 Botões, Preto, M916-PRO-1K",
+    "preco": "R$ 229,90",
+    "url": "https://www.terabyteshop.com.br/produto/29286/mouse-gamer-redragon-king-pro-wireless-26000-dpi-7-botoes-preto-m916-pro-1k",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "33265",
+    "nome": "Mouse Gamer Razer Basilisk V3, RGB, USB, 26.000 DPI, 11 Botões, Preto, RZ0104000100R3U",
+    "preco": "R$ 569,90",
+    "url": "https://www.terabyteshop.com.br/produto/33265/mouse-gamer-razer-basilisk-v3-rgb-usb-26000-dpi-11-botoes-preto-rz0104000100r3u",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "23887",
+    "nome": "Mouse Gamer Akko, Dragon Ball Z Freeza, 16000 DPI, 6 Botões Programáveis, White, Akko RG389",
+    "preco": "R$ 219,90",
+    "url": "https://www.terabyteshop.com.br/produto/23887/mouse-gamer-akko-dragon-ball-z-edition-16000-dpi-6-botoes-pragramaveis-white-akko-rg389",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "35932",
+    "nome": "Mouse Gamer T-Dagger Darkangel V2, RGB, 4000 DPI, 8 Botões, Preto, T-TGM209 V2",
+    "preco": "R$ 69,90",
+    "url": "https://www.terabyteshop.com.br/produto/35932/mouse-gamer-t-dagger-darkangel-v2-rgb-4000-dpi-8-botoes-preto-t-tgm209-v2",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "29430",
+    "nome": "Mouse Gamer Redragon Ranger Lite Dual Mode, Wireless, RGB, 8000 DPI, 9 Botões Programáveis, Black, M910-K",
+    "preco": "R$ 139,90",
+    "url": "https://www.terabyteshop.com.br/produto/29430/mouse-gamer-redragon-ranger-lite-dual-mode-wireless-rgb-8000-dpi-9-botoes-programaveis-black-m910-ks",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36266",
+    "nome": "Mouse Gamer PCYes Argus, RGB, 12400 DPI, PWM 3327, 8 Botões, Preto, PMGABV",
+    "preco": "R$ 89,90",
+    "url": "https://www.terabyteshop.com.br/produto/36266/mouse-gamer-pcyes-argus-rgb-12400-dpi-pwm-3327-8-botoes-preto-pmgabv",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "35935",
+    "nome": "Mouse Gamer T-Dagger Imperial V4, RGB, 10000 DPI, 10 Botões, Preto, T-TGM310RGB V4",
+    "preco": "R$ 69,90",
+    "url": "https://www.terabyteshop.com.br/produto/35935/mouse-gamer-t-dagger-imperial-v4-rgb-10000-dpi-10-botoes-preto-t-tgm310rgb-v4",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36267",
+    "nome": "Mouse Gamer PCYes Gaius, RGB, 12400 DPI, PWM 3327, 6 Botões, Preto, PMGGBV",
+    "preco": "R$ 99,90",
+    "url": "https://www.terabyteshop.com.br/produto/36267/mouse-gamer-pcyes-gaius-rgb-12400-dpi-pwm-3327-6-botoes-preto-pmggbv",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36685",
+    "nome": "Mouse Gamer Kalkan Thor, 10000 DPI, Wireless/Bluetooth, PAW 3311, 6 Botões, Preto, KLK00011",
+    "preco": "R$ 167,90",
+    "url": "https://www.terabyteshop.com.br/produto/36685/mouse-gamer-kalkan-thor-10000-dpi-wirelessbluetooth-paw-3311-6-botoes-preto-klk00011",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "35930",
+    "nome": "Mouse Gamer T-Dagger Camaro V2 RGB, 8000 DPI, 8 Botões, Preto, T-TGM306 V2",
+    "preco": "R$ 99,90",
+    "url": "https://www.terabyteshop.com.br/produto/35930/mouse-gamer-t-dagger-camaro-v2-rgb-8000-dpi-8-botoes-preto-t-tgm306-v2",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  },
+  {
+    "sku": "36432",
+    "nome": "Mouse PCYes Mover Green, Wireless, 1600 DPI, 3 Botões, Verde, PMMWSCG",
+    "preco": "R$ 49,90",
+    "url": "https://www.terabyteshop.com.br/produto/36432/mouse-pcyes-mover-green-wireless-1600-dpi-3-botoes-verde-pmmwscg",
+    "promocao": "Sim",
+    "tipo_produto": "perifericos/mouse"
+  }
+]
