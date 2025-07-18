@@ -440,15 +440,8 @@ def get_terabyte(request):
                         image_url=produto.get("imagem"), 
                         brand=produto.get("tecnica", {}).get("Marca"),
                         **spec_fields
-
-                            name=produto.get("nome"),
-                            category=category,
-                            description=produto.get("descricao"),
-                            image_url=produto.get("imagem"),
-                            brand=produto.get("tecnica", {}).get("Marca"),
-                            **spec_fields
-
                         )
+                       
                     else:
                         product = product_controller.create_product(
                             name=produto.get("nome"),
