@@ -22,6 +22,9 @@ BASE = Path(__file__).parent
 API_URL = "http://localhost:8001/api/products/create/"
 HTTP_STATUS_CREATED = 201
 
+results_dir = BASE / "results"
+results_dir.mkdir(exist_ok=True, parents=True)
+
 
 class KabumScraper(Scraper):
     def __init__(
@@ -162,10 +165,11 @@ class KabumScraper(Scraper):
 
         except PlaywrightTimeoutError as e:
             print(f"❌ Timeout do Playwright durante a execução: {e}")
-            page.screenshot(path="error_screenshot.png")
+            page.screenshot(path=results_dir / "playwright_timeout_error.png")
+            
         except requests.exceptions.RequestException as e:
             print(f"❌ Erro de requisição HTTP durante a execução: {e}")
-            page.screenshot(path="error_screenshot.png")
+            page.screenshot(path=results_dir / "request_error.png")
         finally:
             self.close_browser(browser)
             print("🤖 Coleta finalizada.\n")
@@ -451,8 +455,6 @@ class KabumScraper(Scraper):
         """
         Salva os resultados localmente e os envia para a API.
         """
-        results_dir = BASE / "results"
-        results_dir.mkdir(exist_ok=True, parents=True)
 
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
         base_name = f"{self.category.name.lower()}_{timestamp}"

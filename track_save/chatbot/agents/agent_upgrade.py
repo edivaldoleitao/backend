@@ -9,12 +9,15 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import ChatPromptTemplate
 from langchain.prompts.chat import HumanMessagePromptTemplate
 from langchain.prompts.chat import SystemMessagePromptTemplate
+from django.core.serializers.json import DjangoJSONEncoder
+from django.apps import apps
+
+
+
 
 env_path = Path(__file__).resolve().parent.parent / ".envs" / ".local" / ".api_key_gpt"
 load_dotenv(dotenv_path=env_path)
 API_SEARCH_URL = "http://localhost:8000/api/search/"
-
-from django.apps import apps
 
 
 def generate_schema_string(app_label: str):
@@ -33,33 +36,74 @@ def generate_schema_string(app_label: str):
 
     return "\n".join(schema_lines)
 
+def get_example_records():
+    """
+    Retorna um dicionário onde as chaves são nomes de model
+    e os valores são um único registro de exemplo (como dict).
+    Serve para mostrar exemplos de uso no prompt.
+    """
+    examples = {}
+    # Lista de nomes de models que você quer trazer exemplo
+    model_names = ["Alert", "Favorite", "Product", "ProductStore", "Price", "Storage", "Ram", "Cpu", "Gpu", "Motherboard", "PowerSupply", "Cooler"]
+    
+    for name in model_names:
+        try:
+            Model = apps.get_model("api", name)
+        except LookupError:
+            continue
+        inst = Model.objects.first()
+        if not inst:
+            continue
+        # serializa apenas os campos simples
+        data = {}
+        for field in inst._meta.get_fields():
+            if field.many_to_many or field.one_to_many:
+                continue
+            if hasattr(field, 'attname'):
+                val = getattr(inst, field.attname)
+                # transforme datas e Decimals em primitivos JSON
+                data[field.name] = val
+        examples[name] = data
 
+    # Retorna uma string JSON formatada
+    return json.dumps(examples, cls=DjangoJSONEncoder, indent=2)
+
+examples_json = get_example_records()
+print(f"Exemplos de registros:\n{examples_json}\n")
 schema_str = generate_schema_string("api")
+print(f"Schema gerado: {schema_str}")
 
-upgrade_prompt = ChatPromptTemplate.from_messages(
-    [
-        SystemMessagePromptTemplate.from_template(
-            "Você é um especialista em hardware de computadores. Seu papel é, dado o setup atual do usuário, sua descrição de problema "
-            "e o schema do banco de dados, gerar upgrades compatíveis e superiores no formato JSON.\n\n"
-            "Aqui está o schema do banco:\n{schema}\n\n"
-            "Agora, considere o setup atual do usuário e a descrição do problema:\n"
-            "{setup_json}\n{descricao_dor}\n\n"
-            "Gere um JSON no seguinte formato EXATO:\n\n"
-            "{{\n"
-            '  "searches": [\n'
-            "    {{\n"
-            '      "model_name": "NomeDoModel",\n'
-            '      "columns": ["coluna1", "coluna2"],\n'
-            '      "search_values": ["valor1", "valor2"]\n'
-            "    }}\n"
-            "  ]\n"
-            "}}\n\n"
-            "Inclua apenas colunas e valores relevantes. Retorne **apenas o JSON**, sem explicações adicionais."
-            "Nunca use operadores como '>=', apenas indique valores mínimos reais. Exemplo correto: 'vram': '8GB'. ",
-        ),
-        HumanMessagePromptTemplate.from_template("{setup_json}\n{descricao_dor}"),
-    ]
-)
+upgrade_prompt = ChatPromptTemplate.from_messages([
+    SystemMessagePromptTemplate.from_template(
+        "Você é um especialista em hardware de computadores. Seu papel é, dado o setup atual do usuário, sua descrição de problema "
+        "e o schema do banco de dados, gerar upgrades compatíveis e superiores no formato JSON.\n\n"
+
+        "**Use somente as tabelas e colunas já definidas abaixo**. Não adicione nenhuma tabela nova nem campo extra.\n\n"
+
+        "Aqui está o schema do banco:\n"
+        "{schema}\n\n"
+
+        "Aqui vão exemplos (1 por tabela) para referência:\n{examples}\n\nAgora, considere o setup..."
+
+        "Agora, considere o setup atual do usuário e a descrição do problema:\n"
+        "{setup_json}\n{descricao_dor}\n\n"
+
+        "Gere um JSON no seguinte formato EXATO:\n\n"
+        "{{\n"
+        '  "searches": [\n'
+        "    {{\n"
+        '      "model_name": "NomeDoModel",\n'
+        '      "columns": ["coluna1", "coluna2"],\n'
+        '      "search_values": ["valor1", "valor2"]\n'
+        "    }}\n"
+        "  ]\n"
+        "}}\n\n"
+
+        "Inclua apenas colunas e valores relevantes do schema. Retorne **apenas o JSON**, sem explicações adicionais. "
+        "Nunca use operadores como '>=', apenas indique valores mínimos reais. Exemplo correto: 'vram': '8GB'."
+    ),
+    HumanMessagePromptTemplate.from_template("{setup_json}\n{descricao_dor}")
+])
 
 
 recommendation_prompt = ChatPromptTemplate.from_messages(
@@ -88,13 +132,13 @@ def processar_upgrade(setup_json: dict, descricao_dor: str, dfs: dict):
     llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
     upgrade_chain = LLMChain(llm=llm, prompt=upgrade_prompt)
-    upgrade_specs_json = upgrade_chain.run(
-        {
-            "schema": schema_str,
-            "setup_json": json.dumps(setup_json),
-            "descricao_dor": descricao_dor,
-        }
-    )
+    upgrade_specs_json = upgrade_chain.run({
+        "schema": schema_str,
+        "examples": examples_json,
+        "setup_json": json.dumps(setup_json),
+        "descricao_dor": descricao_dor,
+    })
+
 
     match = re.search(r"({.*})", upgrade_specs_json, re.DOTALL)
     if match:
@@ -122,6 +166,7 @@ def processar_upgrade(setup_json: dict, descricao_dor: str, dfs: dict):
     )
 
     return {
+        "espc_gerado_pela_llm": upgrade_specs_json,
         "upgrade_specs": upgrade_specs,
         "produtos_encontrados": search_results,
         "resposta": recommendation,

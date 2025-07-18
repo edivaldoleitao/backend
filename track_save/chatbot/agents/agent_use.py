@@ -6,6 +6,7 @@ from pathlib import Path
 
 import requests
 from django.apps import apps
+from django.core.serializers.json import DjangoJSONEncoder
 from dotenv import load_dotenv
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -38,6 +39,42 @@ def generate_schema_string(app_label: str):
     return "\n".join(schema_lines)
 
 
+def get_example_records(app_label: str) -> str:
+    """
+    Retorna um JSON formatado com 1 registro de exemplo de cada model do app.
+    - É dinâmico: descobre os models automaticamente.
+    - É robusto: ignora de forma explícita campos relacionais complexos.
+    - Ignora models que não possuem registros.
+    """
+    examples = {}
+
+    # 1. Descoberta dinâmica de models (da Função 1)
+    app_config = apps.get_app_config(app_label)
+    for model in app_config.get_models():
+        inst = model.objects.first()
+        if not inst:
+            continue
+
+        data = {}
+        # 2. Iteração e filtragem de campos clara e robusta (da Função 2)
+        for field in inst._meta.get_fields():
+            # Ignora relações reversas (one-to-many) e many-to-many,
+            # pois elas não têm uma coluna simples no banco de dados.
+            if field.one_to_many or field.many_to_many:
+                continue
+
+            # getattr com field.attname pega o valor bruto (ex: o ID de uma ForeignKey)
+            # de forma segura para todos os campos que têm uma coluna.
+            if hasattr(field, "attname"):
+                val = getattr(inst, field.attname)
+                data[field.name] = val
+
+        examples[model.__name__] = data
+
+    return json.dumps(examples, cls=DjangoJSONEncoder, indent=2)
+
+
+examples_json = get_example_records("api")
 schema_str = generate_schema_string("api")
 
 spec_prompt = ChatPromptTemplate.from_messages(
@@ -45,11 +82,20 @@ spec_prompt = ChatPromptTemplate.from_messages(
         SystemMessagePromptTemplate.from_template(
             "Você é um especialista em tecnologia. Seu papel é transformar as informações do usuário "
             "em um JSON completo, pronto para ser enviado à API de busca de produtos.\n\n"
-            "Aqui está o schema do banco de dados com modelos e colunas disponíveis:\n"
+            "**Use apenas as tabelas e colunas listadas abaixo**. Não crie novas tabelas nem campos.\n"
+            "Antes de escolher qualquer coluna, **verifique** que ela consta no schema ou no exemplo de registro.\n\n"
+            "Aqui está o schema do banco de dados:\n"
             "{schema}\n\n"
+            "E aqui um exemplo de 1 registro de cada tabela (para referência de tipos e formatos):\n"
+            "{examples}\n\n"
+            "Observações:\n"
+            "Regras de marca vs. chipset:\n"
+            "- O campo **chipset** só deve receber valores **‘NVIDIA’** ou **‘AMD’**.\n"
+            "- Quaisquer outros nomes de fabricantes (Asus, Gigabyte, MSI, Galax, Zotac, PNY, Corsair etc.)\n"
+            "  são **brands**, não chipset — use-os apenas no campo **brand** quando disponível.\n\n"
             "Agora, considere a nova entrada do usuário abaixo:\n"
             "{input_json}\n\n"
-            "Gere um JSON no seguinte formato EXATO:\n\n"
+            "Gere **apenas** um JSON no seguinte formato EXATO (sem explicações):\n\n"
             "{{\n"
             '  "searches": [\n'
             "    {{\n"
@@ -59,8 +105,8 @@ spec_prompt = ChatPromptTemplate.from_messages(
             "    }}\n"
             "  ]\n"
             "}}\n\n"
-            "Inclua apenas colunas e valores relevantes para o contexto da necessidade do usuário.\n"
-            "Retorne **apenas o JSON**, sem explicações adicionais.",
+            "— Nunca use operadores como '>=', apenas valores literais.\n"
+            "— Exemplo de valor de coluna: 'vram': '8GB'.\n",
         ),
         HumanMessagePromptTemplate.from_template("{input_json}"),
     ],
@@ -83,7 +129,7 @@ recommendation_prompt = ChatPromptTemplate.from_messages(
 
 
 def processar_recomendacao(input_data: dict, schema_str: str):
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0)
 
     spec_chain = LLMChain(llm=llm, prompt=spec_prompt)
     user_input_json = json.dumps(input_data)
@@ -91,7 +137,8 @@ def processar_recomendacao(input_data: dict, schema_str: str):
     specs_json = spec_chain.run(
         {
             "schema": schema_str,
-            "input_json": user_input_json,
+            "examples": examples_json,
+            "input_json": json.dumps(input_data),
         },
     )
 
