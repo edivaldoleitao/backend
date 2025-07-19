@@ -29,9 +29,7 @@ def generate_schema_string(app_label: str):
     for model in models:
         schema_lines.append(f"Tabela {model.__name__}:")
         for field in model._meta.fields:
-            if (
-                field.name == "id"
-            ):  # Se quiser omitir o id, pode remover esta verificação
+            if field.name == "id":
                 continue
             schema_lines.append(f" - {field.name}: {field.get_internal_type()}")
         schema_lines.append("")  # Linha em branco entre models
@@ -40,15 +38,8 @@ def generate_schema_string(app_label: str):
 
 
 def get_example_records(app_label: str) -> str:
-    """
-    Retorna um JSON formatado com 1 registro de exemplo de cada model do app.
-    - É dinâmico: descobre os models automaticamente.
-    - É robusto: ignora de forma explícita campos relacionais complexos.
-    - Ignora models que não possuem registros.
-    """
     examples = {}
 
-    # 1. Descoberta dinâmica de models (da Função 1)
     app_config = apps.get_app_config(app_label)
     for model in app_config.get_models():
         inst = model.objects.first()
@@ -56,15 +47,9 @@ def get_example_records(app_label: str) -> str:
             continue
 
         data = {}
-        # 2. Iteração e filtragem de campos clara e robusta (da Função 2)
         for field in inst._meta.get_fields():
-            # Ignora relações reversas (one-to-many) e many-to-many,
-            # pois elas não têm uma coluna simples no banco de dados.
             if field.one_to_many or field.many_to_many:
                 continue
-
-            # getattr com field.attname pega o valor bruto (ex: o ID de uma ForeignKey)
-            # de forma segura para todos os campos que têm uma coluna.
             if hasattr(field, "attname"):
                 val = getattr(inst, field.attname)
                 data[field.name] = val
@@ -74,8 +59,13 @@ def get_example_records(app_label: str) -> str:
     return json.dumps(examples, cls=DjangoJSONEncoder, indent=2)
 
 
-examples_json = get_example_records("api")
-schema_str = generate_schema_string("api")
+def carregar_contexto_llm(app_label="api"):
+    examples_json = get_example_records(app_label)
+    schema_str = generate_schema_string(app_label)
+    print(f"Exemplos de registros:\n{examples_json}\n")
+    print(f"Schema gerado: {schema_str}")
+    return schema_str, examples_json
+
 
 spec_prompt = ChatPromptTemplate.from_messages(
     [
@@ -128,17 +118,18 @@ recommendation_prompt = ChatPromptTemplate.from_messages(
 )
 
 
-def processar_recomendacao(input_data: dict, schema_str: str):
-    llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0)
+def processar_recomendacao(input_data: dict):
+    schema_str, examples_json = carregar_contexto_llm()
 
-    spec_chain = LLMChain(llm=llm, prompt=spec_prompt)
+    llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0)
     user_input_json = json.dumps(input_data)
 
+    spec_chain = LLMChain(llm=llm, prompt=spec_prompt)
     specs_json = spec_chain.run(
         {
             "schema": schema_str,
             "examples": examples_json,
-            "input_json": json.dumps(input_data),
+            "input_json": user_input_json,
         },
     )
 

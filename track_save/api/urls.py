@@ -5,6 +5,7 @@ from .views import favorite_views
 from .views import price_views
 from .views import product_views
 from .views import user_views
+from .views import subscription_views
 
 urlpatterns = [
     path("users/create/", user_views.create_user, name="create_user"),
@@ -189,5 +190,45 @@ urlpatterns = [
         alert_views.delete_alert_view,
         name="delete_alert",
     ),
-    path("search/", product_views.search_view, name="generic_search"),
+    path(
+        "search/", 
+        product_views.search_view, 
+        name="generic_search"),
+    path(
+        "subscriptions/", 
+        subscription_views.list_subscriptions, 
+        name="list_subscriptions"
+        ),
+    path("subscriptions/users/", 
+        subscription_views.list_subscription_users, 
+        name="list_subscription_users"
+        ),
+    path("subscriptions/update/<int:subscription_id>/", 
+        subscription_views.update_subscription,
+        name="update_subscription"
+        ),
+    path("subscriptions/delete/<int:subscription_id>/", 
+        subscription_views.delete_subscription,
+        name="delete_subscription"
+        ),
+    path("subscriptions/user/delete/<int:subscription_id>/", 
+        subscription_views.delete_subscription_user,
+        name="delete_subscription"
+        ),
+    path("subscriptions/user/<int:user_id>/",
+         subscription_views.get_user_subscription,
+         name="get_user_subscription"
+         ),
+    path("subscriptions/user/create/",
+         subscription_views.create_user_subscription,
+         name="create_user_subscription"
+         ),
+    path("subscriptions/user/update/<int:user_id>/",
+         subscription_views.update_user_subscription,
+         name="update_user_subscription"
+         ),
+    path("subscriptions/user/cancel/<int:user_id>/",
+         subscription_views.cancel_user_subscription,
+         name="cancel_user_subscription"
+         ),
 ]
