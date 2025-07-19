@@ -29,7 +29,7 @@ def generate_schema_string(app_label: str):
     for model in models:
         schema_lines.append(f"Tabela {model.__name__}:")
         for field in model._meta.fields:
-            if field.name == "id":
+            if field.name == "id":  # Se quiser omitir o id, pode remover esta verificação
                 continue
             schema_lines.append(f" - {field.name}: {field.get_internal_type()}")
         schema_lines.append("")  # Linha em branco entre models
@@ -38,8 +38,15 @@ def generate_schema_string(app_label: str):
 
 
 def get_example_records(app_label: str) -> str:
+    """
+    Retorna um JSON formatado com 1 registro de exemplo de cada model do app.
+    - É dinâmico: descobre os models automaticamente.
+    - É robusto: ignora de forma explícita campos relacionais complexos.
+    - Ignora models que não possuem registros.
+    """
     examples = {}
 
+    # 1. Descoberta dinâmica de models (da Função 1)
     app_config = apps.get_app_config(app_label)
     for model in app_config.get_models():
         inst = model.objects.first()
@@ -47,9 +54,15 @@ def get_example_records(app_label: str) -> str:
             continue
 
         data = {}
+        # 2. Iteração e filtragem de campos clara e robusta (da Função 2)
         for field in inst._meta.get_fields():
+            # Ignora relações reversas (one-to-many) e many-to-many,
+            # pois elas não têm uma coluna simples no banco de dados.
             if field.one_to_many or field.many_to_many:
                 continue
+
+            # getattr com field.attname pega o valor bruto (ex: o ID de uma ForeignKey)
+            # de forma segura para todos os campos que têm uma coluna.
             if hasattr(field, "attname"):
                 val = getattr(inst, field.attname)
                 data[field.name] = val
