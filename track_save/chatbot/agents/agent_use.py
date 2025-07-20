@@ -129,7 +129,7 @@ recommendation_prompt = ChatPromptTemplate.from_messages(
 
 
 def processar_recomendacao(input_data: dict, schema_str: str):
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
+    llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0)
 
     spec_chain = LLMChain(llm=llm, prompt=spec_prompt)
     user_input_json = json.dumps(input_data)
