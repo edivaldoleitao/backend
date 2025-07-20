@@ -10,6 +10,8 @@ class SubscriptionType(models.TextChoices):
 
 class Subscription(models.Model):
     type = models.CharField(max_length=10, choices=SubscriptionType.choices)
+    title = models.CharField(max_length=10, default="")
+    description = models.CharField(max_length=255, default="")
     favorite_quantity = models.IntegerField(default=5)
     alert_quantity = models.IntegerField(default=1)
     interactions_quantity = models.IntegerField(default=5)
