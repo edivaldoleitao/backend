@@ -12,9 +12,7 @@ from langchain.prompts.chat import SystemMessagePromptTemplate
 from django.core.serializers.json import DjangoJSONEncoder
 from django.apps import apps
 
-
-
-
+# Carregando variáveis de ambiente
 env_path = Path(__file__).resolve().parent.parent / ".envs" / ".local" / ".api_key_gpt"
 load_dotenv(dotenv_path=env_path)
 API_SEARCH_URL = "http://localhost:8000/api/search/"
@@ -27,24 +25,24 @@ def generate_schema_string(app_label: str):
     for model in models:
         schema_lines.append(f"Tabela {model.__name__}:")
         for field in model._meta.fields:
-            if (
-                field.name == "id"
-            ):  # Se quiser omitir o id, pode remover esta verificação
+            if field.name == "id":
                 continue
             schema_lines.append(f" - {field.name}: {field.get_internal_type()}")
         schema_lines.append("")  # Linha em branco entre models
 
     return "\n".join(schema_lines)
 
+
 def get_example_records():
     """
     Retorna um dicionário onde as chaves são nomes de model
     e os valores são um único registro de exemplo (como dict).
-    Serve para mostrar exemplos de uso no prompt.
     """
     examples = {}
-    # Lista de nomes de models que você quer trazer exemplo
-    model_names = ["Alert", "Favorite", "Product", "ProductStore", "Price", "Storage", "Ram", "Cpu", "Gpu", "Motherboard", "PowerSupply", "Cooler"]
+    model_names = [
+        "Alert", "Favorite", "Product", "ProductStore", "Price", "Storage",
+        "Ram", "Cpu", "Gpu", "Motherboard", "PowerSupply", "Cooler"
+    ]
 
     for name in model_names:
         try:
@@ -54,40 +52,38 @@ def get_example_records():
         inst = Model.objects.first()
         if not inst:
             continue
-        # serializa apenas os campos simples
+
         data = {}
         for field in inst._meta.get_fields():
             if field.many_to_many or field.one_to_many:
                 continue
             if hasattr(field, 'attname'):
                 val = getattr(inst, field.attname)
-                # transforme datas e Decimals em primitivos JSON
                 data[field.name] = val
         examples[name] = data
 
-    # Retorna uma string JSON formatada
     return json.dumps(examples, cls=DjangoJSONEncoder, indent=2)
 
-examples_json = get_example_records()
-print(f"Exemplos de registros:\n{examples_json}\n")
-schema_str = generate_schema_string("api")
-print(f"Schema gerado: {schema_str}")
 
+def carregar_contexto_llm():
+    schema_str = generate_schema_string("api")
+    examples_json = get_example_records()
+    print(f"Exemplos de registros:\n{examples_json}\n")
+    print(f"Schema gerado: {schema_str}")
+    return schema_str, examples_json
+
+
+# PROMPTS
 upgrade_prompt = ChatPromptTemplate.from_messages([
     SystemMessagePromptTemplate.from_template(
         "Você é um especialista em hardware de computadores. Seu papel é, dado o setup atual do usuário, sua descrição de problema "
         "e o schema do banco de dados, gerar upgrades compatíveis e superiores no formato JSON.\n\n"
-
         "**Use somente as tabelas e colunas já definidas abaixo**. Não adicione nenhuma tabela nova nem campo extra.\n\n"
-
         "Aqui está o schema do banco:\n"
         "{schema}\n\n"
-
         "Aqui vão exemplos (1 por tabela) para referência:\n{examples}\n\nAgora, considere o setup..."
-
         "Agora, considere o setup atual do usuário e a descrição do problema:\n"
         "{setup_json}\n{descricao_dor}\n\n"
-
         "Gere um JSON no seguinte formato EXATO:\n\n"
         "{{\n"
         '  "searches": [\n'
@@ -98,37 +94,33 @@ upgrade_prompt = ChatPromptTemplate.from_messages([
         "    }}\n"
         "  ]\n"
         "}}\n\n"
-
         "Inclua apenas colunas e valores relevantes do schema. Retorne **apenas o JSON**, sem explicações adicionais. "
         "Nunca use operadores como '>=', apenas indique valores mínimos reais. Exemplo correto: 'vram': '8GB'."
     ),
     HumanMessagePromptTemplate.from_template("{setup_json}\n{descricao_dor}")
 ])
 
-
-recommendation_prompt = ChatPromptTemplate.from_messages(
-    [
-        SystemMessagePromptTemplate.from_template(
-            "Você é TrackBot, um consultor especializado em tecnologia. Seu papel é analisar as especificações atuais do usuário, "
-            "os upgrades sugeridos e os produtos disponíveis no banco de dados.\n\n"
-            "**Atenção:**\n"
-            "- Só pode recomendar produtos que estão listados no banco de dados abaixo.\n"
-            "- Se o banco estiver vazio, **não invente produtos.**\n"
-            "- Informe educadamente que não foram encontrados produtos disponíveis.\n\n"
-            "Especificações atuais do usuário:\n{setup_json}\n\n"
-            "Upgrades sugeridos:\n{upgrade_specs}\n\n"
-            "Produtos encontrados no banco:\n{products_json}\n\n"
-            "Gere uma resposta explicando por que os produtos resolvem o problema, citando nome, preço e link.\n"
-            "Se não houver produtos, informe que não há produtos disponíveis.",
-        ),
-        HumanMessagePromptTemplate.from_template(
-            "{setup_json}\n{upgrade_specs}\n{products_json}"
-        ),
-    ]
-)
+recommendation_prompt = ChatPromptTemplate.from_messages([
+    SystemMessagePromptTemplate.from_template(
+        "Você é TrackBot, um consultor especializado em tecnologia. Seu papel é analisar as especificações atuais do usuário, "
+        "os upgrades sugeridos e os produtos disponíveis no banco de dados.\n\n"
+        "**Atenção:**\n"
+        "- Só pode recomendar produtos que estão listados no banco de dados abaixo.\n"
+        "- Se o banco estiver vazio, **não invente produtos.**\n"
+        "- Informe educadamente que não foram encontrados produtos disponíveis.\n\n"
+        "Especificações atuais do usuário:\n{setup_json}\n\n"
+        "Upgrades sugeridos:\n{upgrade_specs}\n\n"
+        "Produtos encontrados no banco:\n{products_json}\n\n"
+        "Gere uma resposta explicando por que os produtos resolvem o problema, citando nome, preço e link.\n"
+        "Se não houver produtos, informe que não há produtos disponíveis."
+    ),
+    HumanMessagePromptTemplate.from_template("{setup_json}\n{upgrade_specs}\n{products_json}")
+])
 
 
+# FUNÇÃO PRINCIPAL
 def processar_upgrade(setup_json: dict, descricao_dor: str, dfs: dict):
+    schema_str, examples_json = carregar_contexto_llm()
     llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
     upgrade_chain = LLMChain(llm=llm, prompt=upgrade_prompt)
@@ -138,7 +130,6 @@ def processar_upgrade(setup_json: dict, descricao_dor: str, dfs: dict):
         "setup_json": json.dumps(setup_json),
         "descricao_dor": descricao_dor,
     })
-
 
     match = re.search(r"({.*})", upgrade_specs_json, re.DOTALL)
     if match:
@@ -157,13 +148,11 @@ def processar_upgrade(setup_json: dict, descricao_dor: str, dfs: dict):
         return {"error": f"Erro ao consultar API: {e!s} {upgrade_specs}"}
 
     rec_chain = LLMChain(llm=llm, prompt=recommendation_prompt)
-    recommendation = rec_chain.run(
-        {
-            "setup_json": json.dumps(setup_json, indent=2),
-            "upgrade_specs": json.dumps(upgrade_specs, indent=2),
-            "products_json": json.dumps(search_results, indent=2),
-        }
-    )
+    recommendation = rec_chain.run({
+        "setup_json": json.dumps(setup_json, indent=2),
+        "upgrade_specs": json.dumps(upgrade_specs, indent=2),
+        "products_json": json.dumps(search_results, indent=2),
+    })
 
     return {
         "espc_gerado_pela_llm": upgrade_specs_json,

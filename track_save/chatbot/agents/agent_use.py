@@ -29,9 +29,7 @@ def generate_schema_string(app_label: str):
     for model in models:
         schema_lines.append(f"Tabela {model.__name__}:")
         for field in model._meta.fields:
-            if (
-                field.name == "id"
-            ):  # Se quiser omitir o id, pode remover esta verificação
+            if field.name == "id":  # Se quiser omitir o id, pode remover esta verificação
                 continue
             schema_lines.append(f" - {field.name}: {field.get_internal_type()}")
         schema_lines.append("")  # Linha em branco entre models
@@ -74,8 +72,13 @@ def get_example_records(app_label: str) -> str:
     return json.dumps(examples, cls=DjangoJSONEncoder, indent=2)
 
 
-examples_json = get_example_records("api")
-schema_str = generate_schema_string("api")
+def carregar_contexto_llm(app_label="api"):
+    examples_json = get_example_records(app_label)
+    schema_str = generate_schema_string(app_label)
+    print(f"Exemplos de registros:\n{examples_json}\n")
+    print(f"Schema gerado: {schema_str}")
+    return schema_str, examples_json
+
 
 spec_prompt = ChatPromptTemplate.from_messages(
     [
@@ -128,17 +131,18 @@ recommendation_prompt = ChatPromptTemplate.from_messages(
 )
 
 
-def processar_recomendacao(input_data: dict, schema_str: str):
-    llm = ChatOpenAI(model_name="gpt-4-turbo", temperature=0)
+def processar_recomendacao(input_data: dict):
+    schema_str, examples_json = carregar_contexto_llm()
 
-    spec_chain = LLMChain(llm=llm, prompt=spec_prompt)
+    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
     user_input_json = json.dumps(input_data)
 
+    spec_chain = LLMChain(llm=llm, prompt=spec_prompt)
     specs_json = spec_chain.run(
         {
             "schema": schema_str,
             "examples": examples_json,
-            "input_json": json.dumps(input_data),
+            "input_json": user_input_json,
         },
     )
 
