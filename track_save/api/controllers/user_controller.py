@@ -9,6 +9,7 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.template.loader import render_to_string
+from api.controllers import subscription_controller
 
 
 def get_categories():
@@ -42,6 +43,9 @@ def create_user(name, email, password, categories):
         categories=categories,
     )
 
+    # inscreve o novo user em plano Basic
+    subscription_controller.create_subscription_user(user.id, "basic")
+
     context = {
         "name": name,
         "redirect_url": f"http://localhost:5173/ConfirmAccount/{user.id}/",
@@ -51,7 +55,6 @@ def create_user(name, email, password, categories):
 
     send_mail(
         subject="Confirmação de email - Track&Save",
-        # ALTERAR O LINK DPS PARA A DA TELA DE CONFIRMAÇÃO DE EMAIL
         message=f"Obrigado por se cadastrar no Track&Save! Para confirmar o email clique no link abaixo. Link: http://localhost:5173/ConfirmAccount/{user.id}/",
         recipient_list=[email],
         from_email=os.getenv("DEFAULT_FROM_EMAIL"),
