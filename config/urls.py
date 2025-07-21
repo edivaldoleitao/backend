@@ -7,7 +7,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
     path("webscraping/", include("webscraping.urls")),
-    path("chatbot/", include("chatbot.urls")),
+    path("api/chatbot/", include("chatbot.urls")),
 ]
 
 if settings.DEBUG:
