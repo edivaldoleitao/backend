@@ -5,11 +5,10 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from .agents.agent_upgrade import generate_schema_string
 from .agents.agent_upgrade import processar_upgrade
 from .agents.agent_use import generate_schema_string
 from .agents.agent_use import processar_recomendacao
-from .agents.agent_upgrade import generate_schema_string
-
 
 schema_str = generate_schema_string("api")
 
