@@ -16,7 +16,7 @@ from langchain.prompts.chat import SystemMessagePromptTemplate
 
 env_path = Path(__file__).resolve().parent.parent / ".envs" / ".local" / ".api_key_gpt"
 load_dotenv(dotenv_path=env_path)
-API_SEARCH_URL = "http://localhost:8000/api/search/"
+API_SEARCH_URL = "http://localhost:8001/api/search/"
 
 if not os.environ.get("OPENAI_API_KEY"):
     os.environ["OPENAI_API_KEY"] = getpass.getpass("Enter API key for OpenAI: ")
@@ -29,7 +29,9 @@ def generate_schema_string(app_label: str):
     for model in models:
         schema_lines.append(f"Tabela {model.__name__}:")
         for field in model._meta.fields:
-            if field.name == "id":  # Se quiser omitir o id, pode remover esta verificação
+            if (
+                field.name == "id"
+            ):  # Se quiser omitir o id, pode remover esta verificação
                 continue
             schema_lines.append(f" - {field.name}: {field.get_internal_type()}")
         schema_lines.append("")  # Linha em branco entre models

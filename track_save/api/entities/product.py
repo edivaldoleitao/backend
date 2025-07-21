@@ -104,9 +104,9 @@ class Motherboard(models.Model):
 
     class Meta:
         app_label = "api"
-        
+
         indexes = [
-        models.Index(fields=["socket", "form_type", "ram_type"]),
+            models.Index(fields=["socket", "form_type", "ram_type"]),
         ]
 
     def __str__(self):
@@ -124,9 +124,9 @@ class Gpu(models.Model):
 
     class Meta:
         app_label = "api"
-        
+
         indexes = [
-        models.Index(fields=["vram"]),
+            models.Index(fields=["vram"]),
         ]
 
     def __str__(self):
@@ -143,9 +143,9 @@ class Keyboard(models.Model):
 
     class Meta:
         app_label = "api"
-        
+
         indexes = [
-        models.Index(fields=["key_type"]),
+            models.Index(fields=["key_type"]),
         ]
 
     def __str__(self):
@@ -172,9 +172,9 @@ class Cpu(models.Model):
 
     class Meta:
         app_label = "api"
-        
+
         indexes = [
-        models.Index(fields=["core_number", "frequency"]),
+            models.Index(fields=["core_number", "frequency"]),
         ]
 
     def __str__(self):
@@ -190,7 +190,7 @@ class Mouse(models.Model):
 
     class Meta:
         app_label = "api"
-        
+
         indexes = [
             models.Index(fields=["connectivity"]),
         ]
@@ -216,7 +216,7 @@ class Monitor(models.Model):
 
     class Meta:
         app_label = "api"
-        
+
         indexes = [
             models.Index(fields=["panel_type", "inches", "refresh_rate"]),
         ]
@@ -234,7 +234,7 @@ class Ram(models.Model):
 
     class Meta:
         app_label = "api"
-        
+
         indexes = [
             models.Index(fields=["speed", "ddr"]),
         ]
@@ -265,7 +265,7 @@ class Computer(models.Model):
 
     class Meta:
         app_label = "api"
-        
+
         indexes = [
             models.Index(fields=["cpu", "gpu", "ram", "panel_type"]),
         ]
@@ -310,9 +310,9 @@ class Storage(models.Model):
         app_label = "api"
         verbose_name = "Storage"
         verbose_name_plural = "Storages"
-        
+
         indexes = [
-        models.Index(fields=["capacity_gb", "storage_type"]),
+            models.Index(fields=["capacity_gb", "storage_type"]),
         ]
 
     def __str__(self):
