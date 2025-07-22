@@ -29,7 +29,9 @@ def generate_schema_string(app_label: str):
     for model in models:
         schema_lines.append(f"Tabela {model.__name__}:")
         for field in model._meta.fields:
-            if field.name == "id":  # Se quiser omitir o id, pode remover esta verificação
+            if (
+                field.name == "id"
+            ):  # Se quiser omitir o id, pode remover esta verificação
                 continue
             schema_lines.append(f" - {field.name}: {field.get_internal_type()}")
         schema_lines.append("")  # Linha em branco entre models

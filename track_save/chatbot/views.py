@@ -21,7 +21,7 @@ def agent_use(request):
         except json.JSONDecodeError:
             return JsonResponse({"error": "JSON inválido"}, status=400)
         print("TESTEEEE")
-        resultado = processar_recomendacao(data, schema_str)
+        resultado = processar_recomendacao(data)
 
         return JsonResponse(resultado, safe=False)
 

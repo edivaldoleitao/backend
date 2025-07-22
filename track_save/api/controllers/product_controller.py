@@ -1547,7 +1547,9 @@ def generic_search(searches):
         try:
             Model = apps.get_model("api", model_name)
         except LookupError:
-            print(f"⚠️ Ignorando busca: model '{model_name}' não encontrado no app 'api'.")
+            print(
+                f"⚠️ Ignorando busca: model '{model_name}' não encontrado no app 'api'."
+            )
             continue
 
         model_fields = [f.name for f in Model._meta.get_fields()]
@@ -1555,7 +1557,6 @@ def generic_search(searches):
 
         query = Q()
         price_limit = None
-
         for column, value in zip(columns, search_values):
             if column == "price":
                 try:
@@ -1565,7 +1566,9 @@ def generic_search(searches):
                 continue
 
             if column not in model_fields:
-                print(f"⚠️ Ignorando filtro: coluna '{column}' não existe no model '{model_name}'")
+                print(
+                    f"⚠️ Ignorando filtro: coluna '{column}' não existe no model '{model_name}'"
+                )
                 continue
 
             field_type = field_types.get(column)
@@ -1595,7 +1598,9 @@ def generic_search(searches):
         products = list(products_qs)
 
         # Busca stores disponíveis
-        stores = ProductStore.objects.filter(product_id__in=[p.id for p in products], available=True)
+        stores = ProductStore.objects.filter(
+            product_id__in=[p.id for p in products], available=True
+        )
         store_data = stores.values("id", "product_id", "url_product", "store_id")
 
         store_ids = [s["store_id"] for s in store_data]
@@ -1603,8 +1608,7 @@ def generic_search(searches):
         store_name_map = {s["id"]: s["name"] for s in store_names}
 
         price_data = (
-            Price.objects
-            .filter(product_store_id__in=[s["id"] for s in store_data])
+            Price.objects.filter(product_store_id__in=[s["id"] for s in store_data])
             .order_by("product_store_id", "-collection_date")
             .values("product_store_id", "value")
         )
@@ -1628,16 +1632,20 @@ def generic_search(searches):
                 if price_limit is not None and price_val > price_limit:
                     continue
 
-                sub_results.append({
-                    "name": product.name,
-                    "description": product.description,
-                    "image_url": product.image_url,
-                    "category": product.category,
-                    "brand": product.brand,
-                    "price": f"{price_val:.2f}",
-                    "store_name": store_name_map.get(store["store_id"], "Unknown Store"),
-                    "url_product": store["url_product"],
-                })
+                sub_results.append(
+                    {
+                        "name": product.name,
+                        "description": product.description,
+                        "image_url": product.image_url,
+                        "category": product.category,
+                        "brand": product.brand,
+                        "price": f"{price_val:.2f}",
+                        "store_name": store_name_map.get(
+                            store["store_id"], "Unknown Store"
+                        ),
+                        "url_product": store["url_product"],
+                    }
+                )
 
         results.extend(sub_results[:3])
 
