@@ -15,7 +15,7 @@ from langchain.prompts.chat import SystemMessagePromptTemplate
 # Carregando variáveis de ambiente
 env_path = Path(__file__).resolve().parent.parent / ".envs" / ".local" / ".api_key_gpt"
 load_dotenv(dotenv_path=env_path)
-API_SEARCH_URL = "http://localhost:8001/api/search/"
+API_SEARCH_URL = "http://localhost:8000/api/search/"
 
 
 def generate_schema_string(app_label: str):

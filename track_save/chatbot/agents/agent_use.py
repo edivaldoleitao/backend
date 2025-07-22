@@ -16,7 +16,7 @@ from langchain.prompts.chat import SystemMessagePromptTemplate
 
 env_path = Path(__file__).resolve().parent.parent / ".envs" / ".local" / ".api_key_gpt"
 load_dotenv(dotenv_path=env_path)
-API_SEARCH_URL = "http://localhost:8001/api/search/"
+API_SEARCH_URL = "http://localhost:8000/api/search/"
 
 if not os.environ.get("OPENAI_API_KEY"):
     os.environ["OPENAI_API_KEY"] = getpass.getpass("Enter API key for OpenAI: ")
