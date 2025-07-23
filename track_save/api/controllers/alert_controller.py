@@ -5,6 +5,9 @@ from api.entities.product import ProductStore
 from api.entities.user import User
 from django.db.models import F
 from django.db.models import Sum
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+import os
 
 
 def create_alert(
@@ -26,6 +29,7 @@ def create_alert(
         expires_at=expires_at,
         created_at=created_at,
     )
+    send_alert_triggered_email(alert)
     return alert
 
 
@@ -188,6 +192,7 @@ def update_alert(alert_id: int, **data) -> Alert:
         a.created_at = data["created_at"]
 
     a.save()
+    send_alert_triggered_email(a)
     return a
 
 
@@ -195,3 +200,41 @@ def delete_alert(alert_id: int) -> str:
     a = Alert.objects.get(id=alert_id)
     a.delete()
     return "Alert removido com sucesso."
+
+
+def send_alert_triggered_email(alert):
+    user = alert.user
+    product = alert.product
+    # Busca ProductStore e preço atual
+    product_store = ProductStore.objects.filter(product=product).first()
+    url_product = product_store.url_product if product_store else None
+    latest_price = None
+    if product_store:
+        latest_price = (
+            Price.objects.filter(product_store=product_store)
+            .order_by("-collection_date")
+            .first()
+        )
+    current_price = str(latest_price.value) if latest_price else None
+
+    # Só envia email se o preço atual for menor ou igual ao desejado
+    if latest_price is None or float(latest_price.value) > float(alert.desired_price):
+        return  # Não envia email
+
+    context = {
+        "user_name": user.name or user.email,
+        "product_name": product.name,
+        "product_image": product.image_url,
+        "desired_price": str(alert.desired_price),
+        "current_price": current_price,
+        "url_product": url_product,
+        "expires_at": alert.expires_at.isoformat(),
+    }
+    html_message = render_to_string("emails/alert_triggered.html", context)
+    send_mail(
+        subject=f"Alerta disparado: {product.name} chegou no preço desejado!",
+        message=f"O produto {product.name} atingiu o preço desejado.",
+        recipient_list=[user.email],
+        from_email=os.getenv("DEFAULT_FROM_EMAIL"),
+        html_message=html_message,
+    )

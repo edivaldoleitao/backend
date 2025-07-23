@@ -1,6 +1,8 @@
 from api.entities.favorite import Favorite
 from api.entities.price import Price
 from api.entities.product import ProductStore
+from api.controllers.alert_controller import send_alert_triggered_email
+from api.entities.alert import Alert
 
 
 def create_price(product_store_id, value, collection_date):
@@ -19,6 +21,12 @@ def create_price(product_store_id, value, collection_date):
     price = Price.objects.create(
         product_store=ps, value=value, collection_date=collection_date
     )
+
+    # Envia email de alerta para todos os alertas ativos desse produto
+    alerts = Alert.objects.filter(product=ps.product, is_active=True)
+    for alert in alerts:
+        send_alert_triggered_email(alert)
+
     return price
 
 
