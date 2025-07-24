@@ -1,33 +1,9 @@
 [
   {
-    "sku": "34899",
-    "nome": "Monitor Gamer SuperFrame View, 30 Pol, UltraWide, WFHD, 200Hz, Fast IPS, 99% sRGB, FreeSync, HDMI/DP, Pre",
-    "preco": "R$ 1.199,90",
-    "url": "https://www.terabyteshop.com.br/produto/34899/monitor-gamer-superframe-view-30-pol-ultrawide-wfhd-200hz-fast-ips-99-srgb-freesync-hdmidp-preto-sfvfb-30200-wfhd-pro",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "33583",
-    "nome": "Monitor Gamer SuperFrame Precision Ultra V3, 23.6 Pol, Curvo, Full HD, VA, 1ms, 180Hz, RGB, FreeSync/G-Sy",
-    "preco": "R$ 699,90",
-    "url": "https://www.terabyteshop.com.br/produto/33583/monitor-gamer-superframe-precision-ultra-v3-236-pol-curvo-full-hd-va-1ms-180hz-rgb-freesyncg-sync-hdmidp-sfpcb-24180-fhd",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
     "sku": "30306",
     "nome": "Monitor Gamer SuperFrame UltraX, 27 Pol, Curvo, Full HD, Fast VA, 1ms, 300Hz, FreeSync/G-Sync, HDMI/DP, B",
-    "preco": "R$ 999,90",
+    "preco": "R$ 1.199,90",
     "url": "https://www.terabyteshop.com.br/produto/30306/monitor-gamer-superframe-ultrax-27-pol-curvo-full-hd-fast-va-1ms-300hz-freesyncg-sync-hdmidp-branco-sfucw-27300-fhd",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "29656",
-    "nome": "Monitor Gamer Ninja Tenseigan, 24 Pol, Full HD, IPS, 1ms, 165Hz, FreeSync, HDR, HDMI/DP, Black, MGN-006-2",
-    "preco": "R$ 699,90",
-    "url": "https://www.terabyteshop.com.br/produto/29656/monitor-gamer-ninja-tenseigan-24-pol-165hz-1ms-full-hd-hdmidp-preto-mgn-006-24b",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -40,10 +16,50 @@
     "tipo_produto": "monitores"
   },
   {
+    "sku": "30286",
+    "nome": "Monitor Gamer SuperFrame UltraX, 27 Pol, Curvo, Full HD, Fast VA, 1ms, 300Hz, FreeSync/G-Sync, HDMI/DP, P",
+    "preco": "R$ 1.199,90",
+    "url": "https://www.terabyteshop.com.br/produto/30286/monitor-gamer-superframe-ultrax-27-pol-curvo-full-hd-fast-va-1ms-300hz-freesyncg-sync-hdmidp-preto-sfucb-27300-fhd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
     "sku": "29657",
     "nome": "Monitor Gamer Ninja Tenseigan, 24 Pol, Full HD, IPS, 1ms, 165Hz, HDR, FreeSync, HDMI/DP, White, MGN-006-2",
     "preco": "R$ 699,90",
     "url": "https://www.terabyteshop.com.br/produto/29657/monitor-gamer-ninja-tenseigan-24-pol-full-hd-ips-1ms-165hz-hdr-freesync-hdmidp-white-mgn-006-24w",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "29656",
+    "nome": "Monitor Gamer Ninja Tenseigan, 24 Pol, Full HD, IPS, 1ms, 165Hz, FreeSync, HDR, HDMI/DP, Black, MGN-006-2",
+    "preco": "R$ 699,90",
+    "url": "https://www.terabyteshop.com.br/produto/29656/monitor-gamer-ninja-tenseigan-24-pol-165hz-1ms-full-hd-hdmidp-preto-mgn-006-24b",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "24460",
+    "nome": "Monitor Dr. Office, 19 Pol, LED, 60Hz, 5ms, HDMI/VGA, MDR-0503-19",
+    "preco": "R$ 249,90",
+    "url": "https://www.terabyteshop.com.br/produto/24460/monitor-dr-office-19-pol-led-60hz-5ms-hdmivga-mdr-0503-19",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "33583",
+    "nome": "Monitor Gamer SuperFrame Precision Ultra V3, 23.6 Pol, Curvo, Full HD, VA, 1ms, 180Hz, RGB, FreeSync/G-Sy",
+    "preco": "R$ 699,90",
+    "url": "https://www.terabyteshop.com.br/produto/33583/monitor-gamer-superframe-precision-ultra-v3-236-pol-curvo-full-hd-va-1ms-180hz-rgb-freesyncg-sync-hdmidp-sfpcb-24180-fhd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "28367",
+    "nome": "Monitor Gamer SuperFrame Vision, 23.8 Pol, Full HD, 107% sRGB, Fast IPS, 1ms, 180Hz, HDR, FreeSync, HDMI/",
+    "preco": "R$ 599,90",
+    "url": "https://www.terabyteshop.com.br/produto/28367/monitor-gamer-superframe-vision-238-pol-full-hd-ips-3ms-180hz-hdr-freesync-hdmidp-sfvfb-23180-fhd-pro",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -56,34 +72,10 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "30286",
-    "nome": "Monitor Gamer SuperFrame UltraX, 27 Pol, Curvo, Full HD, Fast VA, 1ms, 300Hz, FreeSync/G-Sync, HDMI/DP, P",
-    "preco": "R$ 999,90",
-    "url": "https://www.terabyteshop.com.br/produto/30286/monitor-gamer-superframe-ultrax-27-pol-curvo-full-hd-fast-va-1ms-300hz-freesyncg-sync-hdmidp-preto-sfucb-27300-fhd",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "32538",
-    "nome": "Monitor Gamer Ninja Sharingan, 23.6 Pol, Curvo, Full HD, 1ms, 180Hz, FreeSync, HDMI/DP, GNSCB-24180-FHD",
-    "preco": "R$ 579,90",
-    "url": "https://www.terabyteshop.com.br/produto/32538/monitor-gamer-ninja-sharingan-236-pol-curvo-full-hd-1ms-180hz-freesync-hdmidp-gnscb-24180-fhd",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
     "sku": "36047",
     "nome": "Monitor VX PRO, 22 Pol, LED, 60Hz, HDMI/VGA, VX220X",
     "preco": "R$ 379,90",
     "url": "https://www.terabyteshop.com.br/produto/36047/monitor-vx-pro-22-pol-led-60hz-hdmivga-vx220x",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "30252",
-    "nome": "Monitor Gamer Asus TUF Gaming VG249Q3A, 23,8 Pol, Full HD, 180Hz, Fast IPS, 1ms, 99% sRGB, FreeSync Premi",
-    "preco": "R$ 899,90",
-    "url": "https://www.terabyteshop.com.br/produto/30252/monitor-gamer-asus-tuf-gaming-vg249q3a-238-pol-full-hd-180hz-fast-ips-1ms-99-srgb-freesync-premium-hdmidp",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -98,8 +90,32 @@
   {
     "sku": "32475",
     "nome": "Monitor Gamer SuperFrame Precision, 27 Pol, Full HD, 165Hz, 1ms, IPS, 107% sRGB, FreeSync/G-Sync, HDMI/DP",
-    "preco": "R$ 849,90",
+    "preco": "R$ 859,90",
     "url": "https://www.terabyteshop.com.br/produto/32475/monitor-gamer-superframe-precision-27-pol-full-hd-165hz-1ms-ips-107-srgb-freesyncg-sync-hdmidp-sfpfb27165-fhd-pro",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "27013",
+    "nome": "Monitor Gamer SuperFrame Prisma X, 32 Pol, Curvo, VA, Quad HD, 1ms, 165Hz, 100% sRGB, Black, SFPCB-32165-",
+    "preco": "R$ 1.399,90",
+    "url": "https://www.terabyteshop.com.br/produto/27013/monitor-gamer-superframe-prisma-x-32-pol-curvo-va-quad-hd-1ms-165hz-black-sfpcb-32165-qhd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "30249",
+    "nome": "Monitor Gamer Asus TUF Gaming VG279Q3A, 27 Pol, Full HD, 180Hz, Fast IPS, 1ms, 99% sRGB, FreeSync Premium",
+    "preco": "R$ 999,90",
+    "url": "https://www.terabyteshop.com.br/produto/30249/monitor-gamer-asus-tuf-gaming-vg279q3a-27-pol-full-hd-180hz-fast-ips-1ms-99-srgb-freesync-premium-hdmidp",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "30252",
+    "nome": "Monitor Gamer Asus TUF Gaming VG249Q3A, 23,8 Pol, Full HD, 180Hz, Fast IPS, 1ms, 99% sRGB, FreeSync Premi",
+    "preco": "R$ 899,90",
+    "url": "https://www.terabyteshop.com.br/produto/30252/monitor-gamer-asus-tuf-gaming-vg249q3a-238-pol-full-hd-180hz-fast-ips-1ms-99-srgb-freesync-premium-hdmidp",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -120,49 +136,25 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "30249",
-    "nome": "Monitor Gamer Asus TUF Gaming VG279Q3A, 27 Pol, Full HD, 180Hz, Fast IPS, 1ms, 99% sRGB, FreeSync Premium",
-    "preco": "R$ 999,90",
-    "url": "https://www.terabyteshop.com.br/produto/30249/monitor-gamer-asus-tuf-gaming-vg279q3a-27-pol-full-hd-180hz-fast-ips-1ms-99-srgb-freesync-premium-hdmidp",
+    "sku": "30264",
+    "nome": "Monitor VX PRO, 15.4 Pol, Full HD, 60Hz, HDMI/VGA, VX154X",
+    "preco": "R$ 179,90",
+    "url": "https://www.terabyteshop.com.br/produto/30264/monitor-vx-pro-154-pol-hd-75hz-hdmivga-vx154x",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
   {
-    "sku": "31703",
-    "nome": "Monitor Gamer Duex, 24 Pol, Curvo, Full HD, 1ms, 165Hz, HDR, VA, FreeSync, HDMI/DP, DXMO24FC165S",
-    "preco": "R$ 699,90",
-    "url": "https://www.terabyteshop.com.br/produto/31703/monitor-gamer-duex-24-pol-curvo-full-hd-1ms-165hz-hdr-va-freesync-hdmidp-dxmo24fc165s",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "24460",
-    "nome": "Monitor Dr. Office, 19 Pol, LED, 60Hz, 5ms, HDMI/VGA, MDR-0503-19",
-    "preco": "R$ 249,90",
-    "url": "https://www.terabyteshop.com.br/produto/24460/monitor-dr-office-19-pol-led-60hz-5ms-hdmivga-mdr-0503-19",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "32974",
-    "nome": "Monitor Gamer SuperFrame View, 27 Pol, Full HD, IPS, 1ms, 100HZ, FreeSync, HDMI/VGA, SFVFB-27100-FHD-PRO",
-    "preco": "R$ 699,90",
-    "url": "https://www.terabyteshop.com.br/produto/32974/monitor-gamer-superframe-view-27-pol-full-hd-ips-1ms-100hz-freesync-hdmivga-sfvfb-27100-fhd-pro",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "27013",
-    "nome": "Monitor Gamer SuperFrame Prisma X, 32 Pol, Curvo, VA, Quad HD, 1ms, 165Hz, 100% sRGB, Black, SFPCB-32165-",
-    "preco": "R$ 1.399,90",
-    "url": "https://www.terabyteshop.com.br/produto/27013/monitor-gamer-superframe-prisma-x-32-pol-curvo-va-quad-hd-1ms-165hz-black-sfpcb-32165-qhd",
+    "sku": "31414",
+    "nome": "Monitor Gamer SuperFrame Epic Pro, 27 Pol, Fast IPS, Full HD, 0.5ms, 360Hz, 110% sRGB, FreeSync, Preto, S",
+    "preco": "R$ 1.599,90",
+    "url": "https://www.terabyteshop.com.br/produto/31414/monitor-gamer-superframe-epic-pro-27-pol-fast-ips-full-hd-05ms-360hz-freesync-preto-sfefb-27360-fhd-pro",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
   {
     "sku": "19813",
     "nome": "Monitor Gamer Samsung T35F, 24 Pol, Full HD, 75Hz, IPS, HDMI/VGA, LF24T350FHLMZD",
-    "preco": "R$ 599,90",
+    "preco": "R$ 539,90",
     "url": "https://www.terabyteshop.com.br/produto/19813/monitor-gamer-samsung-t35f-24-pol-full-hd-ips-hdmivga-lf24t350fhlmzd",
     "promocao": "Sim",
     "tipo_produto": "monitores"
@@ -176,10 +168,10 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "23528",
-    "nome": "Monitor Gamer LG, 21.5 Pol, Full HD, VA, 75Hz, 5ms, FreeSync, HDMI/VGA, 22MP410-B",
-    "preco": "R$ 569,90",
-    "url": "https://www.terabyteshop.com.br/produto/23528/monitor-gamer-lg-215-pol-full-hd-va-75hz-5ms-freesync-hdmivga-22mp410-b",
+    "sku": "37127",
+    "nome": "Monitor Gamer AOC, 27 Pol, Full HD, IPS, 1ms, 120Hz, Adaptive-Sync, HDMI/VGA, 27B30H3",
+    "preco": "R$ 799,90",
+    "url": "https://www.terabyteshop.com.br/produto/37127/monitor-gamer-aoc-27-pol-full-hd-ips-1ms-120hz-adaptive-sync-hdmivga-27b30h3",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -192,18 +184,10 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "36475",
-    "nome": "Monitor Gamer Duex Pro Ultra Flick, 27 Pol, Quad HD, IPS, 180Hz, 0.5ms, 112% sRGB, FreeSync/G-Sync, HDMI",
-    "preco": "R$ 1.099,90",
-    "url": "https://www.terabyteshop.com.br/produto/36475/monitor-gamer-duex-pro-ultra-flick-27-pol-quad-hd-ips-180hz-05ms-112-srgb-freesyncg-sync-hdmidp-dxmopro270",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
     "sku": "36307",
-    "nome": "Monitor Gamer Duex, 23.8 Pol, Full HD, IPS, 100Hz, 1ms, HDR, FreeSync, HDMI/VGA, Preto, DXMO238F100S",
-    "preco": "R$ 699,90",
-    "url": "https://www.terabyteshop.com.br/produto/36307/monitor-gamer-duex-238-pol-full-hd-ips-100hz-1ms-hdr-freesync-hdmivga-preto-dxmo238f100s",
+    "nome": "Monitor Gamer Duex, 24 Pol, Curvo, Full HD, VA, 165Hz, 1ms, HDR, 99% sRGB, FreeSync/G-Sync, HDMI/DP, Whit",
+    "preco": "R$ 549,90",
+    "url": "https://www.terabyteshop.com.br/produto/36307/monitor-gamer-duex-24-pol-curvo-full-hd-va-165hz-1ms-hdr-99-srgb-freesyncg-sync-hdmidp-white-dxmo24cf165ws",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -216,18 +200,18 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "36214",
-    "nome": "Monitor Gamer Samsung Essential S3, 27 Pol, Full HD, IPS, 100Hz, HDMI/VGA, LS27D300GALMZD",
-    "preco": "R$ 899,90",
-    "url": "https://www.terabyteshop.com.br/produto/36214/monitor-gamer-samsung-essential-s3-27-pol-full-hd-ips-100hz-hdmivga-ls27d300galmzd",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
     "sku": "36212",
     "nome": "Monitor Gamer Samsung Essential S4, 24 Pol, Full HD, IPS, 100Hz, HDMI/DP, LS24D400GALMZD",
     "preco": "R$ 899,90",
     "url": "https://www.terabyteshop.com.br/produto/36212/monitor-gamer-samsung-essential-s4-24-pol-full-hd-ips-100hz-hdmidp-ls24d400galmzd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "36214",
+    "nome": "Monitor Gamer Samsung Essential S3, 27 Pol, Full HD, IPS, 100Hz, HDMI/VGA, LS27D300GALMZD",
+    "preco": "R$ 899,90",
+    "url": "https://www.terabyteshop.com.br/produto/36214/monitor-gamer-samsung-essential-s3-27-pol-full-hd-ips-100hz-hdmivga-ls27d300galmzd",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -264,14 +248,6 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "35316",
-    "nome": "Monitor Gamer Brazil PC, 23.8 Pol, Curvo, Full HD, 75Hz, HDMI/VGA, Preto, 24WCF-75",
-    "preco": "R$ 499,90",
-    "url": "https://www.terabyteshop.com.br/produto/35316/monitor-gamer-brazil-pc-238-pol-curvo-full-hd-75hz-hdmivga-preto-24wcf-75",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
     "sku": "35116",
     "nome": "Monitor Gamer Redragon Opal II, 27 Pol, Quad HD, 180Hz, IPS, 1Ms, FreeSync/G-Sync, HDMI/DP, GM27X5QIPS",
     "preco": "R$ 1.399,90",
@@ -282,16 +258,16 @@
   {
     "sku": "35094",
     "nome": "Monitor Gamer Gigabyte GS25F2, 24.5 Pol, Full HD, IPS, 200Hz, 1Ms, FreeSync, HDR, HDMI/DP",
-    "preco": "R$ 849,90",
+    "preco": "R$ 799,90",
     "url": "https://www.terabyteshop.com.br/produto/35094/monitor-gamer-gigabyte-gs25f2-245-pol-full-hd-ips-200hz-1ms-freesync-hdr-hdmidp",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
   {
-    "sku": "35081",
-    "nome": "Monitor Gamer LG 29 Pol, UltraWide, IPS, Full HD, 100Hz, 1Ms, sRGB 99%, HDR10, FreeSync, USB-C/DP/HDMI, B",
-    "preco": "R$ 1.349,90",
-    "url": "https://www.terabyteshop.com.br/produto/35081/monitor-gamer-lg-29-pol-ultrawide-ips-full-hd-100hz-1ms-srgb-99-hdr10-freesync-usb-cdphdmi-29wq600b-wawzm",
+    "sku": "35077",
+    "nome": "Monitor Gamer LG 34 Pol, Curvo, UltraWide, VA, WQHD, 100Hz, 5Ms, sRGB 99%, HDR10, FreeSync, Preto, 34WR50",
+    "preco": "R$ 2.199,90",
+    "url": "https://www.terabyteshop.com.br/produto/35077/monitor-gamer-lg-34-pol-curvo-ultrawide-va-wqhd-100hz-5ms-srgb-99-hdr10-freesync-preto-34wr50qc-bawzm",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -304,10 +280,10 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "35077",
-    "nome": "Monitor Gamer LG 34 Pol, Curvo, UltraWide, VA, WQHD, 100Hz, 5Ms, sRGB 99%, HDR10, FreeSync, Preto, 34WR50",
-    "preco": "R$ 2.199,90",
-    "url": "https://www.terabyteshop.com.br/produto/35077/monitor-gamer-lg-34-pol-curvo-ultrawide-va-wqhd-100hz-5ms-srgb-99-hdr10-freesync-preto-34wr50qc-bawzm",
+    "sku": "35081",
+    "nome": "Monitor Gamer LG 29 Pol, UltraWide, IPS, Full HD, 100Hz, 1Ms, sRGB 99%, HDR10, FreeSync, USB-C/DP/HDMI, B",
+    "preco": "R$ 1.349,90",
+    "url": "https://www.terabyteshop.com.br/produto/35081/monitor-gamer-lg-29-pol-ultrawide-ips-full-hd-100hz-1ms-srgb-99-hdr10-freesync-usb-cdphdmi-29wq600b-wawzm",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -322,7 +298,7 @@
   {
     "sku": "35037",
     "nome": "Monitor Gamer AOC 21,5 Pol, FULL HD, VA, LED, 1ms, 100Hz, HDMI, 22B30HM2",
-    "preco": "R$ 549,90",
+    "preco": "R$ 499,90",
     "url": "https://www.terabyteshop.com.br/produto/35037/monitor-gamer-aoc-215-pol-full-hd-va-led-1ms-100hz-hdmi-22b30hm2",
     "promocao": "Sim",
     "tipo_produto": "monitores"
@@ -332,6 +308,14 @@
     "nome": "Monitor Gamer AOC 27 Pol, FULL HD, IPS, LED, 1ms, 100Hz, HDMI, 27B30H",
     "preco": "R$ 799,90",
     "url": "https://www.terabyteshop.com.br/produto/35032/monitor-gamer-aoc-27-pol-full-hd-ips-led-1ms-100hz-hdmi-27b30h",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "34751",
+    "nome": "Monitor Gamer SuperFrame View, 24 Pol, Full HD, Fast IPS, 1ms, 200Hz, 99% sRGB, FreeSync, HDMI/DP, SFVFB-",
+    "preco": "R$ 799,90",
+    "url": "https://www.terabyteshop.com.br/produto/34751/monitor-gamer-superframe-view-24-pol-full-hd-fast-ips-1ms-200hz-99-srgb-freesync-hdmidp-sfvfb-24200-fhd-pro",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -410,7 +394,7 @@
   {
     "sku": "33895",
     "nome": "Monitor Acer EK271 EBI, 27 Pol, Full HD, IPS, 100Hz, 1ms, 99% sRGB, FreeSync, HDMI/VGA, UM.HE1AA.E03",
-    "preco": "R$ 889,90",
+    "preco": "R$ 799,90",
     "url": "https://www.terabyteshop.com.br/produto/33895/monitor-acer-ek271-ebi-27-pol-full-hd-ips-100hz-1ms-99-srgb-freesync-hdmivga-umhe1aae03",
     "promocao": "Sim",
     "tipo_produto": "monitores"
@@ -458,7 +442,7 @@
   {
     "sku": "33451",
     "nome": "Monitor Gamer AOC 27 Pol, Full HD, 180Hz, 0.5ms, IPS, HDMI/DP, G-Sync, Preto, 27G4/P/57",
-    "preco": "R$ 1.269,90",
+    "preco": "R$ 999,90",
     "url": "https://www.terabyteshop.com.br/produto/33451/monitor-gamer-aoc-27-pol-full-hd-180hz-05ms-ips-hdmidp-g-sync-preto-27g4p57",
     "promocao": "Sim",
     "tipo_produto": "monitores"
@@ -480,6 +464,14 @@
     "tipo_produto": "monitores"
   },
   {
+    "sku": "32974",
+    "nome": "Monitor Gamer SuperFrame View, 27 Pol, Full HD, IPS, 1ms, 100HZ, FreeSync, HDMI/VGA, SFVFB-27100-FHD-PRO",
+    "preco": "R$ 699,90",
+    "url": "https://www.terabyteshop.com.br/produto/32974/monitor-gamer-superframe-view-27-pol-full-hd-ips-1ms-100hz-freesync-hdmivga-sfvfb-27100-fhd-pro",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
     "sku": "32828",
     "nome": "Monitor Gamer Duex, 24 Pol, Curvo, Full HD, VA, 165Hz, 1Ms, FreeSync/G-Sync, HDMI/DP, Preto, DXMO24CF165S",
     "preco": "R$ 699,90",
@@ -490,7 +482,7 @@
   {
     "sku": "32824",
     "nome": "Monitor Gamer Duex, 27 Pol, Full HD, IPS, 240Hz, 1ms, FreeSync/G-Sync, HDMI/DP, Preto, DXMO27F240S",
-    "preco": "R$ 999,90",
+    "preco": "R$ 899,90",
     "url": "https://www.terabyteshop.com.br/produto/32824/monitor-gamer-duex-27-pol-full-hd-ips-240hz-1ms-freesyncg-sync-hdmidp-preto-dxmo27f240s",
     "promocao": "Sim",
     "tipo_produto": "monitores"
@@ -552,18 +544,18 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "31457",
-    "nome": "Monitor Gamer Duex, 24 Pol, Full HD, IPS, 165Hz, 1ms, HDMI/DP, DX240ZG 165Hz",
+    "sku": "31703",
+    "nome": "Monitor Gamer Duex, 24 Pol, Curvo, Full HD, 1ms, 165Hz, HDR, VA, FreeSync, HDMI/DP, DXMO24FC165S",
     "preco": "R$ 699,90",
-    "url": "https://www.terabyteshop.com.br/produto/31457/monitor-gamer-duex-24-pol-full-hd-ips-165hz-1ms-hdmidp-dx240zg-165hz",
+    "url": "https://www.terabyteshop.com.br/produto/31703/monitor-gamer-duex-24-pol-curvo-full-hd-1ms-165hz-hdr-va-freesync-hdmidp-dxmo24fc165s",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
   {
-    "sku": "31414",
-    "nome": "Monitor Gamer SuperFrame Epic Pro, 27 Pol, Fast IPS, Full HD, 0.5ms, 360Hz, 110% sRGB, FreeSync, Preto, S",
-    "preco": "R$ 1.599,90",
-    "url": "https://www.terabyteshop.com.br/produto/31414/monitor-gamer-superframe-epic-pro-27-pol-fast-ips-full-hd-05ms-360hz-freesync-preto-sfefb-27360-fhd-pro",
+    "sku": "31457",
+    "nome": "Monitor Gamer Duex, 24 Pol, Full HD, IPS, 165Hz, 1ms, HDMI/DP, DX240ZG 165Hz",
+    "preco": "R$ 699,90",
+    "url": "https://www.terabyteshop.com.br/produto/31457/monitor-gamer-duex-24-pol-full-hd-ips-165hz-1ms-hdmidp-dx240zg-165hz",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -576,10 +568,10 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "31336",
-    "nome": "Monitor Portátil SuperFrame Preview Pro, 16.1 Pol, Full HD, 1ms, 144Hz, IPS, Mini-HDMI/USB-C, SFPFB-16144",
-    "preco": "R$ 999,90",
-    "url": "https://www.terabyteshop.com.br/produto/31336/monitor-portatil-superframe-preview-pro-161-pol-full-hd-144hz-ips-mini-hdmiusb-c-sfpfb-16144-fhd",
+    "sku": "31359",
+    "nome": "Monitor Gamer SuperFrame Prisma, 27 Pol, Flat, Fast IPS, Quad HD, 0.3ms, 180Hz, FreeSync, Branco, HDMI/DP",
+    "preco": "R$ 1.199,90",
+    "url": "https://www.terabyteshop.com.br/produto/31359/monitor-gamer-superframe-prisma-27-pol-flat-fast-ips-quad-hd-03ms-180hz-freesync-branco-hdmidp-sfpfw-27180-qhd-pro",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -592,6 +584,14 @@
     "tipo_produto": "monitores"
   },
   {
+    "sku": "31336",
+    "nome": "Monitor Portátil SuperFrame Preview Pro, 16.1 Pol, Full HD, 1ms, 144Hz, IPS, Mini-HDMI/USB-C, SFPFB-16144",
+    "preco": "R$ 999,90",
+    "url": "https://www.terabyteshop.com.br/produto/31336/monitor-portatil-superframe-preview-pro-161-pol-full-hd-144hz-ips-mini-hdmiusb-c-sfpfb-16144-fhd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
     "sku": "31225",
     "nome": "Monitor Brazil PC, 21,5 Pol, LED, FHD, 75Hz, HDMI/VGA, VESA, Com Inclinação, 22WR-75 FHD 75Hz",
     "preco": "R$ 349,90",
@@ -600,10 +600,10 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "31223",
-    "nome": "Monitor Brazil PC, 20 Pol, LED, 75Hz, HDMI/VGA, VESA, Com Inclinação, 20WR 75Hz",
-    "preco": "R$ 329,90",
-    "url": "https://www.terabyteshop.com.br/produto/31223/monitor-brazil-pc-20-pol-led-75hz-hdmivga-vesa-com-inclinacao-20wr-75hz",
+    "sku": "31035",
+    "nome": "Monitor Gamer LG UltraGear, 24 Pol, Full HD, 180Hz, IPS, 1ms, FreeSync/G-Sync, HDMI/DP, 24GS60F-B.AWZM",
+    "preco": "R$ 949,90",
+    "url": "https://www.terabyteshop.com.br/produto/31035/monitor-gamer-lg-ultragear-24-pol-full-hd-180hz-ips-1ms-freesyncg-sync-hdmidp-24gs60f-bawzm",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -612,14 +612,6 @@
     "nome": "Monitor Gamer LG 27 Pol, Full HD, 100Hz, IPS, 5ms, HDMI, Preto, 27MS500-B.AWZM",
     "preco": "R$ 749,90",
     "url": "https://www.terabyteshop.com.br/produto/31037/monitor-gamer-lg-27-pol-full-hd-100hz-ips-5ms-hdmi-preto-27ms500-bawzm",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "31035",
-    "nome": "Monitor Gamer LG UltraGear, 24 Pol, Full HD, 180Hz, IPS, 1ms, FreeSync/G-Sync, HDMI/DP, 24GS60F-B.AWZM",
-    "preco": "R$ 949,90",
-    "url": "https://www.terabyteshop.com.br/produto/31035/monitor-gamer-lg-ultragear-24-pol-full-hd-180hz-ips-1ms-freesyncg-sync-hdmidp-24gs60f-bawzm",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -640,14 +632,6 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "30492",
-    "nome": "Monitor Gamer Duex, 27 Pol, Quad HD, IPS, 240Hz, 1ms, HDR, Flicker Free, FreeSync, HDMI/DP, White, DX270Q",
-    "preco": "R$ 1.359,90",
-    "url": "https://www.terabyteshop.com.br/produto/30492/monitor-gamer-duex-27-pol-quad-hd-ips-240hz-1ms-hdr-flicker-free-freesync-hdmidp-white-dx270qgp240w",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
     "sku": "30487",
     "nome": "Monitor Gamer Duex, 27 Pol, Quad HD, IPS, 165Hz, 1ms, HDR, Flicker Free, FreeSync, HDMI/DP, White, DX270Q",
     "preco": "R$ 1.149,90",
@@ -658,16 +642,8 @@
   {
     "sku": "30266",
     "nome": "Monitor VX PRO, 23 Pol, LED, 60Hz, HDMI/VGA, VX230X",
-    "preco": "R$ 389,90",
+    "preco": "R$ 399,90",
     "url": "https://www.terabyteshop.com.br/produto/30266/monitor-vx-pro-23-pol-led-60hz-hdmivga-vx230x",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "30264",
-    "nome": "Monitor VX PRO, 15.4 Pol, Full HD, 60Hz, HDMI/VGA, VX154X",
-    "preco": "R$ 179,90",
-    "url": "https://www.terabyteshop.com.br/produto/30264/monitor-vx-pro-154-pol-hd-75hz-hdmivga-vx154x",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -688,6 +664,14 @@
     "tipo_produto": "monitores"
   },
   {
+    "sku": "29900",
+    "nome": "Monitor Gamer SuperFrame View, 23.8 Pol, Full HD, IPS, 1ms, 100Hz, 99% sRGB, FreeSync, HDMI/VGA, SFVFB-24",
+    "preco": "R$ 499,90",
+    "url": "https://www.terabyteshop.com.br/produto/29900/monitor-gamer-superframe-view-238-pol-full-hd-ips-1ms-100hz-99-srgb-freesync-hdmivga-sfvfb-24100-fhd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
     "sku": "29899",
     "nome": "Monitor Gamer SuperFrame Orbit, 27 Pol, Quad HD, 180Hz, Fast IPS, 1ms, 130% sRGB, FreeSync, HDR, HDMI/DP,",
     "preco": "R$ 1.299,90",
@@ -704,22 +688,6 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "29672",
-    "nome": "Monitor Gamer Ninja Tenseigan, 27 Pol, Quad HD, IPS, 1ms, 240Hz, FreeSync, HDR, HDMI/DP, Black, MGN-009-2",
-    "preco": "R$ 1.179,90",
-    "url": "https://www.terabyteshop.com.br/produto/29672/monitor-gamer-ninja-tenseigan-27-pol-quad-hd-ips-1ms-240hz-freesync-hdr-hdmidp-black-mgn-009-27b",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "29581",
-    "nome": "Monitor Gamer Gigabyte GS27FC, 27 Pol, Full HD, Curvo, 180Hz, 1Ms, FreeSync Premium, HDR, HDMI/DP, 20VM0-",
-    "preco": "R$ 999,90",
-    "url": "https://www.terabyteshop.com.br/produto/29581/monitor-gamer-gigabyte-gs27fc-27-pol-full-hd-curvo-180hz-1ms-freesync-premium-hdr-hdmidp-20vm0-gs27fcbm-1sar",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
     "sku": "29583",
     "nome": "Monitor Gamer Gigabyte GS27QC, 27 Pol, Quad HD, Curvo, 165Hz, 1Ms, FreeSync Premium, HDR, HDMI/DP, 20VM0-",
     "preco": "R$ 1.499,90",
@@ -728,10 +696,10 @@
     "tipo_produto": "monitores"
   },
   {
-    "sku": "29282",
-    "nome": "Monitor Gamer Acer Nitro KG240Y-M5biip, 23.8 Pol, Full HD, IPS, 180Hz, 1ms, 99% sRGB, HDR, FreeSync Premi",
-    "preco": "R$ 799,90",
-    "url": "https://www.terabyteshop.com.br/produto/29282/monitor-gamer-acer-nitro-238-pol-full-hd-ips-180hz-1ms-99-srgb-hdr-freesync-premium-hdmidp-umqx0aa502",
+    "sku": "28976",
+    "nome": "Monitor Gamer Samsung Odyssey OLED G8, 34 Pol, Curvo, WQHD, 0,1ms, 175Hz, HDR, FreeSync Premium, Mini DP/",
+    "preco": "R$ 7.749,90",
+    "url": "https://www.terabyteshop.com.br/produto/28976/monitor-gamer-samsung-odyssey-oled-g8-34-pol-curvo-wqhd-01ms-175hz-hdr-freesync-premium-mini-dp-micro-hdmi-ls34bg850slxzd",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -740,14 +708,6 @@
     "nome": "Monitor Gamer Redragon Mirror, 27 Pol, Full HD, 1ms, 165Hz, HDMI/DP, GM27X5IPS",
     "preco": "R$ 999,90",
     "url": "https://www.terabyteshop.com.br/produto/28497/monitor-gamer-redragon-mirror-27-pol-full-hd-1ms-165hz-hdmidp-gm27x5ips",
-    "promocao": "Sim",
-    "tipo_produto": "monitores"
-  },
-  {
-    "sku": "28367",
-    "nome": "Monitor Gamer SuperFrame Vision, 23.8 Pol, Full HD, 107% sRGB, Fast IPS, 1ms, 180Hz, HDR, FreeSync, HDMI/",
-    "preco": "R$ 719,90",
-    "url": "https://www.terabyteshop.com.br/produto/28367/monitor-gamer-superframe-vision-238-pol-full-hd-ips-3ms-180hz-hdr-freesync-hdmidp-sfvfb-23180-fhd-pro",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   },
@@ -762,7 +722,7 @@
   {
     "sku": "28336",
     "nome": "Monitor Gamer Duex, 27 Pol, Full HD, IPS, 165Hz, 1ms, HDR, FreeSync, HDMI/DP, DX270GHQ 165HZ",
-    "preco": "R$ 899,90",
+    "preco": "R$ 799,90",
     "url": "https://www.terabyteshop.com.br/produto/28336/monitor-gamer-duex-27-pol-full-hd-ips-165hz-1ms-hdr-freesync-hdmidp-dx270ghq-165hz",
     "promocao": "Sim",
     "tipo_produto": "monitores"
@@ -796,6 +756,46 @@
     "nome": "Monitor Gamer SuperFrame OverView, 27 Pol, Full HD, IPS, 1ms, 180Hz, FreeSync, HDR, HDMI/DP, SFOFB-27180-",
     "preco": "R$ 999,90",
     "url": "https://www.terabyteshop.com.br/produto/27639/monitor-gamer-superframe-overview-27-pol-full-hd-ips-1ms-180hz-freesync-hdr-hdmidp-sfofb-27180-fhd-pro",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "26992",
+    "nome": "Monitor Gamer 3Green, 19,5 Pol, LED, 75Hz, 2ms, HDMI/VGA, M195WHD",
+    "preco": "R$ 299,90",
+    "url": "https://www.terabyteshop.com.br/produto/26992/monitor-gamer-3green-195-pol-led-75hz-2ms-hdmivga-m195whd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "26993",
+    "nome": "Monitor Gamer 3Green, 21,5 Pol, Full HD, 75Hz, 2ms, HDMI/VGA, M215WHD",
+    "preco": "R$ 349,90",
+    "url": "https://www.terabyteshop.com.br/produto/26993/monitor-gamer-3green-215-pol-full-hd-75hz-2ms-hdmivga-m215whd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "26899",
+    "nome": "Monitor Gamer Samsung, 32 Pol, LED UHD, 4ms, 138% sRGB, FreeSync, HDMI/DP, LU32J590UQLMZD",
+    "preco": "R$ 1.499,90",
+    "url": "https://www.terabyteshop.com.br/produto/26899/monitor-gamer-samsung-32-pol-led-uhd-4ms-138-srgb-freesync-hdmidp-lu32j590uqlmzd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "26875",
+    "nome": "Monitor Gamer SuperFrame Precision, 27 Pol, Full HD, Fast IPS, 240Hz, 1ms, RGB, FreeSync, HDR, HDMI/DP, S",
+    "preco": "R$ 1.199,90",
+    "url": "https://www.terabyteshop.com.br/produto/26875/monitor-gamer-superframe-precision-27-pol-full-hd-fast-ips-240hz-1ms-freesync-hdr-hdmidp-sfpfb-27240-fhd",
+    "promocao": "Sim",
+    "tipo_produto": "monitores"
+  },
+  {
+    "sku": "26798",
+    "nome": "Monitor 3Green, 24 Pol, LED, Full HD, Widescreen, 75Hz, 2ms, HDMI/VGA, M240WHD",
+    "preco": "R$ 429,90",
+    "url": "https://www.terabyteshop.com.br/produto/26798/monitor-3green-24-pol-led-full-hd-widescreen-75hz-2ms-hdmivga-m240whd",
     "promocao": "Sim",
     "tipo_produto": "monitores"
   }

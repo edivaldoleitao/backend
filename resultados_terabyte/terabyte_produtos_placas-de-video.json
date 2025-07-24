@@ -1,0 +1,202 @@
+[
+  {
+    "sku": "25487",
+    "nome": "Placa De Vídeo Gigabyte AMD Radeon RX 7600 Gaming OC, 8GB, GDDR6, FSR, Ray Tracing, GV-R76GAMING OC-8GD",
+    "preco": "R$ 1.799,90",
+    "url": "https://www.terabyteshop.com.br/produto/25487/placa-de-video-gigabyte-amd-radeon-rx-7600-gaming-oc-8gb-gddr6-fsr-ray-tracing-gv-r76gaming-oc-8gd",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36107",
+    "nome": "Placa de Vídeo Biostar AMD Radeon RX 580 2048SP, 8GB, GDDR5, 256 Bit, VA5815RF82",
+    "preco": "R$ 699,90",
+    "url": "https://www.terabyteshop.com.br/produto/36107/placa-de-video-biostar-amd-radeon-rx-580-2048sp-8gb-gddr5-256-bit-va5815rf82",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "25101",
+    "nome": "Placa de Vídeo XFX AMD Radeon RX 7600 Speedster QICK 308, 8GB, GDDR6, FSR, Ray Tracing, RX-76PQICKBY",
+    "preco": "R$ 1.799,90",
+    "url": "https://www.terabyteshop.com.br/produto/25101/placa-de-video-xfx-amd-radeon-rx-7600-speedster-qick-308-8gb-gddr6-fsr-ray-tracing-rx-76pqickby",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "20438",
+    "nome": "Placa de Vídeo MSI NVIDIA GeForce RTX 3060 VENTUS 2X OC, LHR, 12GB GDDR6, DLSS, Ray Tracing, 912-V397-658",
+    "preco": "R$ 2.129,90",
+    "url": "https://www.terabyteshop.com.br/produto/20438/placa-de-video-msi-geforce-rtx-3060-ventus-2x-oc-lhr-12gb-gddr6-dlss-ray-tracing-912-v397-050",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "32738",
+    "nome": "Placa De Vídeo Asus Dual AMD Radeon RX 7600 EVO OC Edition, 8GB, GDDR6, FSR, Ray Tracing, DUAL-RX7600-O8G",
+    "preco": "R$ 1.799,90",
+    "url": "https://www.terabyteshop.com.br/produto/32738/placa-de-video-asus-dual-amd-radeon-rx-7600-evo-oc-edition-8gb-gddr6-fsr-ray-tracing-dual-rx7600-o8g-evo",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "19808",
+    "nome": "Placa de Vídeo ASRock Radeon RX 6600 Challenger D, 8GB, GDDR6, FSR, Ray Tracing, 90-GA2RZZ-00UANF",
+    "preco": "R$ 1.599,90",
+    "url": "https://www.terabyteshop.com.br/produto/19808/placa-de-video-asrock-radeon-rx-6600-challenger-d-8gb-gddr6-fsr-ray-tracing-90-ga2rzz-00uanf",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "29998",
+    "nome": "Placa de Vídeo ASRock Radeon RX 6600 Challenger White, 8GB, GDDR6, FSR, Ray Tracing, Branco, 90-GA4UZZ-00",
+    "preco": "R$ 1.599,90",
+    "url": "https://www.terabyteshop.com.br/produto/29998/placa-de-video-asrock-radeon-rx-6600-challenger-white-8gb-gddr6-fsr-ray-tracing-branco-90-ga4uzz-00uanf",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36108",
+    "nome": "Placa de Vídeo Biostar NVIDIA GeForce RTX 3060, 12GB, GDDR6, DLSS, Ray Tracing, VN3606RML9",
+    "preco": "R$ 1.899,90",
+    "url": "https://www.terabyteshop.com.br/produto/36108/placa-de-video-biostar-nvidia-geforce-rtx-3060-12gb-gddr6-dlss-ray-tracing-vn3606rml9",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "29014",
+    "nome": "Placa de Vídeo Palit NVIDIA GeForce RTX 4060 Infinity 2, 8GB, GDDR6, DLSS, Ray Tracing, NE64060019P1-1070",
+    "preco": "R$ 2.249,90",
+    "url": "https://www.terabyteshop.com.br/produto/29014/placa-de-video-palit-nvidia-geforce-rtx-4060-infinity-2-8gb-gddr6-dlss-ray-tracing-ne64060019p1-1070l",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "25051",
+    "nome": "Placa de Vídeo AsRock AMD Radeon RX 7600 Challenger OC, 8GB, GDDR6, FSR, Ray Tracing, 90-GA41ZZ-00UANF",
+    "preco": "R$ 1.789,90",
+    "url": "https://www.terabyteshop.com.br/produto/25051/placa-de-video-asrock-amd-radeon-rx-7600-challenger-oc-8gb-gddr6-fsr-ray-tracing-90-ga41zz-00uanf",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "31977",
+    "nome": "Placa de Vídeo VX PRO NVIDIA GeForce GTX 750 Ti, 4GB GDDR5, 128Bit, GTX750TI-4GD5",
+    "preco": "R$ 369,90",
+    "url": "https://www.terabyteshop.com.br/produto/31977/placa-de-video-vx-pro-nvidia-geforce-gtx-750-ti-4gb-gddr5-128bit-gtx750ti-4gd5",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36048",
+    "nome": "Placa de Vídeo Palit NVIDIA GeForce RTX 5060 Ti Infinity 3, 16GB, GDDR7, DLSS, Ray Tracing, NE7506T019T1-",
+    "preco": "R$ 3.749,90",
+    "url": "https://www.terabyteshop.com.br/produto/36048/placa-de-video-palit-nvidia-geforce-rtx-5060-ti-infinity-3-16gb-gddr7-dlss-ray-tracing-ne7506t019t1-gb2061s",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "34606",
+    "nome": "Placa De Vídeo Maxsun Intel Arc B580 Milestone, 12GB, GDDR6, Xe2, Ray Tracing",
+    "preco": "R$ 1.979,90",
+    "url": "https://www.terabyteshop.com.br/produto/34606/placa-de-video-maxsun-intel-arc-b580-milestone-12gb-gddr6-xe2-ray-tracing",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "34607",
+    "nome": "Placa De Vídeo Maxsun Intel Arc B580 iCraft, 12GB, GDDR6, Xe2, Ray Tracing, White",
+    "preco": "R$ 2.099,90",
+    "url": "https://www.terabyteshop.com.br/produto/34607/placa-de-video-maxsun-intel-arc-b580-icraft-12gb-gddr6-xe2-ray-tracing-white",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36875",
+    "nome": "Placa de Vídeo SuperFrame NVIDIA GeForce RTX 3060 Speeder, 12GB, GDDR6, DLSS, Ray Tracing, SF-GC-SPNV3060",
+    "preco": "R$ 1.899,90",
+    "url": "https://www.terabyteshop.com.br/produto/36875/placa-de-video-superframe-nvidia-geforce-rtx-3060-speeder-12gb-gddr6-dlss-ray-tracing-sf-gc-spnv306012d6",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "27959",
+    "nome": "Placa de Vídeo Asus Dual, NVIDIA GeForce RTX 3050 OC, 6GB, GDDR6, DLSS, Ray Tracing",
+    "preco": "R$ 1.299,90",
+    "url": "https://www.terabyteshop.com.br/produto/27959/placa-de-video-asus-dual-nvidia-geforce-rtx-3050-oc-6gb-gddr6-dlss-ray-tracing",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "34858",
+    "nome": "Placa de Vídeo ASRock AMD Radeon RX 9070 XT Steel Legend, 16GB, GDDR6, FSR, Ray Tracing, White, 90-GA5DZZ",
+    "preco": "R$ 5.149,90",
+    "url": "https://www.terabyteshop.com.br/produto/34858/placa-de-video-asrock-amd-radeon-rx-9070-xt-steel-legend-16gb-gddr6-fsr-ray-tracing-white-90-ga5dzz-00uanf",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "31209",
+    "nome": "Placa De Vídeo VXpro NVIDIA GeForce GT730LP, 4GB, DDR3, 128bit, GT730LP-4GD3-A",
+    "preco": "R$ 189,90",
+    "url": "https://www.terabyteshop.com.br/produto/31209/placa-de-video-vxpro-nvidia-geforce-gt730lp-4gb-ddr3-128bit-gt730lp-4gd3-a",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36469",
+    "nome": "Placa de Vídeo ASRock AMD Radeon RX 9060 XT Challenger OC, 8GB, GDDR6, FSR, Ray Tracing, 90-GA5TZZ-00UANF",
+    "preco": "R$ 2.279,90",
+    "url": "https://www.terabyteshop.com.br/produto/36469/placa-de-video-asrock-amd-radeon-rx-9060-xt-challenger-oc-8gb-gddr6-fsr-ray-tracing-90-ga5tzz-00uanf",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "37158",
+    "nome": "Placa de Vídeo Maxsun NVIDIA GeForce RTX 3060, 12GB, GDDR6, DLSS, Ray Tracing, MS-RTX3060 TR 12G T0",
+    "preco": "R$ 1.699,90",
+    "url": "https://www.terabyteshop.com.br/produto/37158/placa-de-video-maxsun-nvidia-geforce-rtx-3060-12gb-gddr6-dlss-ray-tracing-ms-rtx3060-tr-12g-t0",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36818",
+    "nome": "Placa de Vídeo MSI NVIDIA GeForce RTX 5060 Ti Ventus 3X OC, 16GB, GDDR7, DLSS, Ray Tracing, 912-V812-078",
+    "preco": "R$ 3.999,90",
+    "url": "https://www.terabyteshop.com.br/produto/36818/placa-de-video-msi-nvidia-geforce-rtx-5060-ti-ventus-3x-oc-16gb-gddr7-dlss-ray-tracing-912-v812-078",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36814",
+    "nome": "Placa de Vídeo MSI NVIDIA GeForce RTX 5060 Gaming OC, 8GB, GDDR7, DLSS, Ray Tracing, 912-V537-023",
+    "preco": "R$ 2.799,90",
+    "url": "https://www.terabyteshop.com.br/produto/36814/placa-de-video-msi-nvidia-geforce-rtx-5060-gaming-oc-8gb-gddr7-dlss-ray-tracing-912-v537-023",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36806",
+    "nome": "Placa de Vídeo MSI NVIDIA GeForce RTX 5060 Gaming Trio OC, 8GB, GDDR7, DLSS, Ray Tracing, 912-V537-021",
+    "preco": "R$ 2.879,90",
+    "url": "https://www.terabyteshop.com.br/produto/36806/placa-de-video-msi-nvidia-geforce-rtx-5060-gaming-trio-oc-8gb-gddr7-dlss-ray-tracing-912-v537-021",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36694",
+    "nome": "Placa de Vídeo Zotac Gaming NVIDIA GeForce RTX 4060 Twin Edge, 8GB, GDDR6, DLSS, Ray Tracing, ZT-D40600E-",
+    "preco": "R$ 2.449,90",
+    "url": "https://www.terabyteshop.com.br/produto/36694/placa-de-video-zotac-gaming-nvidia-geforce-rtx-4060-twin-edge-8gb-gddr6-dlss-ray-tracing-zt-d40600e-10m",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  },
+  {
+    "sku": "36612",
+    "nome": "Placa de Vídeo AsRock Radeon RX 6500 XT Phantom Gaming OC, 8GB, GDDR6, FSR, Ray Tracing, 90-GA3VZZ-00UANF",
+    "preco": "R$ 1.279,90",
+    "url": "https://www.terabyteshop.com.br/produto/36612/placa-de-video-asrock-radeon-rx-6500-xt-phantom-gaming-oc-8gb-gddr6-fsr-ray-tracing-90-ga3vzz-00uanf",
+    "promocao": "Sim",
+    "tipo_produto": "hardware/placas-de-video"
+  }
+]

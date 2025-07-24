@@ -190,6 +190,11 @@ urlpatterns = [
         alert_views.delete_alert_view,
         name="delete_alert",
     ),
+    path(
+        "save_terabyte/",
+        product_views.get_terabyte,
+        name="terabyte_save",
+    ),
     path("search/", product_views.search_view, name="generic_search"),
     path(
         "subscriptions/",

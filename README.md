@@ -71,3 +71,11 @@ Em sequência, execute o comando de teste para cada scraper:
 ```bash
 python -m track_save.webscraping.scrapers.kabum
 ```
+
+- Terabyte:
+
+```bash
+python -m track_save.webscrapping_amazon.scraper.scraper
+```
+
+Depois acesse o endpoint em api/save_terabyte para salvar os dados no banco
