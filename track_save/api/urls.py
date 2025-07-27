@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import alert_views
 from .views import favorite_views
+from .views import preference_views
 from .views import price_views
 from .views import product_views
 from .views import subscription_views
@@ -194,6 +195,16 @@ urlpatterns = [
         "save_terabyte/",
         product_views.get_terabyte,
         name="terabyte_save",
+    ),
+    path(
+        "create_preference/",
+        preference_views.create_preference_view,
+        name="create_preference",
+    ),
+    path(
+        "get_preference/",
+        preference_views.get_preference_view,
+        name="get_preference",
     ),
     path("search/", product_views.search_view, name="generic_search"),
     path(

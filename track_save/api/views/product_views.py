@@ -1,5 +1,11 @@
 import json
 
+from api.controllers import price_controller
+from api.controllers import product_controller
+from api.entities.product import Product
+from api.entities.product import ProductCategory
+from api.entities.product import ProductStore
+from api.entities.product import Store
 from django.http import HttpResponseBadRequest
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseNotFound
@@ -9,24 +15,6 @@ from django.views.decorators.http import require_GET
 from django.views.decorators.http import require_POST
 
 import track_save.webscrapping_amazon.scraper.armazena_tera_amazon as amazon_tera
-from api.controllers import product_controller
-from api.entities.product import Product
-from api.entities.product import ProductCategory
-from api.entities.product import ProductStore
-from api.entities.product import Store
-
-from api.controllers import price_controller
-from api.controllers import product_controller
-from api.entities.product import Product
-from api.entities.product import ProductStore
-from api.entities.product import Store
-from django.http import HttpResponseBadRequest
-from django.http import HttpResponseNotAllowed
-from django.http import HttpResponseNotFound
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET
-from django.views.decorators.http import require_POST
 
 
 @csrf_exempt
@@ -434,52 +422,52 @@ def get_terabyte(request):
                 if spec_fields:
                     if category == "mouse":
                         product = product_controller.create_product(
-                        name=produto.get("nome"),
-                        category=category,
-                        description=produto.get("descricao"),
-                        image_url=produto.get("imagem"), 
-                        brand=produto.get("tecnica", {}).get("Marca"),
-                        **spec_fields
+                            name=produto.get("nome"),
+                            category=category,
+                            description=produto.get("descricao"),
+                            image_url=produto.get("imagem"),
+                            rating=5,
+                            brand=produto.get("tecnica", {}).get("Marca"),
+                            **spec_fields,
                         )
-                       
                     else:
                         product = product_controller.create_product(
                             name=produto.get("nome"),
                             category=category,
                             description=produto.get("descricao"),
                             image_url=produto.get("imagem"),
+                            rating=5,
                             brand=produto.get("tecnica", {}).get("Marca"),
-                            **spec_fields
+                            **spec_fields,
                         )
-                    produtos_criados.append({
-                        "id": product.id,
-                        "name": product.name,
-                        "category": product.category,
-                        "description": product.description,
-                        "image_url": product.image_url,
-                        "brand": product.brand,
-                        "hash": product.hash,
-                    })
+                    produtos_criados.append(
+                        {
+                            "id": product.id,
+                            "name": product.name,
+                            "category": product.category,
+                            "description": product.description,
+                            "image_url": product.image_url,
+                            "brand": product.brand,
+                            "hash": product.hash,
+                        }
+                    )
                 spec_fields.clear()
                 category == ""
             except Exception as e:
-                erros.append({
-                    "index": i,
-                    "produto": produto.get("nome"),
-                    "brand": produto.get("tecnica", {}).get("Marca"),
-                    "erro": str(e)
-                })
+                erros.append(
+                    {
+                        "index": i,
+                        "produto": produto.get("nome"),
+                        "brand": produto.get("tecnica", {}).get("Marca"),
+                        "erro": str(e),
+                    }
+                )
                 spec_fields.clear()
                 category = ""
                 continue
 
         return JsonResponse(
-            {
-                "created": produtos_criados,
-                "errors": erros
-            },
-            safe=False,
-            status=201
+            {"created": produtos_criados, "errors": erros}, safe=False, status=201
         )
 
     except Exception as e:
