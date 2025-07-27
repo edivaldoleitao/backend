@@ -6,7 +6,11 @@ from django.db import models
 
 class Preference(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    marca = models.TextField(default="")
+    marca = ArrayField(
+        models.CharField(max_length=20),
+        blank=True,
+        default=list,
+    )
     orcamento = models.DecimalField(max_digits=8, decimal_places=2)
     build = models.ManyToManyField(Product, blank=True)
 

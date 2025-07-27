@@ -27,6 +27,24 @@ class Store(models.Model):
         return self.name
 
 
+class StoreReputation(models.Model):
+    name = models.CharField(max_length=255)
+    reputation_score = models.DecimalField(
+        max_digits=4, decimal_places=2, null=True, blank=True
+    )
+    reputation_source = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        app_label = "api"
+        unique_together = (
+            "name",
+            "reputation_source",
+        )  # garante unicidade por nome + font
+
+    def __str__(self):
+        return self.name
+
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     category = models.CharField(

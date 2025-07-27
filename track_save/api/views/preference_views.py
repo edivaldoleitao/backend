@@ -8,10 +8,12 @@ from django.http import HttpResponseNotFound
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_http_methods
 from django.views.decorators.http import require_POST
 
 from track_save.api.controllers.preference_controller import create_preference
 from track_save.api.controllers.preference_controller import get_preferences
+from track_save.api.controllers.preference_controller import update_preference_orcamento
 
 
 @csrf_exempt
@@ -75,5 +77,34 @@ def get_preference_view(request):
         return HttpResponseNotFound("Usuário ou Produto não encontrado")
     except ValueError as e:
         return HttpResponseBadRequest(str(e))
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+@csrf_exempt
+@require_http_methods(["PATCH"])
+def update_preference_orcamento_view(request, pk):
+    try:
+        data = json.loads(request.body)
+        novo_orcamento = data.get("orcamento")
+        if novo_orcamento is None:
+            return HttpResponseBadRequest("Informe um valor para 'orcamento'.")
+
+        preference = update_preference_orcamento(pk, novo_orcamento)
+        if not preference:
+            return HttpResponseNotFound("Preferência não encontrada")
+
+        return JsonResponse(
+            {
+                "id": preference.id,
+                "user": preference.user.email,
+                "marca": preference.marca,
+                "orcamento": preference.orcamento,
+                "build": [p.id for p in preference.build.all()],
+            },
+            status=200,
+        )
+    except json.JSONDecodeError:
+        return HttpResponseBadRequest("JSON inválido")
     except Exception as e:
         return HttpResponseBadRequest(f"Erro interno: {e}")

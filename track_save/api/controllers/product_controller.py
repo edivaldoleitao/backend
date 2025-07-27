@@ -17,6 +17,7 @@ from api.entities.product import ProductStore
 from api.entities.product import Ram
 from api.entities.product import Storage
 from api.entities.product import Store
+from api.entities.product import StoreReputation
 from api.enums.category_specs import CATEGORY_SPECS
 from django.apps import apps
 from django.contrib.postgres.search import SearchQuery
@@ -34,6 +35,86 @@ from django.db.models import Q
 from django.db.models import Subquery
 from django.db.models import Value
 from django.db.models import When
+
+
+def search_products_with_reputation(filters):  # noqa: C901
+    """
+    Busca produtos aplicando filtros de produto + reputação de loja.
+    """
+    qs = ProductStore.objects.select_related("product", "store")
+
+    # Filtros básicos
+    if filters.get("id"):
+        qs = qs.filter(product__id=filters["id"])
+    if filters.get("name"):
+        qs = qs.filter(product__name__icontains=filters["name"])
+    if filters.get("category"):
+        qs = qs.filter(product__category=filters["category"])
+    if filters.get("store"):
+        qs = qs.filter(store__name__iexact=filters["store"])
+    if filters.get("brand"):
+        qs = qs.filter(product__brand__icontains=filters["brand"])
+    if filters.get("price_min"):
+        qs = qs.filter(price__value__gte=filters["price_min"])
+    if filters.get("price_max"):
+        qs = qs.filter(price__value__lte=filters["price_max"])
+    if filters.get("rating_min"):
+        qs = qs.filter(rating__gte=filters["rating_min"])
+
+    # --- Filtro por reputação ---
+    if filters.get("reputation_min"):
+        reputations = StoreReputation.objects.filter(
+            reputation_score__gte=filters["reputation_min"]
+        )
+        if filters.get("reputation_source"):
+            reputations = reputations.filter(
+                reputation_source__iexact=filters["reputation_source"]
+            )
+        allowed_stores = reputations.values_list("name", flat=True)
+        qs = qs.filter(store__name__in=allowed_stores)
+
+    # Retorna lista de dicionários com reputação
+    results = []
+    for ps in qs:
+        store_rep = StoreReputation.objects.filter(name=ps.store.name).first()
+        results.append(
+            {
+                "id": ps.id,
+                "name": ps.product.name,
+                "category": ps.product.category,
+                "store": ps.store.name,
+                "rating": ps.rating,
+                "url": ps.url_product,
+                "store_reputation": {
+                    "score": store_rep.reputation_score if store_rep else None,
+                    "source": store_rep.reputation_source if store_rep else None,
+                },
+            }
+        )
+    return results
+
+
+def get_store_reputation():
+    return StoreReputation.objects.all()
+
+
+def create_or_update_reputation(name, reputation_score, reputation_source):
+    try:
+        # Busca a loja ignorando maiúsculas/minúsculas
+        store = Store.objects.filter(name__iexact=name).first()
+        if not store:
+            return None
+
+        # Atualiza ou cria a reputação da loja
+        store_reputation, created = StoreReputation.objects.update_or_create(
+            name=store.name,
+            reputation_score=reputation_score,
+            reputation_source=reputation_source,
+        )
+        return store_reputation  # noqa: TRY300
+    except Exception as e:
+        print(e)
+        return None
 
 
 def create_store(name):

@@ -197,14 +197,39 @@ urlpatterns = [
         name="terabyte_save",
     ),
     path(
-        "create_preference/",
+        "preferences/create_preference/",
         preference_views.create_preference_view,
         name="create_preference",
     ),
     path(
-        "get_preference/",
+        "preferences/get_preference/",
         preference_views.get_preference_view,
         name="get_preference",
+    ),
+    path(
+        "preferences/update_orcamento/<int:pk>/",
+        preference_views.update_preference_orcamento_view,
+        name="update_preference",
+    ),
+    path(
+        "store/create_store_reputation/",
+        product_views.create_or_update_store_reputation_view,
+        name="reputation_store",
+    ),
+    path(
+        "store/get_reputations/",
+        product_views.get_all_reputation_view,
+        name="reputation_store_get",
+    ),
+    path(
+        "products/filter_by_reputation/",
+        product_views.filter_products_by_reputation_view,
+        name="filter_products_by_reputation",
+    ),
+    path(
+        "products/search_with_reputation/",
+        product_views.search_products_with_reputation_view,
+        name="search_products_with_reputation",
     ),
     path("search/", product_views.search_view, name="generic_search"),
     path(

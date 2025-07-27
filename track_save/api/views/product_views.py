@@ -2,19 +2,169 @@ import json
 
 from api.controllers import price_controller
 from api.controllers import product_controller
+from api.controllers.product_controller import create_or_update_reputation
+from api.controllers.product_controller import get_store_reputation
 from api.entities.product import Product
 from api.entities.product import ProductCategory
 from api.entities.product import ProductStore
 from api.entities.product import Store
+from api.entities.product import StoreReputation
+from django.db.models import Q
 from django.http import HttpResponseBadRequest
 from django.http import HttpResponseNotAllowed
 from django.http import HttpResponseNotFound
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_http_methods
 from django.views.decorators.http import require_POST
 
 import track_save.webscrapping_amazon.scraper.armazena_tera_amazon as amazon_tera
+
+
+@require_GET
+def search_products_with_reputation_view(request):
+    filters = {
+        key: request.GET.get(key)
+        for key in [
+            "id",
+            "name",
+            "category",
+            "store",
+            "brand",
+            "price_min",
+            "price_max",
+            "rating_min",
+            "reputation_min",
+            "reputation_source",
+        ]
+        if request.GET.get(key) is not None
+    }
+
+    for key in ["price_min", "price_max", "rating_min", "reputation_min"]:
+        if key in filters:
+            try:
+                filters[key] = float(filters[key])
+            except ValueError:
+                return HttpResponseBadRequest(f"'{key}' deve ser numérico.")
+
+    try:
+        result = product_controller.search_products_with_reputation(filters)
+        return JsonResponse(result, safe=False, status=200)
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e!s}")
+
+
+@require_GET
+def filter_products_by_reputation_view(request):
+    try:
+        min_score = request.GET.get("min_score")
+        source = request.GET.get("source")
+
+        # Validação dos parâmetros
+        try:
+            min_score = float(min_score) if min_score is not None else 0
+        except ValueError:
+            return HttpResponseBadRequest("O parâmetro 'min_score' deve ser numérico.")
+
+        # Busca lojas que atendem aos critérios de reputação
+        reputations = StoreReputation.objects.filter(reputation_score__gte=min_score)
+        if source:
+            reputations = reputations.filter(reputation_source__iexact=source)
+
+        if not reputations.exists():
+            return JsonResponse([], safe=False, status=200)
+
+        store_names = reputations.values_list("name", flat=True)
+
+        # Busca ProductStores apenas dessas lojas
+        product_stores = ProductStore.objects.select_related("product", "store").filter(
+            store__name__in=store_names
+        )
+
+        # Monta a resposta
+        result = []
+        for ps in product_stores:
+            rep = reputations.filter(name__iexact=ps.store.name).first()
+            if not rep or rep.reputation_score < min_score:
+                continue  # garante filtro no laço também
+            result.append(
+                {
+                    "product_id": ps.product.id,
+                    "product_name": ps.product.name,
+                    "store_name": ps.store.name,
+                    "store_reputation": float(rep.reputation_score),
+                    "reputation_source": rep.reputation_source,
+                    "url_product": ps.url_product,
+                    "rating": ps.rating,
+                }
+            )
+
+        return JsonResponse(result, safe=False, status=200)
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {str(e)}")
+
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def get_all_reputation_view(request):
+    try:
+        reputations = get_store_reputation()
+        data = [
+            {
+                "name": rep.name,
+                "reputation_score": float(rep.reputation_score),
+                "reputation_source": rep.reputation_source,
+            }
+            for rep in reputations
+        ]
+
+        return JsonResponse(data, safe=False, status=200)
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def create_or_update_store_reputation_view(request):
+    try:
+        data = json.loads(request.body)
+        reputation_score = data.get("reputation_score")
+        reputation_source = data.get("reputation_source")
+        name = data.get("name")
+
+        if not name or reputation_score is None or not reputation_source:
+            return HttpResponseBadRequest(
+                "Campos 'name', 'reputation_score' e 'reputation_source' são obrigatórios."
+            )
+
+        # Validação de faixa
+        if not (0 <= float(reputation_score) <= 10):
+            return HttpResponseBadRequest(
+                "O 'reputation_score' deve estar entre 0 e 10."
+            )
+
+        store_reputation = create_or_update_reputation(
+            name=name,
+            reputation_score=reputation_score,
+            reputation_source=reputation_source,
+        )
+
+        if not store_reputation:
+            return HttpResponseNotFound("Loja não encontrada.")
+
+        return JsonResponse(
+            {
+                "store": store_reputation.name,
+                "reputation_score": store_reputation.reputation_score,
+                "reputation_source": store_reputation.reputation_source,
+            },
+            status=200,
+        )
+    except json.JSONDecodeError:
+        return HttpResponseBadRequest("JSON inválido")
+    except Exception as e:
+        return HttpResponseBadRequest(f"Erro interno: {e}")
 
 
 @csrf_exempt
